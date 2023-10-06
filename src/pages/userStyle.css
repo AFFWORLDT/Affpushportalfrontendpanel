@@ -1,0 +1,39 @@
+/* UserDetails.css */
+.boxstyle {
+    color: #7928CA;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.boxstyleForm {
+    margin: auto;
+    border: 2px solid white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.boxstyleForm1 {
+    margin: auto;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.innerbox {
+    border: 0.5px solid gray;
+    border-radius: 10px;
+    padding: 10px;
+    width: 130px;
+    margin-left: 10px;
+}
+
+.textinBox {
+    margin-left: 10px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+}
+/* Add more styles as needed */
