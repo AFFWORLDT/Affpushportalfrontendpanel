@@ -16,12 +16,16 @@ import useClipboard from "react-use-clipboard";
 import copy from 'clipboard-copy';
 import * as XLSX from 'xlsx';
 import { getData } from '../service/api';
-import { getResFromLocalStorage } from '../service/localStorage';
+import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/localStorage';
+import axios from 'axios';
 
 const Offers = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
+  const URL2 = process.env.REACT_APP_PROD_API;
+  
   const navigate = useNavigate();
   const res = getResFromLocalStorage();
+  const user  = getUserFromLocalStorage();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -50,12 +54,40 @@ const Offers = () => {
   const fetchData = async () => {
     try {
       const result = await getData();
+      console.log("offers data -->" , result);
       setData(result);
       setLoading(true);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
+  const handleIframe = async(row)=>{
+    try {
+      const campageinId = row._id;
+      console.log(campageinId);
+      const url = `${URL2}/api/affiliates/set_on_iframe?campaign_id=${campageinId}`;
+      console.log(url);
+      const accessToken = user.data.access_token;
+      console.log(accessToken);
+      const response =  await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      console.log(response);
+      if(response.status === 200){
+        toast.success("Iframe set successfully!!");
+      }
+      
+      
+      
+    } catch (error) {
+      console.log("Error While setting iframe-->" , error);
+      toast.error("Error While setting iframe!!");
+    }
+  }
 
   const handleCopyAff = (item) => {
     const link = `${URL}/${item?.code}?affiliate_id=${res.data.affiliate_id}`;
@@ -153,6 +185,7 @@ const Offers = () => {
               <TableCell align="center">Payout</TableCell>
               <TableCell align="center">Metrics</TableCell>
               <TableCell align="center">Targeting</TableCell>
+              <TableCell align="center">Iframe</TableCell>
               <TableCell align="center">Action</TableCell>
               <TableCell align="center">Details</TableCell>
             </TableRow>
@@ -173,20 +206,17 @@ const Offers = () => {
                     <TableCell align="center">
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                          <span style={{ color: '#6E7A83' }}>AR</span>
-                          &nbsp;&nbsp;&nbsp; <span>0%</span>
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                           <span style={{ color: '#6E7A83' }}>CR</span>
                           &nbsp;&nbsp;&nbsp; <span>0%</span>
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                          <span style={{ color: '#6E7A83' }}>EPC</span>
-                          &nbsp;&nbsp;&nbsp; <span>$0.00</span>
                         </Box>
                       </Box>
                     </TableCell>
                     <TableCell align="center">India</TableCell>
+                    <TableCell align="center">
+                      <Button variant="contained" onClick={() => handleIframe(row)}>
+                        Link Iframe 
+                      </Button>
+                    </TableCell>
                     <TableCell align="center">
                       <Button
                         onClick={() => {
