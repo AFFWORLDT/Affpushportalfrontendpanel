@@ -10,6 +10,7 @@ import {
     Typography,
     Grid,
     TextField,
+    LinearProgress,
 } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import EmailIcon from '@mui/icons-material/Email';
@@ -133,52 +134,16 @@ function UserDetails() {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             const jsonData = await response.json();
-
             setData(jsonData);
-            setLoading(true);
         } catch (error) {
             console.error('Error fetching data:', error);
-            setLoading(false);
-        }
-    };
-    const fetchAffiliateData = async () => {
-        try {
-            // Replace with your actual access token
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-            };
-
-            const response = await fetch(url1, {
-                method: 'GET',
-                headers: headers,
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const jsonData = await response.json();
-
-            setAffiliateData(jsonData);
-            console.log("this is json data -->", jsonData);
-            setCampageinId(jsonData?.iframe_campaign_id);
-            setLoading(true);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setLoading(false);
         }
     };
     const fetchCampaginDetails = async (id) => {
+        if (!id) return;
         try {
-            // console.log("this is affiliate data -->" ,affiliateData);
             const campageinId = id;
-            // const camapdfkjfndj = campageinId111;
-            // console.log("this is after id ->",campageinId111 );
-            // console.log("this is campageinId1111 -->" ,campageinId);
-            console.log("campagin id -->", campageinId);
             const url = `${URL}/campaign/${campageinId}`;
             const Camdata = await axios.get(url, {
                 headers: {
@@ -195,6 +160,29 @@ function UserDetails() {
             toast.error('Error fetching CampaginData');
         }
     }
+    const fetchAffiliateData = async () => {
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            };
+            const response = await fetch(url1, {
+                method: 'GET',
+                headers: headers,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const jsonData = await response.json();
+
+            setAffiliateData(jsonData);
+            await fetchCampaginDetails(jsonData?.iframe_campaign_id);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
 
     const fetchWalletData = async () => {
@@ -217,12 +205,23 @@ function UserDetails() {
             const jsonData = await response.json();
 
             setWalletData(jsonData[0]);
-            setLoading(true);
         } catch (error) {
             console.error('Error fetching data:', error);
-            setLoading(false);
         }
     };
+
+    async function init() {
+        try {
+            setLoading(true);
+            await fetchData();
+            await fetchAffiliateData();
+            await fetchWalletData();
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
         if (data && data.length > 0) {
@@ -231,11 +230,9 @@ function UserDetails() {
             setTotalCount(calculatedTotalCount);
         }
     }, [data]);
+
     useEffect(() => {
-        fetchData();
-        fetchAffiliateData();
-        fetchWalletData();
-        // fetchCampaginDetails();
+        init();
     }, []);
 
 
@@ -282,6 +279,12 @@ function UserDetails() {
         }
     };
 
+    if(loading){
+        return (
+            <LinearProgress />
+        )
+    }
+
 
     return (
         <>
@@ -289,9 +292,6 @@ function UserDetails() {
             <Box>
                 <Typography className={classes.boxstyle}> User Details </Typography>
             </Box>
-            <Button onClick={fetchCampaginDetails}>
-                click me
-            </Button>
             <Grid style={{ padding: "300", minChildWidth: "300", spacing: "5" }}>
                 <Box style={{ display: "flex", flexDirection: "column", maxWidth: "1200px", height: "250", backgroundColor: "#EDF2F7", flexWrap: "wrap", overflowX: "auto", overflowY: "auto" }} className={classes.boxstyleForm1}>
                     <Box width={"100%"} height={180} bg={"gray.100"} >
@@ -363,25 +363,12 @@ function UserDetails() {
                                     </Box>
 
                                     <Box className={classes.innerbox}>
-                                        {/* <CircularProgress/> */}
-
-                                        {
-                                            totalCount === 0 ? (
-                                                <CircularProgress />
-                                            ) :
-                                                (
-                                                    <>
-
-                                                        <Box>
-                                                            {totalCount}
-                                                        </Box>
-                                                        <Box>
-                                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Clicks</Typography>
-                                                        </Box>
-                                                    </>
-
-                                                )
-                                        }
+                                        <Box>
+                                            {totalCount}
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Clicks</Typography>
+                                        </Box>
                                     </Box>
                                     <Box className={classes.innerbox}>
                                         <Box>
@@ -394,26 +381,15 @@ function UserDetails() {
                                     <Box className={classes.dabox}>
 
                                         <Box>
-                                            {/* {
-                                                affiliateData?.iframe_campaign_id
-                                            } */}
-
 
                                             {
                                                 campaginName ? (
                                                     campaginName
                                                 ) :
                                                     (
-                                                        <Button variant='contained' onClick={() => fetchCampaginDetails(affiliateData?.iframe_campaign_id)}>
-                                                            Campagin Details
-                                                        </Button>
+                                                        "Error"
                                                     )
                                             }
-
-
-
-
-
                                         </Box>
                                         <Box>
                                             <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>DA</Typography>

@@ -18,14 +18,17 @@ import * as XLSX from 'xlsx';
 import { getData } from '../service/api';
 import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/localStorage';
 import axios from 'axios';
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
+import PauseIcon from '@mui/icons-material/Pause';
+import { fontWeight } from '@mui/system';
 
 const Offers = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const URL2 = process.env.REACT_APP_PROD_API;
-  
+
   const navigate = useNavigate();
   const res = getResFromLocalStorage();
-  const user  = getUserFromLocalStorage();
+  const user = getUserFromLocalStorage();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -54,7 +57,7 @@ const Offers = () => {
   const fetchData = async () => {
     try {
       const result = await getData();
-      console.log("offers data -->" , result);
+      console.log("offers data -->", result);
       setData(result);
       setLoading(true);
     } catch (error) {
@@ -62,7 +65,7 @@ const Offers = () => {
     }
   };
 
-  const handleIframe = async(row)=>{
+  const handleIframe = async (row) => {
     try {
       const campageinId = row._id;
       console.log(campageinId);
@@ -70,21 +73,21 @@ const Offers = () => {
       console.log(url);
       const accessToken = user.data.access_token;
       console.log(accessToken);
-      const response =  await axios.get(url, {
+      const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
       })
       console.log(response);
-      if(response.status === 200){
+      if (response.status === 200) {
         toast.success("Iframe set successfully!!");
       }
-      
-      
-      
+
+
+
     } catch (error) {
-      console.log("Error While setting iframe-->" , error);
+      console.log("Error While setting iframe-->", error);
       toast.error("Error While setting iframe!!");
     }
   }
@@ -99,8 +102,8 @@ const Offers = () => {
     try {
 
 
-       copy(link);
-       
+      copy(link);
+
       toast.success('Link copied to clipboard', {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
@@ -111,56 +114,56 @@ const Offers = () => {
       });
     }
   };
- 
+
   const exportData = () => {
 
-    
+
     const fileName = 'Offers.xlsx';
     const table = document.getElementById('offers-table');
     const rows = table.querySelectorAll('tr');
     const tabledata = [];
     const headers = [];
-  rows[0].querySelectorAll('th').forEach((header) => {
-    headers.push(header.innerText);
-  });
-  tabledata.push(headers);
-    rows.forEach((row,index) => {
+    rows[0].querySelectorAll('th').forEach((header) => {
+      headers.push(header.innerText);
+    });
+    tabledata.push(headers);
+    rows.forEach((row, index) => {
       if (index === 0) {
         return; // Skip the header row
       }
-      
+
       const rowData = [];
       const cells = row.querySelectorAll('td');
-      
-      
+
+
       console.log(`INDEX:  ${index}`)
       console.log(`DATA[0]:  ${data[0]}`)
       cells.forEach((cell, cellIndex) => {
         // If this is the action column, add a link
         if (cellIndex === 5) {
-          
+
           const actionLink = `${URL}/${data[index - 1]?.code}?affiliate_id=${res.data.affiliate_id}`;
-         
+
           rowData.push(actionLink);
 
         } else {
           rowData.push(cell.innerText);
         }
       });
-  
+
       tabledata.push(rowData);
     });
-  
+
     const ws = XLSX.utils.aoa_to_sheet(tabledata);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, fileName);
   };
-  
-  
 
-  
-  
+
+
+
+
 
   return (
     <>
@@ -168,13 +171,13 @@ const Offers = () => {
         <title>Best Offers | Affworld</title>
       </Helmet>
       <Button
-  variant="contained"
-  color="primary"
-  onClick={exportData}
-  style={{margin:"8px"}}
->
-  Export to Excel
-</Button>
+        variant="contained"
+        color="primary"
+        onClick={exportData}
+        style={{ margin: "8px" }}
+      >
+        Export to Excel
+      </Button>
 
       <TableContainer component={Paper}>
         <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
@@ -185,6 +188,7 @@ const Offers = () => {
               <TableCell align="center">Payout</TableCell>
               <TableCell align="center">Metrics</TableCell>
               <TableCell align="center">Targeting</TableCell>
+              <TableCell align="center">Status</TableCell>
               <TableCell align="center">Iframe</TableCell>
               <TableCell align="center">Action</TableCell>
               <TableCell align="center">Details</TableCell>
@@ -198,11 +202,9 @@ const Offers = () => {
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell component="td" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="center">{row.description}</TableCell>
-                    <TableCell align="center">$18.00</TableCell>
+                    <TableCell component="td" scope="row">{row.name}</TableCell>
+                    <TableCell align="center">{row?.description}</TableCell>
+                    <TableCell align="center">$20</TableCell>
                     <TableCell align="center">
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -212,9 +214,12 @@ const Offers = () => {
                       </Box>
                     </TableCell>
                     <TableCell align="center">India</TableCell>
+                    <TableCell align="center">{row?.status == "active" ? <CloudDoneIcon style={{ color: '#32e620' }} /> : <PauseIcon style={{ color: '#FF0000' }} />}{"   "}<span style={{fontWeight: 700}}>{row?.status} </span></TableCell>
+
+
                     <TableCell align="center">
                       <Button variant="contained" onClick={() => handleIframe(row)}>
-                        Link Iframe 
+                        Link Iframe
                       </Button>
                     </TableCell>
                     <TableCell align="center">
@@ -253,16 +258,16 @@ const Offers = () => {
           </TableBody>
         </Table>
         <TablePagination
-                            rowsPerPageOptions={[10]}
-                            component="div"
-                            count={data.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
+          rowsPerPageOptions={[10]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
-      
+
     </>
   );
 };

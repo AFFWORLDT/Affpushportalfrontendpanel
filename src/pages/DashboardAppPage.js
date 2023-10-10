@@ -56,23 +56,21 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid style={{ cursor: 'pointer' }}
             onClick={() => navigate("/affilate/offers")} item xs={12} sm={6} md={3}>
-            {/* <Button onClick={()=>navigate("/")}> */}
             <AppWidgetSummary title="See Offers" total={"100++"} icon={'ant-design:gold-filled'} />
-            {/* </Button> */}
           </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/conversions")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See Conversions" total={1352831} color="info" icon={'ant-design:thunderbolt-filled'} />
+            <AppWidgetSummary title="See Conversions" total={1352831} color="info" icon={'ant-design:interaction-filled'} />
           </Grid>
-
-          {/* <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
-          </Grid> */}
-
-          {/* <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid> */}
+          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/user/details")}
+            item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="See Overview" total={1352831} color="info" icon={'ant-design:thunderbolt-outlined'} />
+          </Grid>
+          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/finance")}
+            item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Finance Details" total={1352831} color="info" icon={'ant-design:money-collect-outlined'} />
+          </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
