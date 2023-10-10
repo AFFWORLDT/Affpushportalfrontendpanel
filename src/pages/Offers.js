@@ -21,6 +21,8 @@ import axios from 'axios';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import PauseIcon from '@mui/icons-material/Pause';
 import { fontWeight } from '@mui/system';
+import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
+
 
 const Offers = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -214,7 +216,17 @@ const Offers = () => {
                       </Box>
                     </TableCell>
                     <TableCell align="center">India</TableCell>
-                    <TableCell align="center">{row?.status == "active" ? <CloudDoneIcon style={{ color: '#32e620' }} /> : <PauseIcon style={{ color: '#FF0000' }} />}{"   "}<span style={{fontWeight: 700}}>{row?.status} </span></TableCell>
+                    <TableCell align="center">
+                      {row?.status === "active" ? (
+                        <CloudDoneIcon style={{ color: '#32e620' }} />
+                      ) : row?.status === "paused" ? (
+                        <PauseIcon style={{ color: '#FF0000' }} />
+                      ) : row?.status === "expired" ? (
+                        <AccessTimeIcon style={{ color: '#FFA500' }} />
+                      ) : null}
+                      {"   "}
+                      <span style={{ fontWeight: 700 }}>{row?.status} </span>
+                    </TableCell>
 
 
                     <TableCell align="center">

@@ -56,20 +56,20 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid style={{ cursor: 'pointer' }}
             onClick={() => navigate("/affilate/offers")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See Offers" total={"100++"} icon={'ant-design:gold-filled'} />
+            <AppWidgetSummary title="See Offers" total={"92"} icon={'ant-design:gold-filled'} />
           </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/conversions")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See Conversions" total={1352831} color="info" icon={'ant-design:interaction-filled'} />
+            <AppWidgetSummary title="See Conversions" total={203} color="info" icon={'ant-design:interaction-filled'} />
           </Grid>
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/user/details")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See Overview" total={1352831} color="info" icon={'ant-design:thunderbolt-outlined'} />
+            <AppWidgetSummary title="See Overview" total={1352831}  icon={'ant-design:thunderbolt-outlined'} />
           </Grid>
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/finance")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Finance Details" total={1352831} color="info" icon={'ant-design:money-collect-outlined'} />
+            <AppWidgetSummary title="Finance Details" total={489} color="info" icon={'ant-design:money-collect-outlined'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -152,7 +152,7 @@ export default function DashboardAppPage() {
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentSubject
               title="Current Subject"
-              chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
+              chartLabels={['KhelRaja', '1xBet', 'Cricbuzz', 'RoyalCasino', 'rollingslots', 'vulkan', 'STAKE']}
               chartData={[
                 { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
                 { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },

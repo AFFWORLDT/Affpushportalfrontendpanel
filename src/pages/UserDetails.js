@@ -347,7 +347,7 @@ function UserDetails() {
                                 <Box display={"flex"} flexDirection={"row"} h={"50%"} >
                                     <Box className={classes.innerbox}>
                                         <Box>
-                                            {walletData?.total_earnings}
+                                            {walletData?.total_earnings ? walletData?.total_earnings : 0}
                                         </Box>
                                         <Box>
                                             <Typography style={{ color: '#4CAF50', fontWeight: 'bold' }}>Earnings(INR)</Typography>
@@ -387,7 +387,7 @@ function UserDetails() {
                                                     campaginName
                                                 ) :
                                                     (
-                                                        "Error"
+                                                        "No Campaign Linked"
                                                     )
                                             }
                                         </Box>

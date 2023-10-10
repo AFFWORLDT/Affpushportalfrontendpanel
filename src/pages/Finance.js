@@ -176,7 +176,7 @@ const Finance = () => {
             <Box style={{ display: "flex", justifyContent: "space-between", border: "2px solid gray", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "30px" }}>
               <div style={{ fontSize: "10px", fontWeight: "700" }}>
                 <h2>RevShare</h2>
-                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data.total_earnings}</h2>
+                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data?.total_earnings ? data?.total_earnings : 0}</h2>
               </div>
             </Box>
           </Grid>
@@ -184,7 +184,7 @@ const Finance = () => {
             <Box style={{ display: "flex", justifyContent: "space-between", border: "2px solid orange", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "30px" }}>
               <div style={{ fontSize: "10px", fontWeight: "700" }}>
                 <h2>In processing</h2>
-                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data.unapproved_wallet}</h2>
+                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data?.unapproved_wallet ? data?.unapproved_wallet : 0}</h2>
               </div>
             </Box>
           </Grid>
