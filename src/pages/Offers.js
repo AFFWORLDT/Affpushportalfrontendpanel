@@ -142,7 +142,7 @@ const Offers = () => {
       console.log(`DATA[0]:  ${data[0]}`)
       cells.forEach((cell, cellIndex) => {
         // If this is the action column, add a link
-        if (cellIndex === 5) {
+        if (cellIndex === 6) {
 
           const actionLink = `${URL}/${data[index - 1]?.code}?affiliate_id=${res.data.affiliate_id}`;
 
