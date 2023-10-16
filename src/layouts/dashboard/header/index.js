@@ -48,7 +48,6 @@ const NavItem = ({ to, text, icon, elevation }) => (
       }}
     >
       <ListItemIcon>
-        {/* Use Material-UI Icons here */}
         {icon === 'home' && <Icon component={HomeIcon} fontSize="small" />}
         {icon === 'chart-line-2' && <Icon component={TrendingUpIcon} fontSize="small" />}
         {icon === 'bar-chart-outline' && <Icon component={BarChartIcon} fontSize="small" />}

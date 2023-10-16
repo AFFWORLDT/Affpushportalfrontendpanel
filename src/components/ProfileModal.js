@@ -12,6 +12,7 @@ import { Visibility as ViewIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getResFromLocalStorage } from "../utils/localStorage";
 import avatar from "../images/avatar.png";
+import account from "src/_mock/account";
 
 const ProfileModal = ({ user, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -72,14 +73,15 @@ const ProfileModal = ({ user, children }) => {
       )}
       <Dialog onClose={handleClose} open={isOpen} fullWidth>
         <DialogTitle>
-          Hi! {user1?.data.name}
+
+          Hi ! {account?.displayName}
         </DialogTitle>
         <DialogContent>
           <img
-            src={avatar}
-            alt={user1?.data.name}
+            src={account?.photoURL}
+            alt={account?.displayName}
             style={{
-              borderRadius: "50%",
+              // borderRadius: "60%",
               margin: "10px",
               width: "150px",
               height: "150px",
@@ -87,6 +89,10 @@ const ProfileModal = ({ user, children }) => {
           />
           <Typography variant="subtitle1" gutterBottom>
             Email: {user1?.data.email}
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            here we areeeeeeeeeeeeeee
+            <br />
           </Typography>
         </DialogContent>
         <DialogActions>

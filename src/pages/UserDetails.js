@@ -22,6 +22,7 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
+import { Try } from '@mui/icons-material';
 
 
 
@@ -101,6 +102,9 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
+    const [profile, setProfile] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
+
 
 
 
@@ -117,6 +121,10 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+      };
 
     const fetchData = async () => {
         try {
@@ -236,6 +244,35 @@ function UserDetails() {
     }, []);
 
 
+    const uploadProfile = async () => {
+        try {
+          const formData = new FormData();
+          formData.append('file', selectedFile);
+      
+          const response = await axios.post(
+            `${process.env.REACT_APP_PROD_API}/api/affiliates/update_profile_image`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+      
+          if (response.status === 200) {
+            toast.success('Profile image uploaded successfully');
+          } else {
+            toast.error('Failed to upload profile image');
+          }
+        } catch (error) {
+          console.error('Error uploading profile:', error);
+          toast.error('Error While Uploading Profile!!');
+        }
+      };
+      
+
+
 
 
     const handleSubmit = async (event) => {
@@ -279,7 +316,7 @@ function UserDetails() {
         }
     };
 
-    if(loading){
+    if (loading) {
         return (
             <LinearProgress />
         )
@@ -297,9 +334,24 @@ function UserDetails() {
                     <Box width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
-                                    Profile Photo
-                                </Typography>
+                               
+
+
+                                    <Box>
+                                    <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
+
+                                    </Box>
+
+                                    <br />
+
+                                    <Box>
+
+                                    <Button variant='contained' onClick={uploadProfile}>Upload Profile</Button>
+
+                                    </Box>
+                        
+
+
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >

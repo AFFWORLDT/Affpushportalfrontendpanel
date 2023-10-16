@@ -205,27 +205,21 @@ export default function AccountPopover() {
       >
         <Fade in={open1}>
           <Box sx={style}>
-            {/* <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography> */}
             <div style={{ textAlign: 'center', alignContent: 'center', alignItems: 'center', marginTop: '20px' }}>
               <Typography variant="h3" style={{ fontSize: '40px', fontWeight: 600, fontFamily: 'Poppins' }}>
-                Hi! {user1?.data.name}
+                Hi! {account?.displayName}
               </Typography>
               <Avatar
 
-                alt={user1?.data.name}
-                src={"https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png"}
+                alt={account?.displayName}
+                src={account?.photoURL}
                 style={{ borderRadius: '50%', margin: 'auto', width: '150px', height: '150px' }}
               />
               <Typography
                 variant="subtitle1"
                 style={{ backgroundColor: 'gray.100', fontSize: '18px', margin: '10px', fontFamily: 'Poppins' }}
               >
-                Email: {user1?.data.email}
+                Email: {account?.email}
               </Typography>
               <Box>
 

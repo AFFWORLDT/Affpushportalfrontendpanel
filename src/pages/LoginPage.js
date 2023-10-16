@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
-import {  Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { Container, Typography, Divider, Stack, Button } from '@mui/material';
 // hooks
 
 
-import { useNavigate ,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -13,6 +13,7 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { Box } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -52,16 +53,16 @@ export default function LoginPage() {
   const privateCheck = () => {
     const auth = localStorage.getItem("user");
     if (auth) {
-      navigate("/"); 
+      navigate("/");
     }
   }
-  
+
   useEffect(() => {
     privateCheck();
-  },[]);
+  }, []);
   const boxstyle = {
     // background: "linear(to-l, #7928CA, #FF0080)",
-    color:"green"
+    color: "green"
     // bgClip: "text",
     // fontSize: "4xl",
     // fontWeight: "extrabold"
@@ -74,16 +75,14 @@ export default function LoginPage() {
       </Helmet>
 
       <StyledRoot>
-        <Logo
-          sx={{
-            position: 'fixed',
-            top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 },
-          }}
-        />
+
+            <Box sx={{ height: "18vh",  width: "18vh", display: "flex", justifyContent: "top", alignItems: "top", borderRadius: "10px", }}>
+
+              <Logo />
+            </Box>
 
         {mdUp && (
-          <StyledSection>
+          <StyledSection >
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back to  <span style={boxstyle}> Affworld</span>
             </Typography>
