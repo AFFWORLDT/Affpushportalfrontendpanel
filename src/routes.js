@@ -18,6 +18,7 @@ import UserDetails from './pages/UserDetails';
 import RegisterPage from './pages/RegisterPage';
 import Finance from './pages/Finance';
 import DynamicAds from './pages/DynamicAds';
+import ClickLogs from './pages/ClickLogs';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,9 @@ export default function Router() {
         {
           path: 'offers', element: <Offers />,
         },
+        {
+          path: 'clicklogs', element: <ClickLogs />,
+        },
       ],
     },
     {
@@ -58,6 +62,7 @@ export default function Router() {
         { path: 'user/details', element: <UserDetails /> },
         { path: 'finance', element: <Finance /> },
         { path: 'dynamicAds', element: <DynamicAds /> },
+        { path: 'clicklogs', element: <ClickLogs /> },
       ],
     },
     {
