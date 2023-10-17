@@ -70,8 +70,8 @@ NavItem.propTypes = {
 
 export default function Header({ onOpenNav }) {
   return (
-    <StyledRoot>
-      <StyledToolbar>
+    <StyledRoot >
+      <StyledToolbar >
         <IconButton
           onClick={onOpenNav}
           sx={{

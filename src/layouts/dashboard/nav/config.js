@@ -24,6 +24,11 @@ const navConfig = [
     path: '/affilate/conversions',
     icon: icon('ic_disabled'),
   },
+  {
+    title: 'ClickLogs',
+    path: '/affilate/clicklogs',
+    icon: icon('ic_disabled'),
+  },
   // {
   //   title: 'user',
   //   path: '/dashboard/user',

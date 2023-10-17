@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Divider, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
@@ -12,7 +12,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import account from '../../../_mock/account';
-import { getResFromLocalStorage , removeUserFromLocalStorage} from "../../../service/localStorage";
+import { getResFromLocalStorage , removeUserFromLocalStorage,getUserFromLocalStorage} from "../../../service/localStorage";
 
 
 const style = {
@@ -55,6 +55,12 @@ export default function AccountPopover() {
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
   const user1 = getResFromLocalStorage();
+  const user2 = getUserFromLocalStorage();
+  const accessToken = user2?.data.access_token;
+  const URL2 = process.env.REACT_APP_PROD_API;
+  const url1 = `${URL2}/api/affiliates`;
+  const [affiliateData, setAffiliateData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -112,6 +118,46 @@ export default function AccountPopover() {
     console.log("Login clicked")
     navigate("/login");
   }
+  const fetchAffiliateData = async () => {
+    try {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        };
+        const response = await fetch(url1, {
+            method: 'GET',
+            headers: headers,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        setAffiliateData(jsonData);
+        await fetchCampaginDetails(jsonData?.iframe_campaign_id);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+    console.log(affiliateData.profile_pic)
+};
+
+async function init() {
+  try {
+      setLoading(true);
+      
+      await fetchAffiliateData();
+      
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  } finally {
+      setLoading(false);
+  }
+}
+useEffect(() => {
+  init();
+}, []);
 
   return (
     <>
@@ -211,8 +257,8 @@ export default function AccountPopover() {
               </Typography>
               <Avatar
 
-                alt={account?.displayName}
-                src={account?.photoURL}
+                alt={user1?.data.name}
+                src={"https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png"}
                 style={{ borderRadius: '50%', margin: 'auto', width: '150px', height: '150px' }}
               />
               <Typography

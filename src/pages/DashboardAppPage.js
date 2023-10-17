@@ -58,6 +58,10 @@ export default function DashboardAppPage() {
             onClick={() => navigate("/affilate/offers")} item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="See Offers" total={"92"} icon={'ant-design:gold-filled'} />
           </Grid>
+          <Grid style={{ cursor: 'pointer' }}
+            onClick={() => navigate("/affilate/clicklogs")} item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="See ClickLogs" total={"92"} icon={'ant-design:gold-filled'} />
+          </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/conversions")}
             item xs={12} sm={6} md={3}>
