@@ -186,10 +186,12 @@ const Offers = () => {
           <TableHead>
             <TableRow>
               <TableCell>Offers</TableCell>
-              <TableCell align="center">Categories</TableCell>
+              <TableCell align="center">Category</TableCell>
+              <TableCell align="center">Description</TableCell>
+
               <TableCell align="center">Payout</TableCell>
               <TableCell align="center">Metrics</TableCell>
-              <TableCell align="center">Targeting</TableCell>
+              <TableCell align="center">Country</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Iframe</TableCell>
               <TableCell align="center">Action</TableCell>
@@ -205,7 +207,9 @@ const Offers = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="td" scope="row">{row.name}</TableCell>
-                    <TableCell align="center">{row?.description}</TableCell>
+                    <TableCell align="center">{row?.category ===null ? "N/A" : row?.category}</TableCell>
+                    <TableCell align="center">{row?.description ===null ? "N/A" : row?.description}</TableCell>
+
                     <TableCell align="center">$20</TableCell>
                     <TableCell align="center">
                       <Box>
@@ -215,7 +219,7 @@ const Offers = () => {
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell align="center">India</TableCell>
+                    <TableCell align="center">{row?.country ===null ? "N/A" : row?.country}</TableCell>
                     <TableCell align="center">
                       {row?.status === "active" ? (
                         <CloudDoneIcon style={{ color: '#32e620' }} />

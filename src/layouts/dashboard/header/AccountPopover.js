@@ -257,8 +257,8 @@ useEffect(() => {
               </Typography>
               <Avatar
 
-                alt={user1?.data.name}
-                src={"https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png"}
+                alt={account?.displayName}
+                src={account?.photoURL}
                 style={{ borderRadius: '50%', margin: 'auto', width: '150px', height: '150px' }}
               />
               <Typography
@@ -266,6 +266,18 @@ useEffect(() => {
                 style={{ backgroundColor: 'gray.100', fontSize: '18px', margin: '10px', fontFamily: 'Poppins' }}
               >
                 Email: {account?.email}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                style={{ backgroundColor: 'gray.100', fontSize: '18px', margin: '10px', fontFamily: 'Poppins' }}
+              >
+                Bio: {account?.bio}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                style={{ backgroundColor: 'gray.100', fontSize: '18px', margin: '10px', fontFamily: 'Poppins' }}
+              >
+                Level: {account?.level}
               </Typography>
               <Box>
 
