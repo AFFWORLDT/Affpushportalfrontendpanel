@@ -35,7 +35,9 @@ const Offers = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [pageData, setPageData] = useState([]);
   const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
+  
 
   const privateCheck = () => {
     const auth = localStorage.getItem('user');
@@ -162,6 +164,11 @@ const Offers = () => {
     XLSX.writeFile(wb, fileName);
   };
 
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const dataForPage = data.slice(startIndex, startIndex + rowsPerPage);
+    setPageData(dataForPage);
+  }, [page, rowsPerPage, data]);
 
 
 
@@ -193,6 +200,7 @@ const Offers = () => {
               <TableCell align="center">Description</TableCell>
 
               <TableCell align="center">Payout</TableCell>
+              <TableCell align="center">Tags</TableCell>
               <TableCell align="center">Metrics</TableCell>
               <TableCell align="center">Country</TableCell>
               <TableCell align="center">Status</TableCell>
@@ -203,34 +211,14 @@ const Offers = () => {
           </TableHead>
           <TableBody>
             {loading ? (
-              data?.length > 0 ? (
-                data.map((row) => (
+              pageData?.length > 0 ? (
+                pageData.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="td" scope="row">{row.name}</TableCell>
-                    <TableCell align="center">{row?.category ===null ? "N/A" : row?.category}</TableCell>
-                    <TableCell align="center">
-                    
-                    
-                    <Select>
-                    {row?.tags?.map((tag , index) => (
-                        <option key={index} value={tag}>
-                          {tag}
-                        </option>
-                    ))}
-
-
-                    </Select>
-                    
-                    
-                    
-                    </TableCell>
-
-
-                    <TableCell align="center">{row?.description ===null ? "N/A" : row?.description}</TableCell>
-
+                    <TableCell align="center">{row?.description}</TableCell>
                     <TableCell align="center">$20</TableCell>
                     <TableCell align="center">
                       <Box>
@@ -295,7 +283,7 @@ const Offers = () => {
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[10]}
+          rowsPerPageOptions={[10,25,50,100]}
           component="div"
           count={data.length}
           rowsPerPage={rowsPerPage}
