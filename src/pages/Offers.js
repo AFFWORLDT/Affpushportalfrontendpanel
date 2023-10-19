@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Select } from '@mui/material';
 import { toast } from 'react-toastify';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -187,6 +187,9 @@ const Offers = () => {
             <TableRow>
               <TableCell>Offers</TableCell>
               <TableCell align="center">Category</TableCell>
+              <TableCell align="center">Tags</TableCell>
+
+
               <TableCell align="center">Description</TableCell>
 
               <TableCell align="center">Payout</TableCell>
@@ -208,6 +211,24 @@ const Offers = () => {
                   >
                     <TableCell component="td" scope="row">{row.name}</TableCell>
                     <TableCell align="center">{row?.category ===null ? "N/A" : row?.category}</TableCell>
+                    <TableCell align="center">
+                    
+                    
+                    <Select>
+                    {row?.tags?.map((tag , index) => (
+                        <option key={index} value={tag}>
+                          {tag}
+                        </option>
+                    ))}
+
+
+                    </Select>
+                    
+                    
+                    
+                    </TableCell>
+
+
                     <TableCell align="center">{row?.description ===null ? "N/A" : row?.description}</TableCell>
 
                     <TableCell align="center">$20</TableCell>
