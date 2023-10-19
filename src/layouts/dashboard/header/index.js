@@ -84,10 +84,10 @@ export default function Header({ onOpenNav }) {
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1 }}>
-          <NavItem to="/" text="Home" icon="home" elevation={2} />
-          <NavItem to="/affilate/conversions" text="Conversions" icon="chart-line-2" elevation={2} />
+          {/* <NavItem to="/" text="Home" icon="home" elevation={2} /> */}
+          {/* <NavItem to="/affilate/conversions" text="Conversions" icon="chart-line-2" elevation={2} />
           <NavItem to="/affilate/user/details" text="Overview" icon="bar-chart-outline" elevation={2} />
-          <NavItem to="/affilate/conversions" text="Finance" icon="credit-card-outline" elevation={2} />
+          <NavItem to="/affilate/conversions" text="Finance" icon="credit-card-outline" elevation={2} /> */}
 
           <LanguagePopover />
           <NotificationsPopover />
