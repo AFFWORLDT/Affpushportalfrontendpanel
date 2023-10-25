@@ -36,6 +36,7 @@ function VerificationMail() {
             }
 
             const jsonData = await response.json();
+            console.log("RESPONSE in verification mail-->:",jsonData);
             if (response.ok) {
                 setVerificationSent(true);
               }
@@ -56,6 +57,7 @@ function VerificationMail() {
         className={classes.button}
         
       >
+
         Send Verification Email
       </Button>
       {verificationSent ? (

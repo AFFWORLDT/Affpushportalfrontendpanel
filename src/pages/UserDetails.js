@@ -26,7 +26,8 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
-
+import VerificationMail from './VerificationMail';
+import verificationSent from './VerificationMail';
 
 
 
@@ -86,14 +87,14 @@ function UserDetails() {
     const [loading, setLoading] = useState(false);
     const user2 = getUserFromLocalStorage();
     const accessToken = user2?.data.access_token;
-    const [image,setImage]=useState(null);
+    const [image, setImage] = useState(null);
     const [affiliate, setAffiliate] = useState();
     const [nameBeni, setNameBeni] = useState();
     const [last, setLast] = useState();
     const [username, setUserName] = useState();
     const [companyName, setCompanyName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    
+
     const [address1, setAddress1] = useState();
     const [address2, setAddress2] = useState();
     const [city, setCity] = useState();
@@ -116,7 +117,7 @@ function UserDetails() {
 
     const url = `${URL2}/api/analytics/clicks`;
     const url1 = `${URL2}/api/affiliates`;
-    const url_image =`${URL2}/api/affiliates/update_profile_image`;
+    const url_image = `${URL2}/api/affiliates/update_profile_image`;
     const user1 = getResFromLocalStorage();
     const date = new Date(affiliateData.created_at).toLocaleString(undefined, {
         year: 'numeric',
@@ -217,7 +218,7 @@ function UserDetails() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const jsonData = await response.json();
+            const jsonData = await response.json(); 
 
             setWalletData(jsonData[0]);
         } catch (error) {
@@ -230,17 +231,17 @@ function UserDetails() {
                 toast.error('No image selected for upload.');
                 return;
             }
-    
+
             const formData = new FormData();
             formData.append('profile_image', image);
-    
+
             const response = await axios.post(url_image, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
                 },
             });
-    
+
             if (response.status === 200) {
                 toast.success('Image uploaded successfully.');
             } else {
@@ -251,9 +252,9 @@ function UserDetails() {
             toast.error('Error uploading image. Please try again.');
         }
     };
-    
-    
-    
+
+
+
 
     async function init() {
         try {
@@ -261,15 +262,15 @@ function UserDetails() {
             await fetchData();
             await fetchAffiliateData();
             await fetchWalletData();
-            await fetchImage()
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
         }
     }
+    // await fetchImage()
 
-    
+
 
     const handleImageChange = (event) => {
         const selectedImage = event.target.files[0]; // Get the first selected image
@@ -320,7 +321,7 @@ function UserDetails() {
             postCode,
             state,
             city,
-            
+
         };
 
         console.log("User is :", user);
@@ -352,11 +353,11 @@ function UserDetails() {
 
 
 
-   
-    
-   
 
-    
+
+
+
+
 
 
     return (
@@ -410,10 +411,10 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                            {verificationSent ? (
-        <CheckCircleIcon style={{ color: 'green' }} />
-      ) : (
-        <EmailIcon />)}
+                                                {verificationSent ? (
+                                                    <CheckCircleIcon style={{ color: 'green' }} />
+                                                ) : (
+                                                    <EmailIcon />)}
                                             </Box>
                                             <Box display="flex" alignItems="center">
                                                 <Typography fontWeight={400}>
@@ -665,65 +666,65 @@ function UserDetails() {
                                 />
                             </FormControl>
                         </Box>
-                        <Box style={{display:"flex",alignItems:"center",justifyContent:"flex-start"}}>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
-                                <TextField
-                                    type="number"
-                                    id="age"
-                                    placeholder="Your Age"
-                                    value={age}
-                                    onChange={(event) => setAge(event.target.value)}
+                        <Box style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                            <Box style={{ margin: "8px" }}>
+                                <FormControl>
+                                    <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
+                                    <TextField
+                                        type="number"
+                                        id="age"
+                                        placeholder="Your Age"
+                                        value={age}
+                                        onChange={(event) => setAge(event.target.value)}
 
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "15px" }}>
-                        <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-                            <input
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                id="raised-button-file"
-                                type="file"
-                                onChange={handleImageChange}
-                            />
-                            <label htmlFor="raised-button-file">
-                                <Button
-                                    variant="contained"
-                                    component="span"
-                                    color="primary"
-                                    onClick={fetchImage}
-                                >
-                                    Upload Profile Image
+                                    />
+                                </FormControl>
+                            </Box>
+                            <Box style={{ margin: "15px" }}>
+                                <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <input
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        id="raised-button-file"
+                                        type="file"
+                                        onChange={handleImageChange}
+                                    />
+                                    <label htmlFor="raised-button-file">
+                                        <Button
+                                            variant="contained"
+                                            component="span"
+                                            color="primary"
+                                            onClick={fetchImage}
+                                        >
+                                            Upload Profile Image
+                                        </Button>
+                                    </label>
+                                    {image && (
+                                        <img
+                                            src={image}
+                                            alt="Preview"
+                                            style={{ width: '150px', height: '150px' }}
+                                        />
+                                    )}
+                                </FormControl>
+                            </Box>
+                            <Box style={{ margin: "8px" }}>
+                                <FormControl>
+                                    <VerificationMail />
+                                </FormControl>
+                            </Box>
+
+
+                            <Box style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "8px" }}>
+                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={handleSubmit} type="submit">
+                                    Submit
                                 </Button>
-                            </label>
-                            {image && (
-                                <img
-                                    src={image}
-                                    alt="Preview"
-                                    style={{ width: '150px', height: '150px' }}
-                                />
-                            )}
-                        </FormControl>
-                </Box>
-                <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <VerificationMail/>
-                            </FormControl>
+                            </Box>
+
                         </Box>
-                            
-                            
-                                <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
-                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
-                                Submit
-                            </Button>
-                                </Box>
-                            
-                                </Box>
-                            
-                            
-                        
+
+
+
                     </Grid>
                 </form>
             </Box >

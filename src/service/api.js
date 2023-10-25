@@ -19,7 +19,7 @@ export const getData = async () => {
   
   try {
   
-    const url = `${URL}/campaign/?api_key=${KEY}`;
+    const url = `${URL}/campaign/?page=1`;
     const response = await axios.get(url, {
       headers: {
         'Content-Type': 'application/json',
