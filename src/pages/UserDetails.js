@@ -23,8 +23,7 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
-import VerificationMail from './VerificationMail';
-import verificationSent from './VerificationMail';
+
 
 
 
@@ -79,9 +78,12 @@ function UserDetails() {
     const { user } = useAppContext() || {};
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
-
+    const [verificationSent, setVerificationSent] = useState(false);
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
+    const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
+    const urlVerifyAfterMail=`${URL2}/api/affiliates/`;
+    const [checkEmailVerifiedStatus,setCheckEmailVerifiedStatus]=useState(false);
     const [loading, setLoading] = useState(false);
     const user2 = getUserFromLocalStorage();
     const accessToken = user2?.data.access_token;
@@ -124,6 +126,65 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+    const sendVerificationEmail = async () => {
+        // Make an API request to send the verification email.
+        
+            try {
+    
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                };
+                const response = await fetch(urlVerifyMail, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: headers,
+                });
+                console.log("RESPONSE:__",response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const jsonData = await response.json();
+            
+                setVerificationSent(true);
+                
+                console.log("RESPONSE:",jsonData);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        const checkEmailVerified = async () => {
+            // Make an API request to send the verification email.
+            
+                try {
+        
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    };
+                    const response = await fetch(urlVerifyAfterMail, {
+                        method: 'GET',
+                        headers: headers,
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+        
+                    const jsonData = await response.json();
+                    
+                    setCheckEmailVerifiedStatus(jsonData?.verified)
+                    
+                    
+                    console.log("RESPONSE:",jsonData);
+                    
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
 
     const fetchData = async () => {
         try {
@@ -254,6 +315,7 @@ function UserDetails() {
             await fetchAffiliateData();
             await fetchWalletData();
             await fetchImage()
+            await checkEmailVerified();
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -388,7 +450,7 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                            {verificationSent ? (
+                                            {checkEmailVerifiedStatus ? (
         <CheckCircleIcon style={{ color: 'green' }} />
       ) : (
         <EmailIcon />)}
@@ -687,7 +749,24 @@ function UserDetails() {
                 </Box>
                 <Box style={{ margin: "8px" }}>
                             <FormControl>
-                                <VerificationMail/>
+                            <Box>
+      <Typography style={{marginLeft:"16px",marginTop:"10px"}}>Email Verification</Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={sendVerificationEmail}
+        className={classes.button}
+        
+      >
+        Send Verification Email
+      </Button>
+      {verificationSent &&
+        <Typography style={{ marginLeft: "16px" }}>Verification email sent!</Typography>
+      }
+      {checkEmailVerifiedStatus &&
+        <Typography style={{ marginLeft: "16px" }}>User Already verified!</Typography>
+      }
+    </Box>
                             </FormControl>
                         </Box>
                             
