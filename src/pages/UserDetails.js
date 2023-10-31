@@ -16,7 +16,7 @@ import { makeStyles } from '@mui/styles';
 import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { blue } from '@mui/material/colors';
 import { useAppContext } from "../context/ChatProvider";
 import SideDrawer from "../components/SideDrawer";
