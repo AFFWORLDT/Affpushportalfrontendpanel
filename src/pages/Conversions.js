@@ -155,6 +155,7 @@ const Conversions = () => {
           </div>
         </div>
       </div>
+      
 
       <Modal onClose={() => setIsOpen(false)} open={isOpen}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: 24, p: 2, borderRadius: '8px', width: '60%' }}>
@@ -201,6 +202,7 @@ const Conversions = () => {
           <Button onClick={() => setIsOpen(false)}>Close</Button>
         </Box>
       </Modal>
+      
 
 
 
@@ -208,5 +210,6 @@ const Conversions = () => {
     </>
   );
 };
+
 
 export default Conversions;
