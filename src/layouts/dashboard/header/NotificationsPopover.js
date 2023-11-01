@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { set, sub } from 'date-fns';
 import { noCase } from 'change-case';
 import { faker } from '@faker-js/faker';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 // @mui
 import {
   Box,
@@ -25,64 +25,40 @@ import { fToNow } from '../../../utils/formatTime';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import BellIcon from '../../../components/assets/Bell.png';
+
+import {getUserFromLocalStorage} from '../../../utils/localStorage';
 
 // ----------------------------------------------------------------------
 
-const NOTIFICATIONS = [
-  {
-    id: faker.datatype.uuid(),
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
-    avatar: null,
-    type: 'order_placed',
-    createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-    isUnRead: true,
-  },
-  {
-    id: faker.datatype.uuid(),
-    title: faker.name.fullName(),
-    description: 'answered to your comment on the Minimal',
-    avatar: '/assets/images/avatars/avatar_2.jpg',
-    type: 'friend_interactive',
-    createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
-    isUnRead: true,
-  },
-  {
-    id: faker.datatype.uuid(),
-    title: 'You have new message',
-    description: '5 unread messages',
-    avatar: null,
-    type: 'chat_message',
-    createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-  {
-    id: faker.datatype.uuid(),
-    title: 'You have new mail',
-    description: 'sent from Guido Padberg',
-    avatar: null,
-    type: 'mail',
-    createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-  {
-    id: faker.datatype.uuid(),
-    title: 'Delivery processing',
-    description: 'Your order is being shipped',
-    avatar: null,
-    type: 'order_shipped',
-    createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-];
+
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
-
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const [notifications, setNotifications] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [apiData,setApiData]=useState(null);
+  const URL = process.env.REACT_APP_PROD_ADMIN_API;
+  const url = `${URL}/notification/`;
+  const user2 = getUserFromLocalStorage();
+  const accessToken = user2?.data.access_token;
+  const totalUnRead = notifications?.filter((item) => item.isUnRead === true).length;
 
   const [open, setOpen] = useState(null);
 
+  const transformedNotifications = apiData
+  ? apiData.map((eachData) => ({
+      id: faker.datatype.uuid(),
+      title: eachData.subject,
+      description: eachData.message,
+      avatar: null,
+      type: 'custom_type',
+      createdAt: new Date(),
+      isUnRead: true,
+    }))
+  : [];
+
+  // Concatenate the transformed notifications with the existing notifications
+const updatedNotifications = [...transformedNotifications];
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -93,18 +69,63 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      notifications.map((notification) => ({
+      updatedNotifications.map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
     );
   };
 
+  const getNotification = async () => {
+    
+      console.log("ACCESS__",accessToken);
+      console.log("URL__",url);
+        try {
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            };
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                headers: headers,
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const jsonData = await response.json();
+            
+            setApiData(jsonData);
+            setNotifications(updatedNotifications);
+            
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    async function init() {
+      try {
+          setLoading(true);
+          await getNotification();
+          
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      } finally {
+          setLoading(false);
+      }
+  }
+  useEffect(() => {
+    init();
+}, []);
+
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
         <Badge badgeContent={totalUnRead} color="error">
-          <Iconify icon="eva:bell-fill" />
+          <img src={BellIcon}/>
         </Badge>
       </IconButton>
 
@@ -150,7 +171,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {notifications?.slice(0, 2).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
@@ -163,7 +184,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(2, 5).map((notification) => (
+            {notifications?.slice(2, (notifications?.length+1)).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
