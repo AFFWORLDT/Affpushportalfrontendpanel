@@ -45,7 +45,7 @@ export default function NotificationsPopover() {
 
   const [open, setOpen] = useState(null);
 
-  const transformedNotifications = apiData
+  const updatedNotifications = apiData
   ? apiData.map((eachData) => ({
       id: faker.datatype.uuid(),
       title: eachData.subject,
@@ -57,8 +57,8 @@ export default function NotificationsPopover() {
     }))
   : [];
 
-  // Concatenate the transformed notifications with the existing notifications
-const updatedNotifications = [...transformedNotifications];
+  
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -119,7 +119,7 @@ const updatedNotifications = [...transformedNotifications];
   }
   useEffect(() => {
     init();
-}, []);
+});
 
   return (
     <>
