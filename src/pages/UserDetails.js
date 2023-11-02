@@ -120,6 +120,7 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
+    const [selectedImage , setSelectedFile]   =useState('')
 
 
 
@@ -233,40 +234,7 @@ function UserDetails() {
             console.error('Error fetching data:', error);
         }
     };
-    const fetchImage = async () => {
-        try {
-
-            if (!image) {
-                toast.error('No image selected for upload.');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('profile_image', image);
-
-            const response = await axios.post(url_image, formData, {
-            const url_image12 = `${URL2}/api/affiliates/update_profile_image`;
-            const formData = new FormData();
-            formData.append('profile_image', image);
-
-            const response = await axios.post(url_image12, formData, {
-
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
-
-            if (response.status === 200) {
-                toast.success('Image uploaded successfully.');
-            } else {
-                toast.error('Error uploading image. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            toast.error('Error uploading image. Please try again.');
-        }
-    };
+   
 
 
 
@@ -277,7 +245,7 @@ function UserDetails() {
             await fetchData();
             await fetchAffiliateData();
             await fetchWalletData();
-            await fetchImage()
+            // await fetchImage()
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -288,22 +256,10 @@ function UserDetails() {
     // await fetchImage()
 
 
-
-    const handleImageChange = (event) => {
-        const selectedImage = event.target.files[0]; // Get the first selected image
-        if (selectedImage) {
-            const reader = new FileReader();
-
-            reader.onload = (event) => {
-                // Set the result of FileReader (image data) to the image state
-                setImage(event.target.result);
-            };
-
-            reader.readAsDataURL(selectedImage); // Read the selected image
-        }
-        console.log(`selectedImage: ${selectedImage}`);
-        console.log(`image: ${image}`);
-    };
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+      };
+   
 
 
 
@@ -394,7 +350,7 @@ function UserDetails() {
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
 
 
-                                <Box>
+                                {/* <Box>
                                     <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
 
                                 </Box>
@@ -407,7 +363,7 @@ function UserDetails() {
 
                                 </Box>
 
-                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} /> */}
 
                             </Box>
 
@@ -748,7 +704,7 @@ function UserDetails() {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={fetchImage}
+                                    
                                 >
                                     Save
                                 </Button>
