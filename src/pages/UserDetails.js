@@ -19,7 +19,11 @@ import AddLocationIcon from '@mui/icons-material/AddLocation';
 // import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
+
 import { blue } from '@mui/material/colors';
 import { useAppContext } from "../context/ChatProvider";
 import SideDrawer from "../components/SideDrawer";
@@ -28,6 +32,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
 import VerificationMail from './VerificationMail';
 import verificationSent from './VerificationMail';
+
+import account from 'src/_mock/account';
 
 
 
@@ -83,6 +89,7 @@ function UserDetails() {
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
     const [verificationSent, setVerificationSent] = useState(false);
+
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
     const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
@@ -113,9 +120,6 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
-    const [profile, setProfile] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
-
 
 
 
@@ -123,6 +127,7 @@ function UserDetails() {
     const url1 = `${URL2}/api/affiliates`;
     const url_image = `${URL2}/api/affiliates/update_profile_image`;
     const user1 = getResFromLocalStorage();
+
     const date = new Date(affiliateData.created_at).toLocaleString(undefined, {
         year: 'numeric',
         month: 'long',
@@ -137,6 +142,7 @@ function UserDetails() {
     const fetchData = async () => {
         try {
             // Replace with your actual access token
+
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
@@ -194,6 +200,8 @@ function UserDetails() {
             const jsonData = await response.json();
 
             setAffiliateData(jsonData);
+
+            console.log("this is affiliate data-->", jsonData);
             await fetchCampaginDetails(jsonData?.iframe_campaign_id);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -227,6 +235,7 @@ function UserDetails() {
     };
     const fetchImage = async () => {
         try {
+
             if (!image) {
                 toast.error('No image selected for upload.');
                 return;
@@ -236,6 +245,12 @@ function UserDetails() {
             formData.append('profile_image', image);
 
             const response = await axios.post(url_image, formData, {
+            const url_image12 = `${URL2}/api/affiliates/update_profile_image`;
+            const formData = new FormData();
+            formData.append('profile_image', image);
+
+            const response = await axios.post(url_image12, formData, {
+
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${accessToken}`,
@@ -263,6 +278,7 @@ function UserDetails() {
             await fetchAffiliateData();
             await fetchWalletData();
             await fetchImage()
+
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -287,6 +303,13 @@ function UserDetails() {
         }
         console.log(`selectedImage: ${selectedImage}`);
         console.log(`image: ${image}`);
+    };
+
+
+
+    const handleImageChange = (event) => {
+        const selectedImage = event.target.files[0]; 
+        setImage(selectedImage);
     };
 
     useEffect(() => {
@@ -328,7 +351,7 @@ function UserDetails() {
         console.log("User is :", user);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API}/api/v1/userDetail/userDetails`, {
+            const response = await fetch(`${process.env.REACT_APP_PROD_API}/api/v1/userDetail/userDetails`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -358,9 +381,6 @@ function UserDetails() {
 
 
 
-
-
-
     return (
         <>
             {user && <SideDrawer />}
@@ -372,6 +392,7 @@ function UserDetails() {
                     <Box width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
+
 
                                 <Box>
                                     <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
@@ -385,6 +406,9 @@ function UserDetails() {
                                     <Button variant='contained' onClick={handleImageChange}>Upload Profile</Button>
 
                                 </Box>
+
+                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
@@ -412,10 +436,14 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                            {verificationSent ? (
-        <CheckCircleIcon style={{ color: 'green' }} />
-      ) : (
-        <EmailIcon />)}
+
+
+                                                {affiliateData.verified ? (
+                                                    <VerifiedUserIcon style={{ cursor: "pointer", color: 'green' }} />
+                                                ) : (
+
+                                                    <UnpublishedIcon style={{ cursor: "pointer", color: 'red' }} />
+                                                )}
                                             </Box>
                                             <Box display="flex" alignItems="center">
                                                 <Typography fontWeight={400}>
@@ -678,54 +706,62 @@ function UserDetails() {
                                         value={age}
                                         onChange={(event) => setAge(event.target.value)}
 
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "15px" }}>
-                        <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-                            <input
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                id="raised-button-file"
-                                type="file"
-                                onChange={handleImageChange}
-                            />
-                            <label htmlFor="raised-button-file">
+
+                                    />
+                                </FormControl>
+                            </Box>
+                            <Box style={{ margin: "15px", border: "2px solid red" }}>
+                                <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
+
+                                    <input
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        id="raised-button-file"
+                                        type="file"
+                                        placeholder='Upload Profile Image'
+                                        onChange={handleImageChange}
+                                    />
+
+                                    <label htmlFor="raised-button-file">
+                                        <Button
+                                            variant="contained"
+                                            component="span"
+                                            color="primary"
+                                        >
+                                            Upload Profile Image
+                                        </Button>
+                                    </label>
+                                    
+                                    {image && (
+                                        <img
+                                            src={image}
+                                            alt="Preview"
+                                            style={{ width: '150px', height: '150px' }}
+                                        />
+                                    )}
+                                </FormControl>
+                            </Box>
+
+
+
+                            <Box style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "8px" }}>
                                 <Button
                                     variant="contained"
-                                    component="span"
                                     color="primary"
                                     onClick={fetchImage}
                                 >
-                                    Upload Profile Image
+                                    Save
                                 </Button>
-                            </label>
-                            {image && (
-                                <img
-                                    src={image}
-                                    alt="Preview"
-                                    style={{ width: '150px', height: '150px' }}
-                                />
-                            )}
-                        </FormControl>
-                </Box>
-                <Box style={{ margin: "8px" }}>
+                            </Box>
+
+                        </Box>
+
+
+                        <Box style={{ margin: "8px" }}>
                             <FormControl>
-                                <VerificationMail/>
+                                <VerificationMail />
                             </FormControl>
                         </Box>
-                            
-                            
-                                <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
-                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
-                                Submit
-                            </Button>
-                                </Box>
-                            
-                                </Box>
-                            
-                            
-                        
                     </Grid>
                 </form>
             </Box >

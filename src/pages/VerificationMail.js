@@ -36,7 +36,7 @@ function VerificationMail() {
             }
 
             const jsonData = await response.json();
-            console.log("RESPONSE in verification mail-->:",jsonData);
+
             if (response.ok) {
                 setVerificationSent(true);
               }
