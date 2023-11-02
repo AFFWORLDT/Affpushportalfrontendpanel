@@ -34,9 +34,9 @@ import {getUserFromLocalStorage} from '../../../utils/localStorage';
 
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [apiData,setApiData]=useState(null);
+  const [apiData,setApiData]=useState([]);
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const url = `${URL}/notification/`;
   const user2 = getUserFromLocalStorage();
@@ -45,17 +45,7 @@ export default function NotificationsPopover() {
 
   const [open, setOpen] = useState(null);
 
-  const updatedNotifications = apiData
-  ? apiData.map((eachData) => ({
-      id: faker.datatype.uuid(),
-      title: eachData.subject,
-      description: eachData.message,
-      avatar: null,
-      type: 'custom_type',
-      createdAt: new Date(),
-      isUnRead: true,
-    }))
-  : [];
+
 
   
 
@@ -78,8 +68,7 @@ export default function NotificationsPopover() {
 
   const getNotification = async () => {
     
-      console.log("ACCESS__",accessToken);
-      console.log("URL__",url);
+      
         try {
 
             const headers = {
@@ -97,29 +86,30 @@ export default function NotificationsPopover() {
 
             const jsonData = await response.json();
             
-            setApiData(jsonData);
-            setNotifications(updatedNotifications);
             
+            setApiData(jsonData);
+            const updatedNotifications = apiData
+            ? apiData.map((eachData) => ({
+                id: faker.datatype.uuid(),
+                title: eachData.subject,
+                description: eachData.message,
+                avatar: null,
+                type: 'custom_type',
+                createdAt: new Date(),
+                isUnRead: true,
+              }))
+            : [];
+            setNotifications(updatedNotifications);
             
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
-    async function init() {
-      try {
-          setLoading(true);
-          await getNotification();
-          
-      } catch (error) {
-          console.error('Error fetching data:', error);
-      } finally {
-          setLoading(false);
-      }
-  }
   useEffect(() => {
-    init();
-});
+    
+    getNotification();
+}, [apiData,notifications]);
 
   return (
     <>
