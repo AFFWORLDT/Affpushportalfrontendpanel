@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button, Box, Select } from '@mui/material';
+import { Button, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { toast } from 'react-toastify';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -37,6 +37,7 @@ const Offers = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageData, setPageData] = useState([]);
   const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
+  const [status, setStatus] = useState("");
 
 
   const privateCheck = () => {
@@ -58,11 +59,38 @@ const Offers = () => {
     fetchData();
   }, []); // Use an empty dependency array to run the effect only once
 
+  // const fetchData = async () => {
+  //   try {
+  //     const result = await getData();
+      
+
+
+
+
+  //     console.log("offers data -->", result);
+  //     setData(result);
+  //     setLoading(true);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
+  useEffect(() => {
+    // Call the 'fetchData' function when the 'status' state changes
+    fetchData();
+  }, [status]);
+
   const fetchData = async () => {
     try {
-      const result = await getData();
+      console.log("status-->", status);
+      const result = await axios.get(`${URL}/campaign/?page=1&status=${status}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.data.access_token}`,
+        }
+      } );
+      
       console.log("offers data -->", result);
-      setData(result);
+      setData(result.data);
       setLoading(true);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -117,6 +145,10 @@ const Offers = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
+  };
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
   };
 
   const exportData = () => {
@@ -187,6 +219,21 @@ const Offers = () => {
       >
         Export to Excel
       </Button>
+      <FormControl sx={{  width: 200 }}>
+        <InputLabel id="demo-simple-select-label">All Offers</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={status}
+          onChange={handleStatusChange}
+        > 
+          <MenuItem value="">All</MenuItem>
+          <MenuItem value="paused">Paused</MenuItem>
+          <MenuItem value="expired">Expired</MenuItem>
+        </Select>
+      </FormControl>
+
+
 
       <TableContainer component={Paper}>
         <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">

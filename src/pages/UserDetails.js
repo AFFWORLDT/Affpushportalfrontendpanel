@@ -16,9 +16,14 @@ import { makeStyles } from '@mui/styles';
 import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
+
 import { blue } from '@mui/material/colors';
 import { useAppContext } from "../context/ChatProvider";
 import SideDrawer from "../components/SideDrawer";
@@ -27,7 +32,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
 import VerificationMail from './VerificationMail';
 import verificationSent from './VerificationMail';
+
 import account from 'src/_mock/account';
+
 
 
 
@@ -81,9 +88,13 @@ function UserDetails() {
     const { user } = useAppContext() || {};
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
+    const [verificationSent, setVerificationSent] = useState(false);
 
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
+    const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
+    const urlVerifyAfterMail=`${URL2}/api/affiliates/`;
+    const [checkEmailVerifiedStatus,setCheckEmailVerifiedStatus]=useState(false);
     const [loading, setLoading] = useState(false);
     const user2 = getUserFromLocalStorage();
     const accessToken = user2?.data.access_token;
@@ -109,6 +120,7 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
+    const [selectedImage , setSelectedFile]   =useState('')
 
 
 
@@ -215,36 +227,14 @@ function UserDetails() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const jsonData = await response.json();
+            const jsonData = await response.json(); 
 
             setWalletData(jsonData[0]);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
-    const fetchImage = async () => {
-        try {
-            const url_image12 = `${URL2}/api/affiliates/update_profile_image`;
-            const formData = new FormData();
-            formData.append('profile_image', image);
-
-            const response = await axios.post(url_image12, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
-
-            if (response.status === 200) {
-                toast.success('Image uploaded successfully.');
-            } else {
-                toast.error('Error uploading image. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            toast.error('Error uploading image. Please try again.');
-        }
-    };
+   
 
 
 
@@ -256,12 +246,20 @@ function UserDetails() {
             await fetchAffiliateData();
             await fetchWalletData();
             // await fetchImage()
+
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
         }
     }
+    // await fetchImage()
+
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+      };
+   
 
 
 
@@ -281,6 +279,7 @@ function UserDetails() {
     useEffect(() => {
         init();
     }, []);
+
 
 
 
@@ -349,7 +348,23 @@ function UserDetails() {
                     <Box width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+
+
+                                {/* <Box>
+                                    <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
+
+                                </Box>
+
+                                <br />
+
+                                <Box>
+
+                                    <Button variant='contained' onClick={handleImageChange}>Upload Profile</Button>
+
+                                </Box>
+
+                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} /> */}
+
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
@@ -377,6 +392,7 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
+
 
                                                 {affiliateData.verified ? (
                                                     <VerifiedUserIcon style={{ cursor: "pointer", color: 'green' }} />
@@ -646,6 +662,7 @@ function UserDetails() {
                                         value={age}
                                         onChange={(event) => setAge(event.target.value)}
 
+
                                     />
                                 </FormControl>
                             </Box>
@@ -687,7 +704,7 @@ function UserDetails() {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={fetchImage}
+                                    
                                 >
                                     Save
                                 </Button>
@@ -701,9 +718,6 @@ function UserDetails() {
                                 <VerificationMail />
                             </FormControl>
                         </Box>
-
-
-
                     </Grid>
                 </form>
             </Box >
