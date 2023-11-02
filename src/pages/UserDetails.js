@@ -32,6 +32,7 @@ import verificationSent from './VerificationMail';
 
 
 
+
 function UserDetails() {
 
     const useStyles = makeStyles((theme) => ({
@@ -81,9 +82,12 @@ function UserDetails() {
     const { user } = useAppContext() || {};
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
-
+    const [verificationSent, setVerificationSent] = useState(false);
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
+    const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
+    const urlVerifyAfterMail=`${URL2}/api/affiliates/`;
+    const [checkEmailVerifiedStatus,setCheckEmailVerifiedStatus]=useState(false);
     const [loading, setLoading] = useState(false);
     const user2 = getUserFromLocalStorage();
     const accessToken = user2?.data.access_token;
@@ -129,10 +133,6 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
-
-    const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-    };
 
     const fetchData = async () => {
         try {
@@ -262,6 +262,7 @@ function UserDetails() {
             await fetchData();
             await fetchAffiliateData();
             await fetchWalletData();
+            await fetchImage()
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -411,10 +412,10 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                                {verificationSent ? (
-                                                    <CheckCircleIcon style={{ color: 'green' }} />
-                                                ) : (
-                                                    <EmailIcon />)}
+                                            {verificationSent ? (
+        <CheckCircleIcon style={{ color: 'green' }} />
+      ) : (
+        <EmailIcon />)}
                                             </Box>
                                             <Box display="flex" alignItems="center">
                                                 <Typography fontWeight={400}>
@@ -677,54 +678,54 @@ function UserDetails() {
                                         value={age}
                                         onChange={(event) => setAge(event.target.value)}
 
-                                    />
-                                </FormControl>
-                            </Box>
-                            <Box style={{ margin: "15px" }}>
-                                <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <input
-                                        accept="image/*"
-                                        style={{ display: 'none' }}
-                                        id="raised-button-file"
-                                        type="file"
-                                        onChange={handleImageChange}
-                                    />
-                                    <label htmlFor="raised-button-file">
-                                        <Button
-                                            variant="contained"
-                                            component="span"
-                                            color="primary"
-                                            onClick={fetchImage}
-                                        >
-                                            Upload Profile Image
-                                        </Button>
-                                    </label>
-                                    {image && (
-                                        <img
-                                            src={image}
-                                            alt="Preview"
-                                            style={{ width: '150px', height: '150px' }}
-                                        />
-                                    )}
-                                </FormControl>
-                            </Box>
-                            <Box style={{ margin: "8px" }}>
-                                <FormControl>
-                                    <VerificationMail />
-                                </FormControl>
-                            </Box>
-
-
-                            <Box style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "8px" }}>
-                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={handleSubmit} type="submit">
-                                    Submit
-                                </Button>
-                            </Box>
-
+                                />
+                            </FormControl>
                         </Box>
-
-
-
+                        <Box style={{ margin: "15px" }}>
+                        <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
+                            <input
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                id="raised-button-file"
+                                type="file"
+                                onChange={handleImageChange}
+                            />
+                            <label htmlFor="raised-button-file">
+                                <Button
+                                    variant="contained"
+                                    component="span"
+                                    color="primary"
+                                    onClick={fetchImage}
+                                >
+                                    Upload Profile Image
+                                </Button>
+                            </label>
+                            {image && (
+                                <img
+                                    src={image}
+                                    alt="Preview"
+                                    style={{ width: '150px', height: '150px' }}
+                                />
+                            )}
+                        </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                            <FormControl>
+                                <VerificationMail/>
+                            </FormControl>
+                        </Box>
+                            
+                            
+                                <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
+                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
+                                Submit
+                            </Button>
+                                </Box>
+                            
+                                </Box>
+                            
+                            
+                        
                     </Grid>
                 </form>
             </Box >
