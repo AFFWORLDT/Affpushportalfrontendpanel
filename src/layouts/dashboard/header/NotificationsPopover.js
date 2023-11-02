@@ -25,7 +25,7 @@ import { fToNow } from '../../../utils/formatTime';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import BellIcon from '../../../components/assets/Bell.png';
+import BellIcon from "../../../images/ic_notification_shipping.svg";
 
 import {getUserFromLocalStorage} from '../../../utils/localStorage';
 
