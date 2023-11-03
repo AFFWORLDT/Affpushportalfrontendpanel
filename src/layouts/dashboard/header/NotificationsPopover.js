@@ -37,6 +37,8 @@ export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [apiData,setApiData]=useState([]);
+  const [fetchingData, setFetchingData] = useState(true);
+  const [updatedNotificationsData,setUpdatedNotificationsData]=useState([])
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const url = `${URL}/notification/`;
   const user2 = getUserFromLocalStorage();
@@ -59,12 +61,14 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      updatedNotifications.map((notification) => ({
+      updatedNotificationsData.map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
     );
   };
+
+  
 
   const getNotification = async () => {
     
@@ -88,28 +92,44 @@ export default function NotificationsPopover() {
             
             
             setApiData(jsonData);
-            const updatedNotifications = apiData
-            ? apiData.map((eachData) => ({
-                id: faker.datatype.uuid(),
-                title: eachData.subject,
-                description: eachData.message,
-                avatar: null,
-                type: 'custom_type',
-                createdAt: new Date(),
-                isUnRead: true,
-              }))
-            : [];
-            setNotifications(updatedNotifications);
             
+           
+            
+            setFetchingData(false);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
-  useEffect(() => {
+    useEffect(() => {
+      // Fetch data when this component mounts
+      if (fetchingData) {
+        getNotification();
+      }
+    }, [fetchingData]);
+  
+    useEffect(() => {
+      if (apiData.length > 0) {
+        // Create updatedNotifications here
+        const sortedApiData = apiData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const updatedNotifications = apiData.map((eachData) => ({
+          id: eachData.notification_id,
+          title: eachData.subject,
+          description: eachData.message,
+          avatar: null,
+          type: 'custom_type',
+          createdAt: new Date(eachData.timestamp),
+          isUnRead: true,
+        }));
+        
+        
+        setNotifications(updatedNotifications);
+       
+      }
+    }, [apiData]);
     
-    getNotification();
-}, [apiData,notifications]);
+    
+    
 
   return (
     <>
