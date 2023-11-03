@@ -23,11 +23,7 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
-
-
-
-
-
+import ManagersTable from './ManagersTable';
 
 function UserDetails() {
 
@@ -94,7 +90,7 @@ function UserDetails() {
     const [username, setUserName] = useState();
     const [companyName, setCompanyName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    
+    const [activeTab, setActiveTab] = useState('overview');
     const [address1, setAddress1] = useState();
     const [address2, setAddress2] = useState();
     const [city, setCity] = useState();
@@ -126,6 +122,9 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+      }
     const sendVerificationEmail = async () => {
         // Make an API request to send the verification email.
         
@@ -404,7 +403,249 @@ function UserDetails() {
     }
    
     
-   
+   const OverviewForm=()=>{
+    return (
+        <Box style={{ maxWidth: "1200px", backgroundColor: "#EDF2F7" }} className={classes.boxstyleForm}>
+        <form className="roleform" onSubmit={handleSubmit}>
+            <Grid style={{ minChildWidth: "250", display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="account">Affiliate ID:</FormLabel>
+                        <TextField
+                            type="number"
+                            id="affiliate"
+                            placeholder="Enter Affiliate ID"
+                            min={0}
+                            value={affiliate}
+                            onChange={(event) => setAffiliate(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">First Name:</FormLabel>
+                        <TextField
+                            type="string"
+                            id="name"
+                            placeholder="Enter Name"
+                            min={0}
+                            value={nameBeni}
+                            onChange={(event) => setNameBeni(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Last Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address"
+                            placeholder="Last Name"
+                            value={last}
+                            onChange={(event) => setLast(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="bankName">User Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="username"
+                            placeholder="Enter User Name"
+                            value={username}
+                            onChange={(event) => setUserName(event.target.value)}
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Company Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="companyname"
+                            placeholder="Company Name"
+                            value={companyName}
+                            onChange={(event) => setCompanyName(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Address1:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address1"
+                            placeholder="Address Line 1"
+                            value={address1}
+                            onChange={(event) => setAddress1(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Address2:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address2"
+                            placeholder="Address Line 2"
+                            value={address2}
+                            onChange={(event) => setAddress2(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="city">City:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="city"
+                            placeholder="City Name"
+                            value={city}
+                            onChange={(event) => setCity(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="state">State:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="state"
+                            placeholder="State"
+                            value={state}
+                            onChange={(event) => setState(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="zipcode">Postcode:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="postcode"
+                            placeholder="Enter Post Code"
+                            value={postCode}
+                            onChange={(event) => setPostCode(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="price">Skype ID:</FormLabel>
+                        <TextField
+                            type="text"
+                            placeholder="Enter Skype ID"
+                            id="skype"
+                            value={skype}
+                            onChange={(event) => setSkype(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="phone">Phone Number :</FormLabel>
+                        <TextField
+                            type="number"
+                            id="phonenumber"
+                            placeholder="Enter Phone Number"
+                            value={phoneNumber}
+                            onChange={(event) => setPhoneNumber(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{display:"flex",alignItems:"center",justifyContent:"flex-start"}}>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
+                        <TextField
+                            type="number"
+                            id="age"
+                            placeholder="Your Age"
+                            value={age}
+                            onChange={(event) => setAge(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "15px" }}>
+                <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
+                    <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="raised-button-file"
+                        type="file"
+                        onChange={handleImageChange}
+                    />
+                    <label htmlFor="raised-button-file">
+                        <Button
+                            variant="contained"
+                            component="span"
+                            color="primary"
+                            onClick={fetchImage}
+                        >
+                            Upload Profile Image
+                        </Button>
+                    </label>
+                    {image && (
+                        <img
+                            src={image}
+                            alt="Preview"
+                            style={{ width: '150px', height: '150px' }}
+                        />
+                    )}
+                </FormControl>
+        </Box>
+        <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                    <Box>
+<Typography style={{marginLeft:"16px",marginTop:"10px"}}>Email Verification</Typography>
+<Button
+variant="contained"
+color="primary"
+onClick={sendVerificationEmail}
+className={classes.button}
+
+>
+Send Verification Email
+</Button>
+{verificationSent &&
+<Typography style={{ marginLeft: "16px" }}>Verification email sent!</Typography>
+}
+{checkEmailVerifiedStatus &&
+<Typography style={{ marginLeft: "16px" }}>User Already verified!</Typography>
+}
+</Box>
+                    </FormControl>
+                </Box>
+                    
+                    
+                        <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
+                        <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
+                        Submit
+                    </Button>
+                        </Box>
+                    
+                        </Box>
+                    
+                    
+                
+            </Grid>
+        </form>
+    </Box >
+    )
+   }
 
     
 
@@ -535,8 +776,17 @@ function UserDetails() {
                         </Box>
                     </Box>
                     <Box style={{ display: "flex", marginTop: "15px", marginLeft: "10px" }}>
-                        <Typography className={classes.textinBox} >Overview</Typography>
-                        <Typography className={classes.textinBox}>Managers </Typography>
+                    <Typography 
+                        className={classes.textinBox}
+                        onClick={() => handleTabClick('overview')}>
+                            Overview
+                        </Typography>
+
+                        <Typography
+                        className={classes.textinBox} 
+                        onClick={() => handleTabClick('managers')}>
+                            Managers
+                        </Typography>
                         <Typography className={classes.textinBox}>Campaigns </Typography>
                         <Typography className={classes.textinBox}>PostBacks</Typography>
                         <Typography className={classes.textinBox}>Payouts</Typography>
@@ -545,245 +795,14 @@ function UserDetails() {
                     </Box>
                 </Box>
             </Grid>
-            <Box style={{ maxWidth: "1200px", backgroundColor: "#EDF2F7" }} className={classes.boxstyleForm}>
-                <form className="roleform" onSubmit={handleSubmit}>
-                    <Grid style={{ minChildWidth: "250", display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="account">Affiliate ID:</FormLabel>
-                                <TextField
-                                    type="number"
-                                    id="affiliate"
-                                    placeholder="Enter Affiliate ID"
-                                    min={0}
-                                    value={affiliate}
-                                    onChange={(event) => setAffiliate(event.target.value)}
+            {activeTab === 'overview' && 
+  <OverviewForm />
+}
 
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">First Name:</FormLabel>
-                                <TextField
-                                    type="string"
-                                    id="name"
-                                    placeholder="Enter Name"
-                                    min={0}
-                                    value={nameBeni}
-                                    onChange={(event) => setNameBeni(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Last Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address"
-                                    placeholder="Last Name"
-                                    value={last}
-                                    onChange={(event) => setLast(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="bankName">User Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="username"
-                                    placeholder="Enter User Name"
-                                    value={username}
-                                    onChange={(event) => setUserName(event.target.value)}
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Company Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="companyname"
-                                    placeholder="Company Name"
-                                    value={companyName}
-                                    onChange={(event) => setCompanyName(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Address1:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address1"
-                                    placeholder="Address Line 1"
-                                    value={address1}
-                                    onChange={(event) => setAddress1(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Address2:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address2"
-                                    placeholder="Address Line 2"
-                                    value={address2}
-                                    onChange={(event) => setAddress2(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="city">City:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="city"
-                                    placeholder="City Name"
-                                    value={city}
-                                    onChange={(event) => setCity(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="state">State:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="state"
-                                    placeholder="State"
-                                    value={state}
-                                    onChange={(event) => setState(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="zipcode">Postcode:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="postcode"
-                                    placeholder="Enter Post Code"
-                                    value={postCode}
-                                    onChange={(event) => setPostCode(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="price">Skype ID:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    placeholder="Enter Skype ID"
-                                    id="skype"
-                                    value={skype}
-                                    onChange={(event) => setSkype(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="phone">Phone Number :</FormLabel>
-                                <TextField
-                                    type="number"
-                                    id="phonenumber"
-                                    placeholder="Enter Phone Number"
-                                    value={phoneNumber}
-                                    onChange={(event) => setPhoneNumber(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{display:"flex",alignItems:"center",justifyContent:"flex-start"}}>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
-                                <TextField
-                                    type="number"
-                                    id="age"
-                                    placeholder="Your Age"
-                                    value={age}
-                                    onChange={(event) => setAge(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "15px" }}>
-                        <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-                            <input
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                id="raised-button-file"
-                                type="file"
-                                onChange={handleImageChange}
-                            />
-                            <label htmlFor="raised-button-file">
-                                <Button
-                                    variant="contained"
-                                    component="span"
-                                    color="primary"
-                                    onClick={fetchImage}
-                                >
-                                    Upload Profile Image
-                                </Button>
-                            </label>
-                            {image && (
-                                <img
-                                    src={image}
-                                    alt="Preview"
-                                    style={{ width: '150px', height: '150px' }}
-                                />
-                            )}
-                        </FormControl>
-                </Box>
-                <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                            <Box>
-      <Typography style={{marginLeft:"16px",marginTop:"10px"}}>Email Verification</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={sendVerificationEmail}
-        className={classes.button}
-        
-      >
-        Send Verification Email
-      </Button>
-      {verificationSent &&
-        <Typography style={{ marginLeft: "16px" }}>Verification email sent!</Typography>
-      }
-      {checkEmailVerifiedStatus &&
-        <Typography style={{ marginLeft: "16px" }}>User Already verified!</Typography>
-      }
-    </Box>
-                            </FormControl>
-                        </Box>
-                            
-                            
-                                <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
-                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
-                                Submit
-                            </Button>
-                                </Box>
-                            
-                                </Box>
-                            
-                            
-                        
-                    </Grid>
-                </form>
-            </Box >
+{activeTab === 'managers' &&
+  <ManagersTable /> 
+}
+           
             <ToastContainer />
         </>
     );
