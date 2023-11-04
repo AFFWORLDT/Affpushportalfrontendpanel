@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 // import './ClickLogs2.css'; // Import your CSS file
 // import "./ClickLogs.css";
+// import "./clicklogs1.css";
 import "./clickLogs.css"
 import { useForm, Controller } from 'react-hook-form';
 import navConfig from 'src/layouts/dashboard/nav/config';
