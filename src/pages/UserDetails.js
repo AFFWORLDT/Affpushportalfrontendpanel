@@ -30,14 +30,7 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
-import VerificationMail from './VerificationMail';
-import verificationSent from './VerificationMail';
-
-import account from 'src/_mock/account';
-
-
-
-
+import ManagersTable from './ManagersTable';
 
 function UserDetails() {
 
@@ -105,7 +98,7 @@ function UserDetails() {
     const [username, setUserName] = useState();
     const [companyName, setCompanyName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-
+    
     const [address1, setAddress1] = useState();
     const [address2, setAddress2] = useState();
     const [city, setCity] = useState();
@@ -139,6 +132,65 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+    const sendVerificationEmail = async () => {
+        // Make an API request to send the verification email.
+        
+            try {
+    
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                };
+                const response = await fetch(urlVerifyMail, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: headers,
+                });
+                console.log("RESPONSE:__",response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const jsonData = await response.json();
+            
+                setVerificationSent(true);
+                
+                console.log("RESPONSE:",jsonData);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        const checkEmailVerified = async () => {
+            // Make an API request to send the verification email.
+            
+                try {
+        
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    };
+                    const response = await fetch(urlVerifyAfterMail, {
+                        method: 'GET',
+                        headers: headers,
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+        
+                    const jsonData = await response.json();
+                    
+                    setCheckEmailVerifiedStatus(jsonData?.verified)
+                    
+                    
+                    console.log("RESPONSE:",jsonData);
+                    
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
 
     const fetchData = async () => {
         try {
@@ -330,11 +382,11 @@ function UserDetails() {
             <LinearProgress />
         )
     }
+   
+    
+   
 
-
-
-
-
+    
 
 
     return (
@@ -348,23 +400,9 @@ function UserDetails() {
                     <Box width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-
-
-                                {/* <Box>
-                                    <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
-
-                                </Box>
-
-                                <br />
-
-                                <Box>
-
-                                    <Button variant='contained' onClick={handleImageChange}>Upload Profile</Button>
-
-                                </Box>
-
-                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} /> */}
-
+                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
+                                    Profile Photo
+                                </Typography>
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
@@ -392,14 +430,10 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-
-
-                                                {account.verified ? (
-                                                    <VerifiedUserIcon style={{ cursor: "pointer", color: 'green' }} />
-                                                ) : (
-
-                                                    <UnpublishedIcon style={{ cursor: "pointer", color: 'red' }} />
-                                                )}
+                                            {checkEmailVerifiedStatus ? (
+        <CheckCircleIcon style={{ color: 'green' }} />
+      ) : (
+        <EmailIcon />)}
                                             </Box>
                                             <Box display="flex" alignItems="center">
                                                 <Typography fontWeight={400}>
@@ -505,219 +539,228 @@ function UserDetails() {
                                     value={affiliate}
                                     onChange={(event) => setAffiliate(event.target.value)}
 
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">First Name:</FormLabel>
-                                <TextField
-                                    type="string"
-                                    id="name"
-                                    placeholder="Enter Name"
-                                    min={0}
-                                    value={nameBeni}
-                                    onChange={(event) => setNameBeni(event.target.value)}
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">First Name:</FormLabel>
+                        <TextField
+                            type="string"
+                            id="name"
+                            placeholder="Enter Name"
+                            min={0}
+                            value={nameBeni}
+                            onChange={(event) => setNameBeni(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Last Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address"
+                            placeholder="Last Name"
+                            value={last}
+                            onChange={(event) => setLast(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="bankName">User Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="username"
+                            placeholder="Enter User Name"
+                            value={username}
+                            onChange={(event) => setUserName(event.target.value)}
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Company Name:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="companyname"
+                            placeholder="Company Name"
+                            value={companyName}
+                            onChange={(event) => setCompanyName(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Address1:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address1"
+                            placeholder="Address Line 1"
+                            value={address1}
+                            onChange={(event) => setAddress1(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">Address2:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="address2"
+                            placeholder="Address Line 2"
+                            value={address2}
+                            onChange={(event) => setAddress2(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="city">City:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="city"
+                            placeholder="City Name"
+                            value={city}
+                            onChange={(event) => setCity(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="state">State:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="state"
+                            placeholder="State"
+                            value={state}
+                            onChange={(event) => setState(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="zipcode">Postcode:</FormLabel>
+                        <TextField
+                            type="text"
+                            id="postcode"
+                            placeholder="Enter Post Code"
+                            value={postCode}
+                            onChange={(event) => setPostCode(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="price">Skype ID:</FormLabel>
+                        <TextField
+                            type="text"
+                            placeholder="Enter Skype ID"
+                            id="skype"
+                            value={skype}
+                            onChange={(event) => setSkype(event.target.value)}
+
+                        />
+                    </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
+                    <FormControl>
+                        <FormLabel htmlFor="phone">Phone Number :</FormLabel>
+                        <TextField
+                            type="number"
+                            id="phonenumber"
+                            placeholder="Enter Phone Number"
+                            value={phoneNumber}
+                            onChange={(event) => setPhoneNumber(event.target.value)}
 
                                 />
                             </FormControl>
                         </Box>
+                        <Box style={{display:"flex",alignItems:"center",justifyContent:"flex-start"}}>
                         <Box style={{ margin: "8px" }}>
                             <FormControl>
-                                <FormLabel htmlFor="name">Last Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address"
-                                    placeholder="Last Name"
-                                    value={last}
-                                    onChange={(event) => setLast(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="bankName">User Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="username"
-                                    placeholder="Enter User Name"
-                                    value={username}
-                                    onChange={(event) => setUserName(event.target.value)}
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Company Name:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="companyname"
-                                    placeholder="Company Name"
-                                    value={companyName}
-                                    onChange={(event) => setCompanyName(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Address1:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address1"
-                                    placeholder="Address Line 1"
-                                    value={address1}
-                                    onChange={(event) => setAddress1(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="name">Address2:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="address2"
-                                    placeholder="Address Line 2"
-                                    value={address2}
-                                    onChange={(event) => setAddress2(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="city">City:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="city"
-                                    placeholder="City Name"
-                                    value={city}
-                                    onChange={(event) => setCity(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="state">State:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="state"
-                                    placeholder="State"
-                                    value={state}
-                                    onChange={(event) => setState(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="zipcode">Postcode:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    id="postcode"
-                                    placeholder="Enter Post Code"
-                                    value={postCode}
-                                    onChange={(event) => setPostCode(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="price">Skype ID:</FormLabel>
-                                <TextField
-                                    type="text"
-                                    placeholder="Enter Skype ID"
-                                    id="skype"
-                                    value={skype}
-                                    onChange={(event) => setSkype(event.target.value)}
-
-                                />
-                            </FormControl>
-                        </Box>
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <FormLabel htmlFor="phone">Phone Number :</FormLabel>
+                                <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
                                 <TextField
                                     type="number"
-                                    id="phonenumber"
-                                    placeholder="Enter Phone Number"
-                                    value={phoneNumber}
-                                    onChange={(event) => setPhoneNumber(event.target.value)}
+                                    id="age"
+                                    placeholder="Your Age"
+                                    value={age}
+                                    onChange={(event) => setAge(event.target.value)}
 
                                 />
                             </FormControl>
                         </Box>
-                        <Box style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
-                            <Box style={{ margin: "8px" }}>
-                                <FormControl>
-                                    <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
-                                    <TextField
-                                        type="number"
-                                        id="age"
-                                        placeholder="Your Age"
-                                        value={age}
-                                        onChange={(event) => setAge(event.target.value)}
-
-
-                                    />
-                                </FormControl>
-                            </Box>
-                            <Box style={{ margin: "15px", border: "2px solid red" }}>
-                                <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-
-                                    <input
-                                        accept="image/*"
-                                        style={{ display: 'none' }}
-                                        id="raised-button-file"
-                                        type="file"
-                                        placeholder='Upload Profile Image'
-                                        onChange={handleImageChange}
-                                    />
-
-                                    <label htmlFor="raised-button-file">
-                                        <Button
-                                            variant="contained"
-                                            component="span"
-                                            color="primary"
-                                        >
-                                            Upload Profile Image
-                                        </Button>
-                                    </label>
-                                    
-                                    {image && (
-                                        <img
-                                            src={image}
-                                            alt="Preview"
-                                            style={{ width: '150px', height: '150px' }}
-                                        />
-                                    )}
-                                </FormControl>
-                            </Box>
-
-
-
-                            <Box style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "8px" }}>
+                        <Box style={{ margin: "15px" }}>
+                        <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
+                            <input
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                id="raised-button-file"
+                                type="file"
+                                onChange={handleImageChange}
+                            />
+                            <label htmlFor="raised-button-file">
                                 <Button
                                     variant="contained"
+                                    component="span"
                                     color="primary"
-                                    
+                                    onClick={fetchImage}
                                 >
-                                    Save
+                                    Upload Profile Image
                                 </Button>
-                            </Box>
-
-                        </Box>
-
-
-                        <Box style={{ margin: "8px" }}>
+                            </label>
+                            {image && (
+                                <img
+                                    src={image}
+                                    alt="Preview"
+                                    style={{ width: '150px', height: '150px' }}
+                                />
+                            )}
+                        </FormControl>
+                </Box>
+                <Box style={{ margin: "8px" }}>
                             <FormControl>
-                                <VerificationMail />
+                            <Box>
+      <Typography style={{marginLeft:"16px",marginTop:"10px"}}>Email Verification</Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={sendVerificationEmail}
+        className={classes.button}
+        
+      >
+        Send Verification Email
+      </Button>
+      {verificationSent &&
+        <Typography style={{ marginLeft: "16px" }}>Verification email sent!</Typography>
+      }
+      {checkEmailVerifiedStatus &&
+        <Typography style={{ marginLeft: "16px" }}>User Already verified!</Typography>
+      }
+    </Box>
                             </FormControl>
                         </Box>
+                            
+                            
+                                <Box style={{display:"flex",alignItems:"center",justifyContent:"center",margin:"8px"}}>
+                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px",display:"flex",justifyContent:"center",alignItems:"center" }} onClick={handleSubmit} type="submit">
+                                Submit
+                            </Button>
+                                </Box>
+                            
+                                </Box>
+                            
+                            
+                        
                     </Grid>
                 </form>
             </Box >

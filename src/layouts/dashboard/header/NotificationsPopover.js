@@ -34,7 +34,9 @@ import { getUserFromLocalStorage } from '../../../utils/localStorage';
 export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [apiData, setApiData] = useState([]);
+  const [apiData,setApiData]=useState([]);
+  const [fetchingData, setFetchingData] = useState(true);
+  const [updatedNotificationsData,setUpdatedNotificationsData]=useState([])
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const url = `${URL}/notification/`;
   const user2 = getUserFromLocalStorage();
@@ -44,7 +46,7 @@ export default function NotificationsPopover() {
   const [test , setTest] = useState(false);
 
   const transformedNotifications = apiData
-    ? apiData.map((eachData) => ({
+  ? apiData.map((eachData) => ({
       id: faker.datatype.uuid(),
       title: eachData.subject,
       description: eachData.message,
@@ -53,12 +55,10 @@ export default function NotificationsPopover() {
       createdAt: new Date(),
       isUnRead: true,
     }))
-    : [];
-
-
+  : [];
 
   // Concatenate the transformed notifications with the existing notifications
-  const updatedNotifications = [...transformedNotifications];
+const updatedNotifications = [...transformedNotifications];
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -69,15 +69,20 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      updatedNotifications.map((notification) => ({
+      updatedNotificationsData.map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
     );
   };
 
-    const getNotification = async () => {
-    try {
+  
+
+  const getNotification = async () => {
+    
+      console.log("ACCESS__",accessToken);
+      console.log("URL__",url);
+        try {
 
       const headers = {
         'Content-Type': 'application/json',
@@ -93,37 +98,48 @@ export default function NotificationsPopover() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const jsonData = await response.json();
+            const jsonData = await response.json();
+            
+            
+            setApiData(jsonData);
+            
+           
+            
+            setFetchingData(false);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
-      // console.log("this is notification data-->", jsonData);
-      setNotifications(updatedNotifications);
-      setApiData(jsonData);
-      setTest(true);
-
-
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  async function init() {
-    try {
-      setLoading(true);
-      await getNotification(); // Call getNotification inside init
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
+    useEffect(() => {
+      // Fetch data when this component mounts
+      if (fetchingData) {
+        getNotification();
+      }
+    }, [fetchingData]);
   
-  useEffect(() => {
-    init();
-  }, [accessToken , test]);
-
-
- 
-
+    useEffect(() => {
+      if (apiData.length > 0) {
+        // Create updatedNotifications here
+        const sortedApiData = apiData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const updatedNotifications = apiData.map((eachData) => ({
+          id: eachData.notification_id,
+          title: eachData.subject,
+          description: eachData.message,
+          avatar: null,
+          type: 'custom_type',
+          createdAt: new Date(eachData.timestamp),
+          isUnRead: true,
+        }));
+        
+        
+        setNotifications(updatedNotifications);
+       
+      }
+    }, [apiData]);
+    
+    
+    
 
   return (
     <>

@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import account from '../../../_mock/account';
 import { getResFromLocalStorage , removeUserFromLocalStorage,getUserFromLocalStorage} from "../../../service/localStorage";
+import AvatorIcon from '../../../components/assets/User.png';
 
 
 const style = {
@@ -136,11 +137,11 @@ export default function AccountPopover() {
         const jsonData = await response.json();
 
         setAffiliateData(jsonData);
-        await fetchCampaginDetails(jsonData?.iframe_campaign_id);
+        
     } catch (error) {
         console.error('Error fetching data:', error);
     }
-    console.log(affiliateData.profile_pic)
+   
 };
 
 async function init() {
@@ -178,7 +179,7 @@ useEffect(() => {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src={AvatorIcon} alt="photoURL" />
       </IconButton>
 
       <Popover
