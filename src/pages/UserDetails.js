@@ -394,7 +394,7 @@ function UserDetails() {
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
 
 
-                                                {affiliateData.verified ? (
+                                                {account.verified ? (
                                                     <VerifiedUserIcon style={{ cursor: "pointer", color: 'green' }} />
                                                 ) : (
 

@@ -12,6 +12,7 @@ const account = {
   created_at: user?.data.created_at,
   iframe_campaign_id: user?.data.iframe_campaign_id,
   level: user?.data.level,
+  verified: user?.data.verified,
   
 };
 
