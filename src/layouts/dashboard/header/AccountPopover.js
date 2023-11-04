@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import account from '../../../_mock/account';
 import { getResFromLocalStorage , removeUserFromLocalStorage,getUserFromLocalStorage} from "../../../service/localStorage";
-import AvatorIcon from '../../../components/assets/User.png';
+// import AvatorIcon from '../../../components/assets/User.png';
 
 
 const style = {
@@ -179,7 +179,7 @@ useEffect(() => {
           }),
         }}
       >
-        <Avatar src={AvatorIcon} alt="photoURL" />
+        <Avatar src={account.photoURL} alt="photoURL" />
       </IconButton>
 
       <Popover
