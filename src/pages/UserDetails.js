@@ -30,14 +30,8 @@ import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
-import VerificationMail from './VerificationMail';
-import verificationSent from './VerificationMail';
-
+import ManagersTable from './ManagersTable';
 import account from 'src/_mock/account';
-
-
-
-
 
 function UserDetails() {
 
@@ -93,8 +87,8 @@ function UserDetails() {
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
     const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
-    const urlVerifyAfterMail=`${URL2}/api/affiliates/`;
-    const [checkEmailVerifiedStatus,setCheckEmailVerifiedStatus]=useState(false);
+    const urlVerifyAfterMail = `${URL2}/api/affiliates/`;
+    const [checkEmailVerifiedStatus, setCheckEmailVerifiedStatus] = useState(false);
     const [loading, setLoading] = useState(false);
     const user2 = getUserFromLocalStorage();
     const accessToken = user2?.data.access_token;
@@ -120,7 +114,7 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
-    const [selectedImage , setSelectedFile]   =useState('')
+    const [selectedImage, setSelectedFile] = useState('')
 
 
 
@@ -139,6 +133,65 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+    const sendVerificationEmail = async () => {
+        // Make an API request to send the verification email.
+
+        try {
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            };
+            const response = await fetch(urlVerifyMail, {
+                method: 'GET',
+                mode: 'cors',
+                headers: headers,
+            });
+            console.log("RESPONSE:__", response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const jsonData = await response.json();
+
+            setVerificationSent(true);
+
+            console.log("RESPONSE:", jsonData);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const checkEmailVerified = async () => {
+        // Make an API request to send the verification email.
+
+        try {
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            };
+            const response = await fetch(urlVerifyAfterMail, {
+                method: 'GET',
+                headers: headers,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const jsonData = await response.json();
+
+            setCheckEmailVerifiedStatus(jsonData?.verified)
+
+
+            console.log("RESPONSE:", jsonData);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -227,14 +280,14 @@ function UserDetails() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const jsonData = await response.json(); 
+            const jsonData = await response.json();
 
             setWalletData(jsonData[0]);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
-   
+
 
 
 
@@ -258,13 +311,13 @@ function UserDetails() {
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
-      };
-   
+    };
+
 
 
 
     const handleImageChange = (event) => {
-        const selectedImage = event.target.files[0]; 
+        const selectedImage = event.target.files[0];
         setImage(selectedImage);
     };
 
@@ -332,6 +385,35 @@ function UserDetails() {
     }
 
 
+    const fetchImage = async () => {
+        try {
+            if (!image) {
+                toast.error('No image selected for upload.');
+                return;
+            }
+    
+            const formData = new FormData();
+            formData.append('profile_image', image);
+    
+            const response = await axios.post(url_image, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+    
+            if (response.status === 200) {
+                toast.success('Image uploaded successfully.');
+            } else {
+                toast.error('Error uploading image. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Error uploading image. Please try again.');
+        }
+    };
+
+
 
 
 
@@ -348,23 +430,9 @@ function UserDetails() {
                     <Box width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-
-
-                                {/* <Box>
-                                    <input type="file" id="profileImage" accept="image/jpeg" onChange={handleFileChange} />
-
-                                </Box>
-
-                                <br />
-
-                                <Box>
-
-                                    <Button variant='contained' onClick={handleImageChange}>Upload Profile</Button>
-
-                                </Box>
-
-                                <img src={account.photoURL} alt="profile" style={{ width: "100%", height: "100%", borderRadius: "10px" }} /> */}
-
+                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
+                                    Profile Photo
+                                </Typography>
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
@@ -392,14 +460,10 @@ function UserDetails() {
                                                 </Typography>
                                             </Box>
                                             <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-
-
-                                                {affiliateData.verified ? (
-                                                    <VerifiedUserIcon style={{ cursor: "pointer", color: 'green' }} />
+                                                {account.verified ? (
+                                                    <VerifiedUserIcon style={{ color: 'green' }} />
                                                 ) : (
-
-                                                    <UnpublishedIcon style={{ cursor: "pointer", color: 'red' }} />
-                                                )}
+                                                    <UnpublishedIcon style={{ color: 'red' }} />)}
                                             </Box>
                                             <Box display="flex" alignItems="center">
                                                 <Typography fontWeight={400}>
@@ -662,32 +726,28 @@ function UserDetails() {
                                         value={age}
                                         onChange={(event) => setAge(event.target.value)}
 
-
                                     />
                                 </FormControl>
                             </Box>
-                            <Box style={{ margin: "15px", border: "2px solid red" }}>
+                            <Box style={{ margin: "15px" }}>
                                 <FormControl style={{ display: 'flex', flexDirection: 'row' }}>
-
                                     <input
                                         accept="image/*"
                                         style={{ display: 'none' }}
                                         id="raised-button-file"
                                         type="file"
-                                        placeholder='Upload Profile Image'
                                         onChange={handleImageChange}
                                     />
-
                                     <label htmlFor="raised-button-file">
                                         <Button
                                             variant="contained"
                                             component="span"
                                             color="primary"
+                                            onClick={fetchImage}
                                         >
                                             Upload Profile Image
                                         </Button>
                                     </label>
-                                    
                                     {image && (
                                         <img
                                             src={image}
@@ -697,27 +757,40 @@ function UserDetails() {
                                     )}
                                 </FormControl>
                             </Box>
+                            <Box style={{ margin: "8px" }}>
+                                <FormControl>
+                                    <Box>
+                                        <Typography style={{ marginLeft: "16px", marginTop: "10px" }}>Email Verification</Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={sendVerificationEmail}
+                                            className={classes.button}
 
+                                        >
+                                            Send Verification Email
+                                        </Button>
+                                        {verificationSent &&
+                                            <Typography style={{ marginLeft: "16px" }}>Verification email sent!</Typography>
+                                        }
+                                        {checkEmailVerifiedStatus &&
+                                            <Typography style={{ marginLeft: "16px" }}>User Already verified!</Typography>
+                                        }
+                                    </Box>
+                                </FormControl>
+                            </Box>
 
 
                             <Box style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "8px" }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    
-                                >
-                                    Save
+                                <Button style={{ variant: "contained", backgroundColor: "blue", color: "white", width: "50%", height: "50%", marginTop: "30px", marginLeft: "6px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={handleSubmit} type="submit">
+                                    Submit
                                 </Button>
                             </Box>
 
                         </Box>
 
 
-                        <Box style={{ margin: "8px" }}>
-                            <FormControl>
-                                <VerificationMail />
-                            </FormControl>
-                        </Box>
+
                     </Grid>
                 </form>
             </Box >
