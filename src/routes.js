@@ -19,6 +19,7 @@ import RegisterPage from './pages/RegisterPage';
 import Finance from './pages/Finance';
 import DynamicAds from './pages/DynamicAds';
 import ClickLogs from './pages/ClickLogs';
+import ClickLogs2 from './pages/ClickLogs2';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,9 @@ export default function Router() {
         {
           path: 'clicklogs', element: <ClickLogs />,
         },
+        {
+          path: 'clicklogs2', element: <ClickLogs2 />,
+        }
       ],
     },
     {
