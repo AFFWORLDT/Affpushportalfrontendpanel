@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
@@ -16,18 +17,13 @@ import { makeStyles } from '@mui/styles';
 import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
-// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
-
-// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
-
 import { blue } from '@mui/material/colors';
 import { useAppContext } from "../context/ChatProvider";
 import SideDrawer from "../components/SideDrawer";
 import CircularProgress from '@mui/material/CircularProgress';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
 import ManagersTable from './ManagersTable';
@@ -83,7 +79,6 @@ function UserDetails() {
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
     const [verificationSent, setVerificationSent] = useState(false);
-
     const URL = process.env.REACT_APP_PROD_ADMIN_API;
     const URL2 = process.env.REACT_APP_PROD_API;
     const urlVerifyMail = `${URL2}/api/affiliates/send_verification_mail`;
@@ -99,7 +94,7 @@ function UserDetails() {
     const [username, setUserName] = useState();
     const [companyName, setCompanyName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-
+    const [activeTab, setActiveTab] = useState('overview');
     const [address1, setAddress1] = useState();
     const [address2, setAddress2] = useState();
     const [city, setCity] = useState();
@@ -114,7 +109,6 @@ function UserDetails() {
     const [campaignData, setCampaignData] = useState();
     const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
-    const [selectedImage, setSelectedFile] = useState('')
 
 
 
@@ -122,7 +116,6 @@ function UserDetails() {
     const url1 = `${URL2}/api/affiliates`;
     const url_image = `${URL2}/api/affiliates/update_profile_image`;
     const user1 = getResFromLocalStorage();
-
     const date = new Date(affiliateData.created_at).toLocaleString(undefined, {
         year: 'numeric',
         month: 'long',
@@ -133,6 +126,9 @@ function UserDetails() {
         fractionalSecondDigits: 3,
         hour12: false,
     })
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+    }
     const sendVerificationEmail = async () => {
         // Make an API request to send the verification email.
 
@@ -196,7 +192,6 @@ function UserDetails() {
     const fetchData = async () => {
         try {
             // Replace with your actual access token
-
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
@@ -254,8 +249,6 @@ function UserDetails() {
             const jsonData = await response.json();
 
             setAffiliateData(jsonData);
-
-            console.log("this is affiliate data-->", jsonData);
             await fetchCampaginDetails(jsonData?.iframe_campaign_id);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -287,7 +280,33 @@ function UserDetails() {
             console.error('Error fetching data:', error);
         }
     };
+    const fetchImage = async () => {
+        try {
+            if (!image) {
+                toast.error('No image selected for upload.');
+                return;
+            }
 
+            const formData = new FormData();
+            formData.append('profile_image', image);
+
+            const response = await axios.post(url_image, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            if (response.status === 200) {
+                toast.success('Image uploaded successfully.');
+            } else {
+                toast.error('Error uploading image. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Error uploading image. Please try again.');
+        }
+    };
 
 
 
@@ -298,27 +317,31 @@ function UserDetails() {
             await fetchData();
             await fetchAffiliateData();
             await fetchWalletData();
-            // await fetchImage()
-
+            await fetchImage()
+            await checkEmailVerified();
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
         }
     }
-    // await fetchImage()
-
-
-    const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-    };
-
 
 
 
     const handleImageChange = (event) => {
-        const selectedImage = event.target.files[0];
-        setImage(selectedImage);
+        const selectedImage = event.target.files[0]; // Get the first selected image
+        if (selectedImage) {
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                // Set the result of FileReader (image data) to the image state
+                setImage(event.target.result);
+            };
+
+            reader.readAsDataURL(selectedImage); // Read the selected image
+        }
+        console.log(`selectedImage: ${selectedImage}`);
+        console.log(`image: ${image}`);
     };
 
     useEffect(() => {
@@ -332,7 +355,6 @@ function UserDetails() {
     useEffect(() => {
         init();
     }, []);
-
 
 
 
@@ -360,7 +382,7 @@ function UserDetails() {
         console.log("User is :", user);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_PROD_API}/api/v1/userDetail/userDetails`, {
+            const response = await fetch(`${process.env.REACT_APP_API}/api/v1/userDetail/userDetails`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -385,176 +407,8 @@ function UserDetails() {
     }
 
 
-    const fetchImage = async () => {
-        try {
-            if (!image) {
-                toast.error('No image selected for upload.');
-                return;
-            }
-    
-            const formData = new FormData();
-            formData.append('profile_image', image);
-    
-            const response = await axios.post(url_image, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
-    
-            if (response.status === 200) {
-                toast.success('Image uploaded successfully.');
-            } else {
-                toast.error('Error uploading image. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            toast.error('Error uploading image. Please try again.');
-        }
-    };
-
-
-
-
-
-
-
-    return (
-        <>
-            {user && <SideDrawer />}
-            <Box>
-                <Typography className={classes.boxstyle}> User Details </Typography>
-            </Box>
-            <Grid style={{ padding: "300", minChildWidth: "300", spacing: "5" }}>
-                <Box style={{ display: "flex", flexDirection: "column", maxWidth: "1200px", height: "250", backgroundColor: "#EDF2F7", flexWrap: "wrap", overflowX: "auto", overflowY: "auto" }} className={classes.boxstyleForm1}>
-                    <Box width={"100%"} height={180} bg={"gray.100"} >
-                        <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
-                            <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
-                                    Profile Photo
-                                </Typography>
-                            </Box>
-
-                            <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
-                                <Box h={"50%"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
-                                    <Box display={"flex"} flexDirection={"column"}>
-                                        <Box h={"50%"} >
-                                            <Typography fontWeight={700}>{user1.data.name}</Typography>
-                                        </Box>
-                                        <Box display={"flex"} flexDirection={"row"} h={"50%"} alignItems="center">
-
-                                            <Box display="flex" alignItems="center" marginRight="5px">
-                                                <AccountCircleIcon style={{ cursor: "pointer" }} fontSize='small' />&nbsp;
-                                            </Box>
-                                            <Box display="flex" alignItems="center">
-                                                <Typography fontWeight={400}>
-                                                    Active
-                                                </Typography>
-                                            </Box>
-                                            <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                                <AddLocationIcon style={{ cursor: "pointer" }} fontSize='small' />&nbsp;
-                                            </Box>
-                                            <Box display="flex" alignItems="center">
-                                                <Typography fontWeight={400}>
-                                                    India
-                                                </Typography>
-                                            </Box>
-                                            <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
-                                                {account.verified ? (
-                                                    <VerifiedUserIcon style={{ color: 'green' }} />
-                                                ) : (
-                                                    <UnpublishedIcon style={{ color: 'red' }} />)}
-                                            </Box>
-                                            <Box display="flex" alignItems="center">
-                                                <Typography fontWeight={400}>
-                                                    <span style={{ whiteSpace: 'nowrap' }}>{user1.data.email}</span>
-                                                </Typography>
-                                            </Box>
-
-
-
-                                        </Box>
-                                    </Box>
-                                    <Box style={{ display: 'flex', flexDirection: "row", marginTop: "10px", width: "80%", height: "60%", marginBottom: "40px", marginLeft: "40px" }}>
-                                        <Button style={{ backgroundColor: "blue", color: "white", width: "100%", marginRight: "20px" }}>{`MEMBER ${date}`}</Button>
-                                        <Button style={{ backgroundColor: "blue", color: "white", width: "100%" }}> RESET PASSWORD</Button>
-                                    </Box>
-                                </Box>
-                                <Box display={"flex"} flexDirection={"row"} h={"50%"} >
-                                    <Box className={classes.innerbox}>
-                                        <Box>
-                                            {walletData?.total_earnings ? walletData?.total_earnings : 0}
-                                        </Box>
-                                        <Box>
-                                            <Typography style={{ color: '#4CAF50', fontWeight: 'bold' }}>Earnings(INR)</Typography>
-                                        </Box>
-                                    </Box>
-                                    <Box className={classes.innerbox}>
-                                        <Box>
-                                            1
-                                        </Box>
-                                        <Box>
-                                            <Typography style={{ color: '#1976D2', fontWeight: 'bold' }}>Offers</Typography>
-                                        </Box>
-                                    </Box>
-
-                                    <Box className={classes.innerbox}>
-                                        <Box>
-                                            {totalCount}
-                                        </Box>
-                                        <Box>
-                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Clicks</Typography>
-                                        </Box>
-                                    </Box>
-                                    <Box className={classes.innerbox}>
-                                        <Box>
-                                            1
-                                        </Box>
-                                        <Box>
-                                            <Typography color={'#9C27B0'} fontWeight={"bold"}>Offers</Typography>
-                                        </Box>
-                                    </Box>
-                                    <Box className={classes.dabox}>
-
-                                        <Box>
-
-                                            {
-                                                campaginName ? (
-                                                    campaginName
-                                                ) :
-                                                    (
-                                                        "No Campaign Linked"
-                                                    )
-                                            }
-                                        </Box>
-                                        <Box>
-                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>DA</Typography>
-                                        </Box>
-                                    </Box>
-                                    <Box className={classes.innerbox}>
-
-                                        <Box>
-                                            {affiliateData.level}
-                                        </Box>
-                                        <Box>
-                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Level</Typography>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Box>
-                    <Box style={{ display: "flex", marginTop: "15px", marginLeft: "10px" }}>
-                        <Typography className={classes.textinBox} >Overview</Typography>
-                        <Typography className={classes.textinBox}>Managers </Typography>
-                        <Typography className={classes.textinBox}>Campaigns </Typography>
-                        <Typography className={classes.textinBox}>PostBacks</Typography>
-                        <Typography className={classes.textinBox}>Payouts</Typography>
-                        <Typography className={classes.textinBox}>Comapany</Typography>
-                        <Typography className={classes.textinBox}>Billing</Typography>
-                    </Box>
-                </Box>
-            </Grid>
+    const OverviewForm = () => {
+        return (
             <Box style={{ maxWidth: "1200px", backgroundColor: "#EDF2F7" }} className={classes.boxstyleForm}>
                 <form className="roleform" onSubmit={handleSubmit}>
                     <Grid style={{ minChildWidth: "250", display: "flex", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
@@ -794,6 +648,165 @@ function UserDetails() {
                     </Grid>
                 </form>
             </Box >
+        )
+    }
+
+
+
+
+    return (
+        <>
+            {user && <SideDrawer />}
+            <Box>
+                <Typography className={classes.boxstyle}> User Details </Typography>
+            </Box>
+            <Grid style={{ padding: "300", minChildWidth: "300", spacing: "5" }}>
+                <Box style={{ display: "flex", flexDirection: "column", maxWidth: "1200px", height: "250", backgroundColor: "#EDF2F7", flexWrap: "wrap", overflowX: "auto", overflowY: "auto" }} className={classes.boxstyleForm1}>
+                    <Box width={"100%"} height={180} bg={"gray.100"} >
+                        <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
+                            <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
+                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
+                                    Profile Photo
+                                </Typography>
+                            </Box>
+
+                            <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
+                                <Box h={"50%"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+                                    <Box display={"flex"} flexDirection={"column"}>
+                                        <Box h={"50%"} >
+                                            <Typography fontWeight={700}>{user1.data.name}</Typography>
+                                        </Box>
+                                        <Box display={"flex"} flexDirection={"row"} h={"50%"} alignItems="center">
+
+                                            <Box display="flex" alignItems="center" marginRight="5px">
+                                                <AccountCircleIcon style={{ cursor: "pointer" }} fontSize='small' />&nbsp;
+                                            </Box>
+                                            <Box display="flex" alignItems="center">
+                                                <Typography fontWeight={400}>
+                                                    Active
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
+                                                <AddLocationIcon style={{ cursor: "pointer" }} fontSize='small' />&nbsp;
+                                            </Box>
+                                            <Box display="flex" alignItems="center">
+                                                <Typography fontWeight={400}>
+                                                    India
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" marginRight="5px" marginLeft="40px">
+                                                {account.verified ? (
+                                                    <VerifiedUserIcon style={{ color: 'green' }} />
+                                                ) : (
+                                                    <UnpublishedIcon style={{ color: 'red' }} />)}
+                                            </Box>
+                                            <Box display="flex" alignItems="center">
+                                                <Typography fontWeight={400}>
+                                                    <span style={{ whiteSpace: 'nowrap' }}>{user1.data.email}</span>
+                                                </Typography>
+                                            </Box>
+
+
+
+                                        </Box>
+                                    </Box>
+                                    <Box style={{ display: 'flex', flexDirection: "row", marginTop: "10px", width: "80%", height: "60%", marginBottom: "40px", marginLeft: "40px" }}>
+                                        <Button style={{ backgroundColor: "blue", color: "white", width: "100%", marginRight: "20px" }}>{`MEMBER ${date}`}</Button>
+                                        <Button style={{ backgroundColor: "blue", color: "white", width: "100%" }}> RESET PASSWORD</Button>
+                                    </Box>
+                                </Box>
+                                <Box display={"flex"} flexDirection={"row"} h={"50%"} >
+                                    <Box className={classes.innerbox}>
+                                        <Box>
+                                            {walletData?.total_earnings ? walletData?.total_earnings : 0}
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#4CAF50', fontWeight: 'bold' }}>Earnings(INR)</Typography>
+                                        </Box>
+                                    </Box>
+                                    <Box className={classes.innerbox}>
+                                        <Box>
+                                            1
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#1976D2', fontWeight: 'bold' }}>Offers</Typography>
+                                        </Box>
+                                    </Box>
+
+                                    <Box className={classes.innerbox}>
+                                        <Box>
+                                            {totalCount}
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Clicks</Typography>
+                                        </Box>
+                                    </Box>
+                                    <Box className={classes.innerbox}>
+                                        <Box>
+                                            1
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#9C27B0'} fontWeight={"bold"}>Offers</Typography>
+                                        </Box>
+                                    </Box>
+                                    <Box className={classes.dabox}>
+
+                                        <Box>
+
+                                            {
+                                                campaginName ? (
+                                                    campaginName
+                                                ) :
+                                                    (
+                                                        "No Campaign Linked"
+                                                    )
+                                            }
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>DA</Typography>
+                                        </Box>
+                                    </Box>
+                                    <Box className={classes.innerbox}>
+
+                                        <Box>
+                                            {affiliateData.level}
+                                        </Box>
+                                        <Box>
+                                            <Typography style={{ color: '#FFA000', fontWeight: 'bold' }}>Level</Typography>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box style={{ display: "flex", marginTop: "15px", marginLeft: "10px" }}>
+                        <Typography
+                            className={classes.textinBox}
+                            onClick={() => handleTabClick('overview')}>
+                            Overview
+                        </Typography>
+
+                        <Typography
+                            className={classes.textinBox}
+                            onClick={() => handleTabClick('managers')}>
+                            Managers
+                        </Typography>
+                        <Typography className={classes.textinBox}>Campaigns </Typography>
+                        <Typography className={classes.textinBox}>PostBacks</Typography>
+                        <Typography className={classes.textinBox}>Payouts</Typography>
+                        <Typography className={classes.textinBox}>Comapany</Typography>
+                        <Typography className={classes.textinBox}>Billing</Typography>
+                    </Box>
+                </Box>
+            </Grid>
+            {activeTab === 'overview' &&
+                <OverviewForm />
+            }
+
+            {activeTab === 'managers' &&
+                <ManagersTable />
+            }
+
             <ToastContainer />
         </>
     );
