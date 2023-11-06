@@ -230,6 +230,7 @@ const Offers = () => {
           <MenuItem value="">All</MenuItem>
           <MenuItem value="paused">Paused</MenuItem>
           <MenuItem value="expired">Expired</MenuItem>
+          <MenuItem value="active">Active</MenuItem>
         </Select>
       </FormControl>
 

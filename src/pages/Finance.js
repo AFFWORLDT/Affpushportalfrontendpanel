@@ -43,6 +43,7 @@ const Finance = () => {
   const [totalCount, setTotalCount] = useState(0);
   const user1 = getUserFromLocalStorage();
   const URL2 = process.env.REACT_APP_PROD_API;
+  const URL= process.env.REACT_APP_PROD_ADMIN_API;
   const url = `${URL2}/api/analytics/wallet`;
   const url_payment = `${URL2}/api/analytics/transactions`;
   //const [userDataLoaded, setUserDataLoaded] = useState(false);
@@ -86,6 +87,7 @@ const Finance = () => {
     return (
       <TableRow style={{ position: "sticky", top: 0, zIndex: 1000 }}>
         <TableCell className="affilate-deatils-all">Campaign Id</TableCell>
+        <TableCell className="affilate-deatils-all">Campaign Name</TableCell>
         <TableCell className="affilate-deatils-all">Event</TableCell>
         <TableCell className="affilate-deatils-all">Amount</TableCell>
         <TableCell className="affilate-deatils-all">Approved</TableCell>
@@ -148,13 +150,55 @@ const Finance = () => {
     }
   };
 
+  const fetchCampaignName = async (campaignId) => {
+    const campaignUrl = `${URL}/campaign/${campaignId}`;
+    
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      };
+  
+      const response = await fetch(campaignUrl, {
+        method: 'GET',
+        headers: headers,
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const jsonData = await response.json();
+      console.log("JSONDATA:".jsonData);
+      return jsonData?.name || "N/A"; // Return campaign name or "N/A" if not found
+    } catch (error) {
+      console.error('Error fetching campaign name:', error);
+      return "N/A"; // Return "N/A" in case of an error
+    }
+  };
+  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   useEffect(() => {
     fetchData();
     fetchUserData();
+    
+    // Fetch campaign names for each row
+    if (userData) {
+      const fetchCampaignNames = async () => {
+        const updatedRows = [];
+        for (const row of userData) {
+          const campaignName = await fetchCampaignName(row.campaign_id);
+          updatedRows.push({ ...row, campaignName });
+        }
+        setUserData(updatedRows);
+      };
+      fetchCampaignNames();
+    }
   }, []);
+  
 
 
 
@@ -295,6 +339,7 @@ const Finance = () => {
                       {filteredRows?.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
                         <TableRow key={index}>
                           <TableCell>{row.campaign_id}</TableCell>
+                          <TableCell>{row.campaignName}</TableCell>
                           <TableCell>{row.event}</TableCell>
                           <TableCell>{row.amount}</TableCell>
                           <TableCell>{row?.approved ? "Approved" : "Pending"}</TableCell>
