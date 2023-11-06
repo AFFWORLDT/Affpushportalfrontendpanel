@@ -33,10 +33,12 @@ export default function DashboardAppPage() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [newsData,setNewsData] = useState([]);
   const [user, setUser] = useState(null);
   const user1 = getUserFromLocalStorage();
   const [loading, setLoading] = useState(false);
   const URL2 = process.env.REACT_APP_PROD_API;
+  const URL3 = process.env.REACT_APP_PROD_ADMIN_API;
   
   const fetchData = async () => {
     const url = `${URL2}/api/analytics/clicks`;
@@ -60,7 +62,35 @@ export default function DashboardAppPage() {
     }
   };
 
- 
+  const fetchNewsData = async () => {
+    const PAGENUMBER=1;
+    const url_news = `${URL3}/news/?page=${PAGENUMBER}`;
+    // console.log("THis is user data --->", url);
+    const accessToken = user1.data.access_token;
+    // console.log("This is access token --->", accessToken);
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      };
+      const response = await fetch(url_news, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const jsonData = await response.json();
+      setNewsData(jsonData);
+      setLoading(true);
+    } catch (error) {
+      console.log('Error While Fetching data click --->', error);
+      toast.error('Error in Fetching Data');
+    }
+  };
+  
   useEffect(() => {
     // Check if user is authenticated
     // privateCheck();
@@ -70,11 +100,14 @@ export default function DashboardAppPage() {
       }
     );
     fetchData();
+    fetchNewsData();
 
   }, []);
+
   const names = data.map(item => item.name);
   const count = data.map(item=>item.count);
   
+ 
 
 
   return (
@@ -225,12 +258,12 @@ export default function DashboardAppPage() {
           <Grid item xs={12} md={6} lg={8}>
             <AppNewsUpdate
               title="News Update"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: faker.name.jobTitle(),
-                description: faker.name.jobTitle(),
-                image: `/assets/images/covers/cover_${index + 1}.jpg`,
-                postedAt: faker.date.recent(),
+              list={newsData.slice(-5).map((eachNews, index) => ({
+                id: eachNews?.news_id,
+                title: eachNews?.subject,
+                description: eachNews?.description,
+                image: eachNews?.icon,
+                postedAt: eachNews?.timestamp,
               }))}
             />
           </Grid>
