@@ -185,6 +185,10 @@ const Finance = () => {
     fetchData();
     fetchUserData();
     
+    
+    
+  }, []);
+  useEffect(() => {
     // Fetch campaign names for each row
     if (userData) {
       const fetchCampaignNames = async () => {
@@ -197,7 +201,7 @@ const Finance = () => {
       };
       fetchCampaignNames();
     }
-  }, []);
+  }, [userData]);
   
 
 
