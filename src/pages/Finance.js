@@ -41,6 +41,7 @@ const Finance = () => {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('UPI');
   const [totalCount, setTotalCount] = useState(0);
+  const [campaignNamesFetched, setCampaignNamesFetched] = useState(false);
   const user1 = getUserFromLocalStorage();
   const URL2 = process.env.REACT_APP_PROD_API;
   const URL= process.env.REACT_APP_PROD_ADMIN_API;
@@ -190,7 +191,7 @@ const Finance = () => {
   }, []);
   useEffect(() => {
     // Fetch campaign names for each row
-    if (userData) {
+    if (userData && !campaignNamesFetched) {
       const fetchCampaignNames = async () => {
         const updatedRows = [];
         for (const row of userData) {
@@ -198,10 +199,11 @@ const Finance = () => {
           updatedRows.push({ ...row, campaignName });
         }
         setUserData(updatedRows);
+        setCampaignNamesFetched(true);
       };
       fetchCampaignNames();
     }
-  }, [userData]);
+  }, [userData,campaignNamesFetched]);
   
 
 
