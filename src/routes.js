@@ -10,6 +10,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import Offers from './pages/Offers';
+import ConversionReport from './pages/ConversionReport';
 import DetailOffer from './pages/DetailOffer';
 import Conversions from './pages/Conversions';
 import PrivateComponent from './components/PrivateRoute';
@@ -51,6 +52,9 @@ export default function Router() {
         },
         {
           path: 'clicklogs2', element: <ClickLogs2 />,
+        },
+        {
+          path: 'conversionReport', element: <ConversionReport />,
         }
       ],
     },
@@ -67,6 +71,7 @@ export default function Router() {
         { path: 'finance', element: <Finance /> },
         { path: 'dynamicAds', element: <DynamicAds /> },
         { path: 'clicklogs', element: <ClickLogs /> },
+        { path: 'conversionReport', element: <ConversionReport /> },
       ],
     },
     {
