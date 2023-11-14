@@ -15,7 +15,9 @@ const Chistory = () => {
 
   const getJobData = async () => {
     try {
-      const url = `https://auto-api-affworld.vercel.app/api/particularjobs/${affiliate_id}`;
+      // const url = `https://auto-api-affworld.vercel.app/api/particularjobs/${affiliate_id}`;
+      const url = `https://filingsolutions.in/api/particularjobs/${affiliate_id}`;
+
       setLoading(true);
       const res = await axios.get(url);
       setData(res.data);
@@ -37,7 +39,7 @@ const Chistory = () => {
     } else {
       toast.warning("No link available for this item.");
     }
-    
+
   }
 
   useEffect(() => {
