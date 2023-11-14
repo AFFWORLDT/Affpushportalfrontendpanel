@@ -30,8 +30,13 @@ const navConfig = [
     icon: icon('ic_disabled'),
   },
   {
-    title: 'ConversionReport',
-    path: '/affilate/conversionReport',
+    title: 'Campaign Management',
+    path: '/dashboard/clicklogs2',
+    icon: icon('ic_disabled'),
+  },
+  {
+    title: 'C-Statistics',
+    path: '/dashboard/chistory',
     icon: icon('ic_disabled'),
   },
   // {

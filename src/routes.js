@@ -21,6 +21,7 @@ import Finance from './pages/Finance';
 import DynamicAds from './pages/DynamicAds';
 import ClickLogs from './pages/ClickLogs';
 import ClickLogs2 from './pages/ClickLogs2';
+import Chistory from './pages/Chistory';
 
 // ----------------------------------------------------------------------
 
@@ -53,9 +54,7 @@ export default function Router() {
         {
           path: 'clicklogs2', element: <ClickLogs2 />,
         },
-        {
-          path: 'conversionReport', element: <ConversionReport />,
-        }
+        { path: 'chistory', element: <Chistory /> },
       ],
     },
     {
@@ -71,7 +70,9 @@ export default function Router() {
         { path: 'finance', element: <Finance /> },
         { path: 'dynamicAds', element: <DynamicAds /> },
         { path: 'clicklogs', element: <ClickLogs /> },
-        { path: 'conversionReport', element: <ConversionReport /> },
+        { path: 'clicklogs2', element: <ClickLogs2 /> },
+       
+
       ],
     },
     {
