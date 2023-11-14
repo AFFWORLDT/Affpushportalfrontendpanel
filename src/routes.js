@@ -10,6 +10,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import Offers from './pages/Offers';
+import ConversionReport from './pages/ConversionReport';
 import DetailOffer from './pages/DetailOffer';
 import Conversions from './pages/Conversions';
 import PrivateComponent from './components/PrivateRoute';

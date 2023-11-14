@@ -35,7 +35,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 
 
-const Finance = () => {
+const ConversionReport = () => {
   const { user } = useAppContext() || {};
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -159,7 +159,7 @@ const Finance = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       };
-  
+      settableLoading(true);
       const response = await fetch(campaignUrl, {
         method: 'GET',
         headers: headers,
@@ -171,10 +171,13 @@ const Finance = () => {
   
       const jsonData = await response.json();
       console.log("JSONDATA:".jsonData);
-      return jsonData?.name || "N/A"; // Return campaign name or "N/A" if not found
+      return jsonData?.name || "N/A"; 
+      
     } catch (error) {
       console.error('Error fetching campaign name:', error);
+      settableLoading(false);
       return "N/A"; // Return "N/A" in case of an error
+      
     }
   };
   
@@ -193,13 +196,18 @@ const Finance = () => {
     // Fetch campaign names for each row
     if (userData && !campaignNamesFetched) {
       const fetchCampaignNames = async () => {
-        const updatedRows = [];
-        for (const row of userData) {
-          const campaignName = await fetchCampaignName(row.campaign_id);
-          updatedRows.push({ ...row, campaignName });
-        }
+        const updatedRows = [...userData]; // Create a copy to avoid modifying the original data
+      console.log("first userdata", userData);
+      updatedRows.sort((a, b) => new Date(b.initiated_at) - new Date(a.initiated_at)); // Sort the data
+      console.log("AFTER SORTING", updatedRows);
+      
+      for (const row of updatedRows) {
+        const campaignName = await fetchCampaignName(row.campaign_id);
+        row.campaignName = campaignName; // Update the row with the campaign name
+      }
         setUserData(updatedRows);
         setCampaignNamesFetched(true);
+        settableLoading(false);
       };
       fetchCampaignNames();
     }
@@ -218,108 +226,7 @@ const Finance = () => {
   return (
     <div style={{ width: "100%", padding: "0px 26px" }}>
       {user && <SideDrawer />}
-      <Typography style={{ fontSize: "40px", fontWeight: "600", width: "100%", textAlign: "center" }}>Balances</Typography>
-      <Grid style={{ display: "flex", justifyContent: "space-evenly" }} minChildWidth={250} spacing={4}>
-        <Grid container spacing={2}>
-          {/* Adjusted layout using Grid */}
-          <Grid item xs={12} md={4}>
-            <Box style={{ display: "flex", justifyContent: "space-between", border: "2px solid gray", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "30px" }}>
-              <div style={{ fontSize: "10px", fontWeight: "700" }}>
-                <h2>All time</h2>
-                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data?.total_earnings ? data?.total_earnings : 0}</h2>
-              </div>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box style={{ display: "flex", justifyContent: "space-between", border: "2px solid orange", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "30px" }}>
-              <div style={{ fontSize: "10px", fontWeight: "700" }}>
-                <h2>In processing</h2>
-                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>{data?.unapproved_wallet ? data?.unapproved_wallet : 0}</h2>
-              </div>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box style={{ display: "flex", justifyContent: "space-between", border: "2px solid purple", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "30px" }}>
-              <div style={{ fontSize: "10px", fontWeight: "700" }}>
-                <h2>To the payment</h2>
-                <h2 style={{ fontSize: "30px", fontWeight: "bold" }}>$1000.00</h2>
-              </div>
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Choose Payment Method</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Choose your payment method:
-          </Typography>
-          <FormControl component="fieldset">
-            <RadioGroup name="payment options" defaultValue="UPI" onChange={handleRadioChange}>
-              <Stack style={{ fontWeight: "600", display: "flex", Direction: "column" }} spacing={3}>
-                <FormControlLabel
-                  value="UPI"
-                  control={<Radio />}
-                  label="UPI"
-
-                />
-                <FormControlLabel
-                  value="Astropay"
-                  control={<Radio />}
-                  label="Astropay"
-                />
-                <FormControlLabel
-                  value="Bitcoin"
-                  control={<Radio />}
-                  label="Bitcoin"
-                />
-                <FormControlLabel
-                  value="Other"
-                  control={<Radio />}
-                  label="Other"
-                />
-              </Stack>
-            </RadioGroup>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} style={{ color: "white", colorScheme: "blue", backgroundColor: "#1976D2" }}>
-            Close
-          </Button>
-          <Button onClick={handleClose} style={{ color: "white", colorScheme: "whatsup", backgroundColor: "#25D366" }}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Grid style={{ marginTop: "20px", padding: "5px", display: "flex", justifyContent: "space-evenly", flexDirection: "row" }} minChildWidth={250} spacing={10}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Box style={{ display: "flex", justifyContent: "space-between", border: "1px solid green", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "20px" }}>
-              <Box style={{ fontSize: "10px", fontWeight: "700" }}>
-                <h2>Manual payment</h2>
-
-                <h2 style={{ marginTop: "8px", fontSize: "20px" }}>Payment is made within 3 days of order</h2>
-
-
-              </Box>
-              <Box style={{ width: "30%" }}>
-                <Button style={{ variant: "outlined", colorScheme: "purple", backgroundColor: "purple", color: "white" }} onClick={handleClickOpen} v w={200}>
-                  Order Payment
-                </Button>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Box style={{ display: "flex", justifyContent: "space-between", border: "1px solid orange", borderRadius: "10px", backgroundColor: "#E6EDFA", width: "100%", height: "25.5vh", padding: "20px" }}>
-              <div style={{ fontSize: "10px", fontWeight: "700" }}>
-                <h2>Autopay</h2>
-                <h2 style={{ marginTop: "8px", fontSize: "20px" }}>You haven't activated the autopay feature</h2>
-              </div>
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
+     
       <Grid style={{ marginTop: "20px", padding: "5px", display: "flex", justifyContent: "space-evenly" }} minChildWidth={250} spacing={10}>
 
         <Box style={{
@@ -392,4 +299,4 @@ const Finance = () => {
   )
 
 }
-export default Finance
+export default ConversionReport
