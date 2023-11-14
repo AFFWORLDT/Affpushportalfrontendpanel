@@ -28,7 +28,9 @@ export default function ClickLogs2() {
 
   const getData = async () => {
     try {
-      const response = await axios.get("https://auto-api-affworld.vercel.app/api/service-list");
+      // const response = await axios.get("https://auto-api-affworld.vercel.app/api/service-list");
+      const response = await axios.get("https://filingsolutions.in/api/service-list");
+
 
       console.log("this is response filing hub", response.data);
       setData(response.data);
@@ -84,7 +86,9 @@ export default function ClickLogs2() {
       console.log("This is service object --->", serviceObj);
       console.log("This is data we are posting--->", data);
 
-      const res = await axios.post("https://auto-api-affworld.vercel.app/api/jobs", data);
+      // const res = await axios.post("https://auto-api-affworld.vercel.app/api/jobs", data);
+      const res = await axios.post("https://filingsolutions.in/api/jobs", data);
+
       // const res = await axios.post("http://localhost:4000/api/jobs", data);
 
 
