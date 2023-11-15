@@ -1,44 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import "./clickLogs.css"
-import { useForm, Controller } from 'react-hook-form';
-// import navConfig from 'src/layouts/dashboard/nav/config';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { getUserFromLocalStorage } from 'src/service/localStorage';
 import { Button, Input } from '@mui/material';
 import { toast } from 'react-toastify';
 import account from 'src/_mock/account';
 
 export default function ClickLogs2() {
-  const user = getUserFromLocalStorage();
-  
   let [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryOption, setCategoryOption] = useState([]);
   const [serviceOptions, setServiceOptions] = useState([]);
   const [service, setService] = useState([]);
   const [sname, setSname] = useState();
-  const [serviceID, setServiceID] = useState();
   const [serviceObj, setServiceObj] = useState(null);
   const [quantity, setQuantity] = useState();
   const [timing, setTiming] = useState();
   const [link, setLink] = useState();
   const [maxExecutions, setMaxExecutions] = useState();
   const { handleSubmit, control } = useForm();
-  const accessToken = user.data.access_token;
+  const URL = process.env.REACT_APP_PROD_FILINGSOLUTIONS_API;
 
   const getData = async () => {
     try {
-      // const response = await axios.get("https://auto-api-affworld.vercel.app/api/service-list");
-      const response = await axios.get("https://filingsolutions.in/api/service-list");
-
-
-      console.log("this is response filing hub", response.data);
-      setData(response.data);
-      setCategoryOption(data.category);
-      console.log("this is setCategoryOption", categoryOption);
-
+      const response = await axios.get(`${URL}/api/service-list`);
+      if(response.status === 200) {
+        toast.success("Services fetched successfully!!");
+        setData(response?.data);
+        setCategoryOption(data.category);
+      }
     } catch (error) {
-      console.error('Error fetching filing hub soltion data:', error);
+      console.error('Error fetching Data --->', error);
+      toast.error("Error fetching filing hub soltion data!!");
     }
   }
 
@@ -49,25 +42,13 @@ export default function ClickLogs2() {
     getData();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     const selectedCategoryData = data.find(item => item.category === selectedCategory);
-  //     if (selectedCategoryData) {
-  //       const names = selectedCategoryData.services.map(service => service.name);
-  //       setService(names);
-  //     }
-  //   }
-  // }, [selectedCategory, data]);
-
   useEffect(() => {
     if (selectedCategory) {
       const selectedCategoryData = data.find(item => item.category === selectedCategory);
       if (selectedCategoryData) {
         setServiceOptions(selectedCategoryData.services);
         const names = selectedCategoryData.services.map(service => service.name);
-        const serviceIds = selectedCategoryData.services.map(service => service.serviceId);
         setService(names);
-        // setServiceID(serviceIds);
       }
     }
   }, [selectedCategory, data]);
@@ -83,18 +64,11 @@ export default function ClickLogs2() {
         maxExecutions: maxExecutions,
         affiliate_id: account.affiliate_id
       };
-      console.log("This is service object --->", serviceObj);
-      console.log("This is data we are posting--->", data);
-
-      // const res = await axios.post("https://auto-api-affworld.vercel.app/api/jobs", data);
-      const res = await axios.post("https://filingsolutions.in/api/jobs", data);
-
-      // const res = await axios.post("http://localhost:4000/api/jobs", data);
-
-
-      console.log("this is res while submirtting the data--->", res);
+    
+      const res = await axios.post(`${URL}/api/jobs`, data);
+      
       if(res.status === 200) {
-        toast.success("Data submitted successfully!!");
+        toast.success("Campagin Added successfully see Statistics!!");
       }
       
 
@@ -104,37 +78,9 @@ export default function ClickLogs2() {
       toast.error("Error While submitting the data!! See Console");
     }
   };
-
-
-  // const onSubmit = async () => {
-  //   try {
-  //     const selectedService = serviceOptions.find(option => option.name === service);
-  //     const serviceID = selectedService ? selectedService.serviceId : null;
-
-  //     const data = {
-  //       name: sname,
-  //       serviceId: serviceID,
-  //       quantity: quantity,
-  //       timing: timing,
-  //       link: link,
-  //       maxExecutions: maxExecutions
-  //     };
-
-  //     console.log("This is data we are posting--->", data);
-
-  //     // const response = await axios.post("https://auto-api-affworld.vercel.app/api/click-log", data, {
-
-  //     // })
-
-  //   } catch (error) {
-  //     console.log("this is error While submitting the data--->", error);
-  //     toast.error("Error While submitting the data!! See Console");
-  //   }
-  // };
-
-
   return (
     <>
+      <h1 className='text-center'>Add Campagin</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form-group">
           <label htmlFor="name">Name</label>
@@ -183,15 +129,6 @@ export default function ClickLogs2() {
             onChange={(e) => setQuantity(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="totalCharges">Charges</label>
-          <Input
-            fullWidth
-            name="Charges"
-            placeholder='Enter Charges'
-          />
-        </div>
-
         <div className="form-group">
           <label htmlFor="timing">Timing</label>
           <Input
