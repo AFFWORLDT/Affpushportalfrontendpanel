@@ -65,7 +65,7 @@ export default function LoginForm() {
     } catch (error) {
 
       console.log("Error while login-->", error)
-      toast.error(error.response.data.detail);
+      toast.error(error?.response?.data?.detail);
       setValues({ ...values, loading: false });
 
     }
