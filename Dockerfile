@@ -3,9 +3,9 @@
 FROM node:alpine3.18 as nodework
 WORKDIR /affiliate_vercel_panel
 COPY package.json .
-RUN npm install --force
+RUN yarn install
 COPY . .
-RUN npm run build
+RUN yarn run build
 
 
 

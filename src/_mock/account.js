@@ -1,8 +1,6 @@
-// ----------------------------------------------------------------------
-import {   getResFromLocalStorage} from "../service/localStorage";
+import { getResFromLocalStorage } from "../service/localStorage";
 
-const user  = getResFromLocalStorage();
-console.log("This is user in account -->" , user)
+const user = getResFromLocalStorage();
 const account = {
   affiliate_id: user?.data.affiliate_id,
   displayName: user?.data.name,
@@ -13,7 +11,7 @@ const account = {
   iframe_campaign_id: user?.data.iframe_campaign_id,
   level: user?.data.level,
   verified: user?.data.verified,
-  
+
 };
 
 export default account;

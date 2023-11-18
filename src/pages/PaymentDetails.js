@@ -123,7 +123,6 @@ function PaymentDetails() {
 
     return (
         <>
-            {/* {user && <SideDrawer />} */}
             <Box sx={boxstyle}>
                 <Typography variant="h3">Payment Details</Typography>
             </Box>
