@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button, Box } from '@mui/material';
-import { toast } from 'react-toastify';
+import { Button } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,21 +11,13 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import LinearProgress from '@mui/material/LinearProgress';
-import useClipboard from "react-use-clipboard";
-import copy from 'clipboard-copy';
 import * as XLSX from 'xlsx';
-import { getData } from '../service/api';
 import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/localStorage';
-import axios from 'axios';
-import CloudDoneIcon from '@mui/icons-material/CloudDone';
-import PauseIcon from '@mui/icons-material/Pause';
-import { fontWeight } from '@mui/system';
-import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
+
 
 
 const ManagersTable = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
-  const URL2 = process.env.REACT_APP_PROD_API;
   const PAGENUMBER=1;
   const url = `${URL}/manager/?page=${PAGENUMBER}`;
   const navigate = useNavigate();
@@ -38,7 +29,6 @@ const ManagersTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageData, setPageData] = useState([]);
-  const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
   
 
   const privateCheck = () => {
@@ -58,7 +48,7 @@ const ManagersTable = () => {
   useEffect(() => {
     privateCheck();
     fetchData();
-  }, []); // Use an empty dependency array to run the effect only once
+  }, []); 
  
   const fetchData = async () => {
     try {
@@ -87,57 +77,6 @@ const ManagersTable = () => {
         console.error('Error fetching data:', error);
     }
 };
-
-//   const handleIframe = async (row) => {
-//     try {
-//       const campageinId = row._id;
-//       console.log(campageinId);
-//       const url = `${URL2}/api/affiliates/set_on_iframe?campaign_id=${campageinId}`;
-//       console.log(url);
-//       const accessToken = user.data.access_token;
-//       console.log(accessToken);
-//       const response = await axios.get(url, {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       })
-//       console.log(response);
-//       if (response.status === 200) {
-//         toast.success("Iframe set successfully!!");
-//       }
-
-
-
-//     } catch (error) {
-//       console.log("Error While setting iframe-->", error);
-//       toast.error("Error While setting iframe!!");
-//     }
-//   }
-
-//   const handleCopyAff = (item) => {
-//     const link = `${URL}/${item?.code}?affiliate_id=${res.data.affiliate_id}`;
-//     console.log('Copy clicked');
-//     console.log('Link is -->', link);
-//     console.log('This is res --->', res);
-//     console.log('This is user affiliate id -----> :', res.data.affiliate_id);
-
-//     try {
-
-
-//       copy(link);
-
-//       toast.success('Link copied to clipboard', {
-//         position: toast.POSITION.BOTTOM_RIGHT,
-//       });
-//     } catch (error) {
-//       console.error('Error copying link to clipboard:', error);
-//       toast.error('Error copying link to clipboard', {
-//         position: toast.POSITION.BOTTOM_RIGHT,
-//       });
-//     }
-//   };
-
   const exportData = () => {
 
 

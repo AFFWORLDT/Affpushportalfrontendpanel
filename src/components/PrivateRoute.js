@@ -14,7 +14,6 @@ const PrivateComponent=({
             navigate("/login")
             
         }
-        console.log("Hello this is private component ");
     });
     return (
         <>{children}</>

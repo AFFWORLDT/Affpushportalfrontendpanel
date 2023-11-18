@@ -4,11 +4,9 @@ import {
   Button,
   Typography,
   Grid,
-  TextField,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   FormControl,
   FormControlLabel,
@@ -17,7 +15,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Container,
   TableContainer,
   TablePagination,
   Paper,
@@ -26,8 +23,6 @@ import {
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Stack from '@mui/material/Stack';
-import { useAppContext } from "../context/ChatProvider";
-import SideDrawer from "../components/SideDrawer";
 import Loader from '../components/Loader';
 import { getUserFromLocalStorage } from '../utils/localStorage';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -36,7 +31,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 
 const Finance = () => {
-  const { user } = useAppContext() || {};
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('UPI');
@@ -47,7 +41,6 @@ const Finance = () => {
   const URL= process.env.REACT_APP_PROD_ADMIN_API;
   const url = `${URL2}/api/analytics/wallet`;
   const url_payment = `${URL2}/api/analytics/transactions`;
-  //const [userDataLoaded, setUserDataLoaded] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const accessToken = user1?.data.access_token;
@@ -217,7 +210,6 @@ const Finance = () => {
 
   return (
     <div style={{ width: "100%", padding: "0px 26px" }}>
-      {user && <SideDrawer />}
       <Typography style={{ fontSize: "40px", fontWeight: "600", width: "100%", textAlign: "center" }}>Balances</Typography>
       <Grid style={{ display: "flex", justifyContent: "space-evenly" }} minChildWidth={250} spacing={4}>
         <Grid container spacing={2}>
