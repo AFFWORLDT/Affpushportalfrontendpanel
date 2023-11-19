@@ -11,6 +11,8 @@ const user = getUserFromLocalStorage();
 export const getData = async () => {
   
   try {
+
+    
   
     const url = `${URL}/campaign/?page=1`;
     const response = await axios.get(url, {
