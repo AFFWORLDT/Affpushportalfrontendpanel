@@ -3,9 +3,9 @@
 FROM node:alpine3.18 as nodework
 WORKDIR /affiliate_vercel_panel
 COPY package.json .
-RUN npm install --force
+RUN yarn install
 COPY . .
-RUN npm run build
+RUN yarn run build
 
 
 
@@ -14,4 +14,4 @@ FROM nginx:1.25.3-alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=nodework /affiliate_vercel_panel/build .
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
