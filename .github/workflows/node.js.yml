@@ -42,4 +42,5 @@ jobs:
 
         
     - run: yarn install
-    - run: CI=false yarn run build --if-present
+    - run: CI=false NODE_OPTIONS="--max-old-space-size=4096" yarn run build --if-present
+
