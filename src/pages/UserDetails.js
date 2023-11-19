@@ -14,14 +14,9 @@ import {
     LinearProgress,
 } from "@mui/material";
 import { makeStyles } from '@mui/styles';
-import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { blue } from '@mui/material/colors';
-import { useAppContext } from "../context/ChatProvider";
-import SideDrawer from "../components/SideDrawer";
-import CircularProgress from '@mui/material/CircularProgress';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
@@ -75,7 +70,6 @@ function UserDetails() {
     }));
 
     const classes = useStyles();
-    const { user } = useAppContext() || {};
     const [data, setData] = useState([]);
     const [affiliateData, setAffiliateData] = useState([]);
     const [verificationSent, setVerificationSent] = useState(false);
@@ -105,9 +99,7 @@ function UserDetails() {
     const [totalCount, setTotalCount] = useState(0);
     const urlWallet = `${URL2}/api/analytics/wallet`;
     const [walletData, setWalletData] = useState([]);
-    const [userDataLoaded, setUserDataLoaded] = useState(false);
     const [campaignData, setCampaignData] = useState();
-    const [campageinId111, setCampageinId] = useState();
     const [campaginName, setCampaginName] = useState('');
 
 
@@ -258,7 +250,6 @@ function UserDetails() {
 
     const fetchWalletData = async () => {
         try {
-            // Replace with your actual access token
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
@@ -362,7 +353,7 @@ function UserDetails() {
         event.preventDefault();
 
         const data = {
-            userId: user?._id,
+            userId: user1?._id,
             affiliate,
             nameBeni,
             last,
@@ -379,7 +370,7 @@ function UserDetails() {
 
         };
 
-        console.log("User is :", user);
+
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API}/api/v1/userDetail/userDetails`, {
@@ -656,7 +647,6 @@ function UserDetails() {
 
     return (
         <>
-            {user && <SideDrawer />}
             <Box>
                 <Typography className={classes.boxstyle}> User Details </Typography>
             </Box>

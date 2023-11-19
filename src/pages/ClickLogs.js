@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button, Box } from '@mui/material';
+import { Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { toast } from 'react-toastify';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,24 +12,14 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import LinearProgress from '@mui/material/LinearProgress';
-import useClipboard from "react-use-clipboard";
-import copy from 'clipboard-copy';
 import * as XLSX from 'xlsx';
-import { getData } from '../service/api';
-import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/localStorage';
+import {  getUserFromLocalStorage } from '../service/localStorage';
 import { v4 as uuidv4 } from 'uuid';
-import { subDays, isAfter } from 'date-fns';
-// import { DateRangePicker } from "react-date-range";
-// import { DateRange } from 'react-date-range';
+import {  isAfter } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Loader from '../components/Loader';
-// import CustomDateRangePicker from './CustomDateRangePicker'; // Your custom date range picker
-import axios from 'axios';
-import CloudDoneIcon from '@mui/icons-material/CloudDone';
-import PauseIcon from '@mui/icons-material/Pause';
-import { fontWeight } from '@mui/system';
-import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
+
 
 
 
@@ -40,7 +29,6 @@ const ClickLogs = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [campaignNameData, setCampaignNameData] = useState("");
   const [campaignNames, setCampaignNames] = useState({});
   const [selectedOffer, setSelectedOffer] = useState('');
   const initialStartDate = new Date('2023-10-02'); // Set your desired initial start date
@@ -56,9 +44,7 @@ const ClickLogs = () => {
   const URL3 = process.env.REACT_APP_PROD_ADMIN_API;
   const url1 = `${URL2}/api/analytics/clicks_and_postbacks`;
   const navigate = useNavigate();
-  const res = getResFromLocalStorage();
-  const user = getUserFromLocalStorage();
-  const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
+
   const options = Object.values(campaignNames);
   const validOptions = ["All Offers", ...options];
 
@@ -69,7 +55,6 @@ const ClickLogs = () => {
       navigate('/login');
     }
   };
-  /* styles.css */
   const useStyles = makeStyles((theme) => ({
     datepicker: {
       color: `#333`,
@@ -104,13 +89,8 @@ const ClickLogs = () => {
   const handleDateChangeAndFetch = () => {
     fetchClickLogsData(startDate, endDate);
   }
-  //   const dateRangeProps = {
-  //     ranges: [selectedDateRange],
-  //     onChange: handleDateRangeChange,
-  //   };
 
   const handleOfferSelect = (offer) => {
-    // Check if the selected offer is a valid option
     if (validOptions.includes(offer)) {
       if (offer === "All Offers") {
         setSelectedOffer("");
@@ -121,32 +101,20 @@ const ClickLogs = () => {
 
     } else {
       console.log("Option selected is not valid");
-      // Handle the case where the selected option is not valid
-      // You can display an error message or take appropriate action.
+     
     }
   }
 
   useEffect(() => {
     privateCheck();
     fetchClickLogsData(initialStartDate, initialEndDate);
-    //fetchData();
-  }, []); // Use an empty dependency array to run the effect only once
+  }, []); 
 
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await getData();
-  //       console.log("offers data -->", result);
-  //       setData(result);
-  //       setLoading(true);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+  
   const fetchClickLogsData = async (startDate, endDate) => {
     try {
 
       if (!startDate || !endDate) {
-        // Handle the case where startDate or endDate is not defined
         console.error('Start date or end date is not defined');
         return;
       }
@@ -274,12 +242,6 @@ const ClickLogs = () => {
   };
 
   useEffect(() => {
-    // Any code that depends on the updated selectedOffer should be placed here
-    // For example, you can call a function or log the updated selectedOffer.
-
-    console.log("Selected Offer has been updated:", selectedOffer);
-
-    // Fetch click logs data when selectedOffer changes
     fetchClickLogsData(startDate, endDate);
 
   }, [selectedOffer]);
