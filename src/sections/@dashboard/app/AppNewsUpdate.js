@@ -45,7 +45,7 @@ NewsItem.propTypes = {
   news: PropTypes.shape({
     description: PropTypes.string,
     image: PropTypes.string,
-    postedAt: PropTypes.instanceOf(Date),
+    postedAt: PropTypes.string,
     title: PropTypes.string,
   }),
 };

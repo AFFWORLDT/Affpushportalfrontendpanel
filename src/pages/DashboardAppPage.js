@@ -25,6 +25,7 @@ import {
 import { afterLoginStorage   } from "../service/localStorage";
 import { getUserFromLocalStorage } from '../service/localStorage';
 
+
 // import PrivateComponent from "../components/PrivateRoute";
 
 // ----------------------------------------------------------------------
@@ -39,12 +40,18 @@ export default function DashboardAppPage() {
   const [loading, setLoading] = useState(false);
   const URL2 = process.env.REACT_APP_PROD_API;
   const URL3 = process.env.REACT_APP_PROD_ADMIN_API;
+
+  const PrivateCheck = () => {
+    const auth = localStorage.getItem("user");
+    if (!auth) {
+      navigate('/login');
+    }
+  }
+ 
   
   const fetchData = async () => {
     const url = `${URL2}/api/analytics/clicks`;
-    // console.log("THis is user data --->", url);
     const accessToken = user1.data.access_token;
-    // console.log("This is access token --->", accessToken);
     try {
       const response = await axios.get(url, {
         headers: {
@@ -52,8 +59,6 @@ export default function DashboardAppPage() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      
-      console.log('this is response this is laxmikant edit page  --->', response);
       setData(response.data);
       setLoading(true);
     } catch (error) {
@@ -94,6 +99,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     // Check if user is authenticated
     // privateCheck();
+    PrivateCheck();
     afterLoginStorage(
       (res) => {
         setUser(res);
@@ -125,11 +131,11 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid style={{ cursor: 'pointer' }}
             onClick={() => navigate("/affilate/offers")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See Offers" total={"92"} icon={'ant-design:gold-filled'} />
+            <AppWidgetSummary title="See Offers" total={97} icon={'ant-design:gold-filled'} />
           </Grid>
           <Grid style={{ cursor: 'pointer' }}
             onClick={() => navigate("/affilate/clicklogs")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="See ClickLogs" total={"92"} icon={'ant-design:gold-filled'} />
+            <AppWidgetSummary title="See ClickLogs" total={92} icon={'ant-design:gold-filled'} />
           </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/conversions")}
@@ -244,7 +250,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentSubject
-              title="Current Subject"
+              title="Current Campagins"
               chartLabels={['KhelRaja', '1xBet', 'Cricbuzz', 'RoyalCasino', 'rollingslots', 'vulkan', 'STAKE']}
               chartData={[
                 { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },

@@ -1,9 +1,4 @@
 import axios from "axios";
-
-
- 
-
-
 export const afterLoginStorage = async (
   onSuccess = () => {}
 ) => {
@@ -67,6 +62,7 @@ export const getResFromLocalStorage = () => {
   // const result = localStorage.getItem("user");
   const res = JSON.parse(resData); // Parse the JSON data
 
-  
   return res;
 };
+
+

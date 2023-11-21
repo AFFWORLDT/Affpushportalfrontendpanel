@@ -39,7 +39,6 @@ const ClickLogs = () => {
   const [pageData, setPageData] = useState([]);
   const user2 = getUserFromLocalStorage();
   const accessToken = user2?.data.access_token;
-  const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const URL2 = process.env.REACT_APP_PROD_API;
   const URL3 = process.env.REACT_APP_PROD_ADMIN_API;
   const url1 = `${URL2}/api/analytics/clicks_and_postbacks`;
