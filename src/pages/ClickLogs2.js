@@ -14,17 +14,19 @@ export default function ClickLogs2() {
   const [service, setService] = useState([]);
   const [sname, setSname] = useState();
   const [serviceObj, setServiceObj] = useState(null);
-  const [quantity, setQuantity] = useState();
-  const [timing, setTiming] = useState();
+  const [quantity, setQuantity] = useState(100);
+  var [timing, setTiming] = useState();
   const [link, setLink] = useState();
-  const [maxExecutions, setMaxExecutions] = useState();
+  const [maxExecutions, setMaxExecutions] = useState(1);
   const { handleSubmit, control } = useForm();
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalCharges, setTotalCharges] = useState(0);
   const URL = process.env.REACT_APP_PROD_FILINGSOLUTIONS_API;
 
   const getData = async () => {
     try {
       const response = await axios.get(`${URL}/api/service-list`);
-      if(response.status === 200) {
+      if (response.status === 200) {
         toast.success("Services fetched successfully!!");
         setData(response?.data);
         setCategoryOption(data.category);
@@ -35,12 +37,44 @@ export default function ClickLogs2() {
     }
   }
 
+  const handleTiming = (e) => {
+    const inputTiming = e.target.value;
+    // Split the input into days, hours, and minutes
+    const [days, hours, minutes] = inputTiming.split('/').map(Number);
+
+    // Calculate the total milliseconds
+    const totalMilliseconds = (days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60) * 1000;
+
+    // Update the state with the calculated milliseconds
+    setTiming(totalMilliseconds);
+  }
+
   const uniqueCategories = Object.values(data).map(item => item.category);
   const uniqueCategoriesSet = [...new Set(uniqueCategories)];
 
   useEffect(() => {
     getData();
   }, []);
+
+  const updateQunatityCharge = () => {
+
+    let totalQuantity = 0;
+    let totalCharges = 0;
+
+    totalQuantity = quantity * maxExecutions;
+    totalCharges = (quantity * maxExecutions) / 100;
+
+    setTotalQuantity(totalQuantity);
+    setTotalCharges(totalCharges);
+
+  }
+
+  useEffect(() => {
+
+
+    updateQunatityCharge();
+
+  }, [quantity, maxExecutions])
 
   useEffect(() => {
     if (selectedCategory) {
@@ -64,13 +98,13 @@ export default function ClickLogs2() {
         maxExecutions: maxExecutions,
         affiliate_id: account.affiliate_id
       };
-    
+
       const res = await axios.post(`${URL}/api/jobs`, data);
-      
-      if(res.status === 200) {
+
+      if (res.status === 200) {
         toast.success("Campagin Added successfully see Statistics!!");
       }
-      
+
 
 
     } catch (error) {
@@ -81,89 +115,124 @@ export default function ClickLogs2() {
   return (
     <>
       <h1 className='text-center'>Add Campagin</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="form">
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <Input
-            fullWidth
-            name="name"
-            onChange={(e) => setSname(e.target.value)}
-            placeholder="Enter Service name"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="category">Category</label>
-          <select
-            id="categoryDropdown"
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            value={selectedCategory}
-          >
-            {uniqueCategoriesSet.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-  
-        <div className="form-group">
-          <label htmlFor="services">Services</label>
-          <select onChange={(e) => setServiceObj(e.target.value)}>
-            {serviceOptions?.map((option, index) => (
-              <option key={index} value={option.serviceId}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-        </div>
+
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} className="form">
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <Input
+              fullWidth
+              name="name"
+              onChange={(e) => setSname(e.target.value)}
+              placeholder="Enter Service name"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <select
+              id="categoryDropdown"
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              value={selectedCategory}
+            >
+              {uniqueCategoriesSet.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="services">Services</label>
+            <select onChange={(e) => setServiceObj(e.target.value)}>
+              {serviceOptions?.map((option, index) => (
+                <option key={index} value={option.serviceId}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
 
 
-        <div className="form-group">
-          <label htmlFor="quantity">Quantity</label>
-          <Input
-            fullWidth
-            name="quantity"
-            type='number'
-            placeholder='Enter quantity'
-            onChange={(e) => setQuantity(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="timing">Timing</label>
-          <Input
-            fullWidth
-            name="timing"
-            type='number'
-            placeholder='Enter timing'
-            onChange={(e) => setTiming(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="link">Link</label>
-          <Input
-            fullWidth
-            name="link"
-            placeholder='Enter link'
-            onChange={(e) => setLink(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="maxExecutions">Max Executions</label>
-          <Input
-            fullWidth
-            type='number'
-            name="maxExecutions"
-            placeholder='Enter maxExecutions'
-            onChange={(e) => setMaxExecutions(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="quantity">Quantity</label>
+            <Input
+              fullWidth
+              name="quantity"
+              type='number'
+              value={quantity}
+              placeholder='Enter quantity (Minimum 100)'
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="timing">Timing (dd/hh/mm)</label>
+            <Input
+              fullWidth
+              name="timing"
+              placeholder='Enter timing (dd/hh/mm)'
+              onChange={handleTiming}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="link">Link</label>
+            <Input
+              fullWidth
+              name="link"
+              placeholder='Enter link'
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="maxExecutions">Max Executions</label>
+            <Input
+              fullWidth
+              type='number'
+              name="maxExecutions"
+              value={maxExecutions}
+              placeholder='Enter maxExecutions'
+              onChange={(e) => setMaxExecutions(e.target.value)}
+            />
+          </div>
 
-        <div className='form-group submit d-flex justify-content-center  align-items-center'>
-          <Button type="submit" variant="contained" color="success" >Submit</Button>
-        </div>
+          <div className="form-group">
+            <label htmlFor="totalQuantity">Total Quantity</label>
+            <Input
+              fullWidth
+              type='number'
+              name="totalQuantity"
+              value={totalQuantity}
+              placeholder='Total Quantity'
+            />
+          </div>
 
-      </form>
+
+          <div className="form-group">
+            <label htmlFor="maxExecutions">Total Charges </label>
+            <Input
+              fullWidth
+              type='number'
+              name="totalCharges"
+              value={totalCharges}
+              placeholder='Total Charges'
+              
+            />
+          </div>
+
+          <div className='form-group submit d-flex justify-content-center  align-items-center'>
+            <Button type="submit" variant="contained" color="success" >Submit</Button>
+          </div>
+
+        </form>
+
+
+
+
+      </div>
+
+
+
     </>
   )
 }
