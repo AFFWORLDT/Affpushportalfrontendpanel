@@ -12,6 +12,7 @@ import {
     Grid,
     TextField,
     LinearProgress,
+    Input,
 } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -23,6 +24,7 @@ import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
 import ManagersTable from './ManagersTable';
 import account from 'src/_mock/account';
+import { Image } from 'react-bootstrap';
 
 function UserDetails() {
 
@@ -650,14 +652,30 @@ function UserDetails() {
             <Box>
                 <Typography className={classes.boxstyle}> User Details </Typography>
             </Box>
+        
+
             <Grid style={{ padding: "300", minChildWidth: "300", spacing: "5" }}>
                 <Box style={{ display: "flex", flexDirection: "column", maxWidth: "1200px", height: "250", backgroundColor: "#EDF2F7", flexWrap: "wrap", overflowX: "auto", overflowY: "auto" }} className={classes.boxstyleForm1}>
-                    <Box width={"100%"} height={180} bg={"gray.100"} >
+                    <Box style={{ padding: "300", minChildWidth: "300", spacing: "5" }} width={"100%"} height={180} bg={"gray.100"} >
                         <Box style={{ display: "flex", flexDirection: "row", width: "95%", marginBottom: "7px", marginTop: "6px", height: 150 }} >
                             <Box style={{ backgroundColor: blue[100], borderRadius: "10px", height: "150px", width: "120px", padding: "1px" }}>
-                                <Typography style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: "center" }}>
-                                    Profile Photo
-                                </Typography>
+
+                                {account.photoURL === "" ? 
+                                <>
+
+                                    <Input type="file" onChange={handleImageChange} />
+                                    <Button variant="contained" component="span" color="primary" onClick={fetchImage}> Upload</Button>
+                                
+                                </>
+                                
+                                 : 
+                                
+                                <Image src={account.photoURL} rounded />
+                                
+                                }
+
+                                
+
                             </Box>
 
                             <Box style={{ marginLeft: "10px", height: "150px", width: "100%" }} >
@@ -705,7 +723,7 @@ function UserDetails() {
                                         <Button style={{ backgroundColor: "blue", color: "white", width: "100%" }}> RESET PASSWORD</Button>
                                     </Box>
                                 </Box>
-                                <Box display={"flex"} flexDirection={"row"} h={"50%"} >
+                                <Box h={"50%"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}  >
                                     <Box className={classes.innerbox}>
                                         <Box>
                                             {walletData?.total_earnings ? walletData?.total_earnings : 0}

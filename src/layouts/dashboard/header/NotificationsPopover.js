@@ -79,9 +79,6 @@ const updatedNotifications = [...transformedNotifications];
   
 
   const getNotification = async () => {
-    
-      console.log("ACCESS__",accessToken);
-      console.log("URL__",url);
         try {
 
       const headers = {

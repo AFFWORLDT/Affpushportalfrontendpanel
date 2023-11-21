@@ -122,6 +122,13 @@ const Chistory = () => {
     }
   };
 
+  const formatMilliseconds = (milliseconds) => {
+    const days = Math.floor(milliseconds / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((milliseconds % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    const minutes = Math.floor((milliseconds % (60 * 60 * 1000)) / (60 * 1000));
+  
+    return `${days}d/${hours}h/${minutes}m`;
+  };
 
 
 
@@ -187,7 +194,7 @@ const Chistory = () => {
                         {"   "}
                         <span style={{ fontWeight: 700 }}>{row?.status} </span>
                       </TableCell>
-                      <TableCell align="center">{row?.timing}</TableCell>
+                      <TableCell align="center">{formatMilliseconds(row?.timing)}</TableCell>
                       <TableCell align="center">{row?.executionCount}</TableCell>
                       <TableCell align="center">{row?.quantity}</TableCell>
                       <TableCell align="center">{row?.totalCharges}</TableCell>
