@@ -130,6 +130,10 @@ const Chistory = () => {
     return `${days}d/${hours}h/${minutes}m`;
   };
 
+  const totalCharges = data?.reduce((acc, item) => {
+    return acc + (item?.totalCharges ?? 0);
+  }, 0);
+
 
 
   useEffect(() => {
@@ -141,6 +145,7 @@ const Chistory = () => {
     <div>
       <h1 className='text-center'> Campagin History </h1>
       <h2 className='text-center'> Welcome {affiliate_name} !! </h2>
+      <h3>Total Charges : ₹{totalCharges}</h3>
 
       {loading ? (
         <Box sx={{ width: '100%' }}>
@@ -197,7 +202,7 @@ const Chistory = () => {
                       <TableCell align="center">{formatMilliseconds(row?.timing)}</TableCell>
                       <TableCell align="center">{row?.executionCount}</TableCell>
                       <TableCell align="center">{row?.quantity}</TableCell>
-                      <TableCell align="center">{row?.totalCharges}</TableCell>
+                      <TableCell align="center">₹ {row?.totalCharges}</TableCell>
                       <TableCell align="center">{row?.totalQuantity}</TableCell>
                       <TableCell align="center">
                         <Button
