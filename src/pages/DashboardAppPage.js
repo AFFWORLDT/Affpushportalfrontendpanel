@@ -63,7 +63,7 @@ export default function DashboardAppPage() {
       setLoading(true);
     } catch (error) {
       console.log('Error While Fetching data click --->', error);
-      toast.error('Error in Fetching Data');
+      toast.error('Session Expired Please Login Again');
     }
   };
 

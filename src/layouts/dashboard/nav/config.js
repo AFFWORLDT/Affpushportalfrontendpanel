@@ -1,5 +1,11 @@
 // component
 import SvgColor from '../../../components/svg-color';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import TaskIcon from '@mui/icons-material/Task';
+
 
 
 // ----------------------------------------------------------------------
@@ -17,27 +23,27 @@ const navConfig = [
   {
     title: 'Offers',
     path: '/affilate/offers',
-    icon: icon('ic_disabled'),
+    icon: <LocalOfferIcon/>,
   },
   {
     title: 'Conversions',
     path: '/affilate/conversions',
-    icon: icon('ic_disabled'),
+    icon: <ChangeCircleIcon/>,
   },
   {
     title: 'ClickLogs',
     path: '/affilate/clicklogs',
-    icon: icon('ic_disabled'),
+    icon: <QueryStatsIcon/>,
   },
   {
     title: 'Campaign Management',
     path: '/dashboard/clicklogs2',
-    icon: icon('ic_disabled'),
+    icon: <PostAddIcon/>,
   },
   {
     title: 'C-Statistics',
     path: '/dashboard/chistory',
-    icon: icon('ic_disabled'),
+    icon: <TaskIcon/>,
   },
   // {
   //   title: 'user',
