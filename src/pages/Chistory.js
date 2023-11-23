@@ -1,4 +1,4 @@
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, ButtonBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
@@ -19,6 +19,10 @@ const Chistory = () => {
   const [apires, setApires] = useState([]);
   const URL = process.env.REACT_APP_PROD_FILINGSOLUTIONS_API;
   const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [isDetailsStatus, setIsDetailsStatus] = useState(false);
+  const [orderStatus, setOrderStatus] = useState();
+
+
   const [serviceToDelete, setServiceToDelete] = useState(null);
 
 
@@ -54,10 +58,6 @@ const Chistory = () => {
   }
 
   const handleApires = (apires) => {
-
-    console.log("this is apires array--->", apires.apiResponse);
-
-
     setApires(apires.apiResponse);
     setIsOpen(true);
   }
@@ -78,24 +78,8 @@ const Chistory = () => {
     }
   }
 
-  // const handleDelete = async (row) => {
 
 
-  //   try {
-  //     const url = `${URL}/api/jobs/${row?._id}`;
-  //     const res = await axios.delete(url);
-
-  //     if (res.status === 200) {
-  //       toast.success(`Job  of ${row?.name} has been deleted successfully`, {
-  //         position: toast.POSITION.TOP_CENTER,
-  //       })
-  //     }
-  //     getJobData();
-  //   } catch (error) {
-  //     console.log("Error in deleting--->", error);
-  //     toast.error("Error in deleting!!");
-  //   }
-  // }
 
   const handleDelete = (row) => {
     setServiceToDelete(row);
@@ -126,13 +110,35 @@ const Chistory = () => {
     const days = Math.floor(milliseconds / (24 * 60 * 60 * 1000));
     const hours = Math.floor((milliseconds % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
     const minutes = Math.floor((milliseconds % (60 * 60 * 1000)) / (60 * 1000));
-  
+
     return `${days}d/${hours}h/${minutes}m`;
   };
 
   const totalCharges = data?.reduce((acc, item) => {
     return acc + (item?.totalCharges ?? 0);
   }, 0);
+
+  const handleOrderStatus = async (item) => {
+
+    console.log("this is item for status--->", item.response.order);
+
+    const order = item.response.order;
+
+    try {
+      const res = await axios.post(`${URL}/api/check-order-status`, { order });
+      console.log("this is res for Order Status--->", res);
+      setOrderStatus(res.data);
+      setIsDetailsStatus(true);
+
+
+    } catch (error) {
+      console.log("Error While getting Status Of Order --->", error);
+      toast.error("Error While getting Status Of Order !!");
+
+    }
+
+
+  }
 
 
 
@@ -146,7 +152,6 @@ const Chistory = () => {
       <h1 className='text-center'> Campagin History </h1>
       <h2 className='text-center'> Welcome {affiliate_name} !! </h2>
       <h3>Total Charges : ₹{totalCharges}</h3>
-
       {loading ? (
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
@@ -228,31 +233,25 @@ const Chistory = () => {
                   ))
 
                 )
-
-
-
               }
-
-
-
             </TableBody>
           </Table>
         </TableContainer>
-
       )
       }
 
       <Modal onClose={() => setIsOpen(false)} open={isOpen}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: 24, p: 2, borderRadius: '8px', width: '60%' }}>
-          <Typography variant="h6" align="center" gutterBottom>
+        <Box sx={{ margin: "auto" }} >
+          <Typography component="h1" backgroundColor="white" variant="h6" align="center" gutterBottom>
             Api Response
           </Typography>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>Order</TableCell>
-                <TableCell>Time Stamp</TableCell>
+                <TableCell className='text-center'>No.</TableCell>
+                <TableCell className='text-center'>Order</TableCell>
+                <TableCell className='text-center'>Time Stamp</TableCell>
+                <TableCell className='text-center'>Order Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -264,18 +263,22 @@ const Chistory = () => {
                     style={{ backgroundColor: index % 2 === 0 ? '#f2f2f2' : 'white' }} // Alternating colors
 
                   >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item?.response?.order}</TableCell>
-                    <TableCell>{item?.timestamp}</TableCell>
+                    <TableCell className='text-center'>{index + 1}</TableCell>
+                    <TableCell className='text-center' >{item?.response?.order}</TableCell>
+                    <TableCell className='text-center' >{item?.timestamp}</TableCell>
+                    <TableCell className='text-center'>
+                      <Button variant='contained' color='success' onClick={() => handleOrderStatus(item)} >
+                        Details
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               }
             </TableBody>
+            <Button variant='contained' color='error' onClick={() => setIsOpen(false)}>Close</Button>
           </Table>
-          <Button onClick={() => setIsOpen(false)}>Close</Button>
         </Box>
       </Modal>
-
       <Modal onClose={() => setDeleteConfirmationOpen(false)} open={isDeleteConfirmationOpen}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: 24, p: 2, borderRadius: '8px', width: '60%' }}>
           <Typography variant="h6" align="center" gutterBottom>
@@ -295,11 +298,25 @@ const Chistory = () => {
         </Box>
       </Modal>
 
-
-
-
+      <Modal onClose={() => setIsDetailsStatus(false)} open={isDetailsStatus}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: 24, p: 2, borderRadius: '8px', width: '60%' }}>
+          <Table >
+            <TableHead>
+              <TableRow>
+                <TableCell className='text-center'>Status</TableCell>
+                <TableCell className='text-center'>Remaining</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow style={{ backgroundColor: '#f2f2f2' }}>
+                <TableCell className='text-center' ><b style={{ color: 'green' }} >{orderStatus?.status}   <CloudDoneIcon />     </b></TableCell>
+                <TableCell className='text-center' >{orderStatus?.remains}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Box>
+      </Modal>
     </div>
   )
 }
-
 export default Chistory
