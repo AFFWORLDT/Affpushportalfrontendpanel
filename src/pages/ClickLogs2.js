@@ -27,7 +27,7 @@ export default function ClickLogs2() {
     try {
       const response = await axios.get(`${URL}/api/service-list`);
       if (response.status === 200) {
-        toast.success("Services fetched successfully!!");
+        // toast.success("Services fetched successfully!!");
         setData(response?.data);
         setCategoryOption(data.category);
       }
@@ -45,7 +45,7 @@ export default function ClickLogs2() {
     // Calculate the total milliseconds
     const totalMilliseconds = (days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60) * 1000;
 
-    // Update the state with the calculated milliseconds
+   
     setTiming(totalMilliseconds);
   }
 

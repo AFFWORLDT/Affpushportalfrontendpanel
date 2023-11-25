@@ -28,13 +28,6 @@ const Conversions = () => {
   const navigate = useNavigate();
   const [totalCount, setTotalCount] = useState(0);
 
-
-
-
-
-
-
-
   const privateCheck = () => {
     const auth = localStorage.getItem("user");
     if (!auth) {
@@ -44,9 +37,9 @@ const Conversions = () => {
 
   const fetchData = async () => {
     const url = `${URL2}/api/analytics/clicks`;
-    // console.log("THis is user data --->", url);
+  
     const accessToken = user.data.access_token;
-    // console.log("This is access token --->", accessToken);
+  
     try {
       const response = await axios.get(url, {
         headers: {
