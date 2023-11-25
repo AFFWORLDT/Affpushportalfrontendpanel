@@ -26,9 +26,6 @@ export default function Router() {
       element:
 
         <DashboardLayout />,
-
-
-
       children: [
         { element: <Navigate to="/dashboard" />, index: true },
         { path: 'app', element: <PrivateComponent children={<DashboardAppPage />} /> },

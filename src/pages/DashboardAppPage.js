@@ -24,6 +24,7 @@ import {
 } from '../sections/@dashboard/app';
 import { afterLoginStorage   } from "../service/localStorage";
 import { getUserFromLocalStorage } from '../service/localStorage';
+import { removeUserFromLocalStorage } from '../service/localStorage';
 
 
 // import PrivateComponent from "../components/PrivateRoute";
@@ -64,6 +65,8 @@ export default function DashboardAppPage() {
     } catch (error) {
       console.log('Error While Fetching data click --->', error);
       toast.error('Session Expired Please Login Again');
+      navigate('/login');
+      removeUserFromLocalStorage();
     }
   };
 

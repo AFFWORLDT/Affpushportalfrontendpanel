@@ -1,8 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
-
-
 export const afterLoginStorage = async () => {
   const URL = process.env.REACT_APP_PROD_API;
 
