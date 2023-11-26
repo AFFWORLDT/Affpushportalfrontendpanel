@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Button, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Box, Select, MenuItem, FormControl, InputLabel, Modal } from '@mui/material';
 import { toast } from 'react-toastify';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -38,6 +38,8 @@ const Offers = () => {
   const [pageData, setPageData] = useState([]);
   const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
   const [status, setStatus] = useState('');
+  const [payoutVal , setPayoutVal] = useState();
+  const [ isPayoutVal , setIsPayoutVal] = useState(false); 
   const PrivateCheck = () => {
     const auth = localStorage.getItem("user");
     if (!auth) {
@@ -65,7 +67,7 @@ const Offers = () => {
   }, [status]);
 
   useEffect(() => {
-    console.log("DATA__", data);
+    // console.log("DATA__", data);
     (data.map((each) => {
     }))
   }, [data]);
@@ -111,10 +113,10 @@ const Offers = () => {
 
   const handleCopyAff = (item) => {
     const link = `${URL}/${item?.code}?affiliate_id=${res.data.affiliate_id}`;
-    console.log('Copy clicked');
-    console.log('Link is -->', link);
-    console.log('This is res --->', res);
-    console.log('This is user affiliate id -----> :', res.data.affiliate_id);
+    // console.log('Copy clicked');
+    // console.log('Link is -->', link);
+    // console.log('This is res --->', res);
+    // console.log('This is user affiliate id -----> :', res.data.affiliate_id);
 
     try {
 
@@ -181,6 +183,12 @@ const Offers = () => {
     XLSX.writeFile(wb, fileName);
   };
 
+  const handlePayout = (row)=>{
+    setPayoutVal(row?.payouts);
+    setIsPayoutVal(true);
+    // console.log("row this is payout row--->", row?.payouts);
+  }
+
   useEffect(() => {
     const startIndex = page * rowsPerPage;
     const dataForPage = data.slice(startIndex, startIndex + rowsPerPage);
@@ -207,6 +215,7 @@ const Offers = () => {
       <FormControl sx={{ width: 200 }}>
         <InputLabel id="demo-simple-select-label">All Offers</InputLabel>
         <Select
+          defaultValue=""
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={status}
@@ -228,18 +237,13 @@ const Offers = () => {
               <TableCell>Offers</TableCell>
               <TableCell align="center">Category</TableCell>
               <TableCell align="center">Tags</TableCell>
-
-
               <TableCell align="center">Description</TableCell>
-
               <TableCell align="center">Payout</TableCell>
-              {/* <TableCell align="center">Tags</TableCell> */}
               <TableCell align="center">Metrics</TableCell>
               <TableCell align="center">Country</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Iframe</TableCell>
               <TableCell align="center">Action</TableCell>
-              <TableCell align="center">Details</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -255,7 +259,9 @@ const Offers = () => {
                     <TableCell align="center">
 
 
-                      <Select>
+                      <Select
+                        defaultValue=""
+                      >
                         {row?.tags?.map((tag, index) => (
                           <option key={index} value={tag}>
                             {tag}
@@ -264,16 +270,22 @@ const Offers = () => {
 
 
                       </Select>
+                    </TableCell>
+                    <TableCell align="center">{row?.description === null ? "N/A" : row?.description}</TableCell>
+
+                    <TableCell align="center">
+
+                      <Button
+                        variant='contained'
+                        onClick={() => handlePayout(row)}>
+
+                        See Payouts
+
+                      </Button>
 
 
 
                     </TableCell>
-                    {/* <TableCell align="center">{row?.description}</TableCell> */}
-
-
-                    <TableCell align="center">{row?.description === null ? "N/A" : row?.description}</TableCell>
-
-                    <TableCell align="center">$20</TableCell>
                     <TableCell align="center">
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -317,20 +329,6 @@ const Offers = () => {
                         {row?.type === "Private" ? 'Get Approval' : (copied ? 'Copied' : 'Copy Link')}
                       </Button>
                     </TableCell>
-
-
-                    <TableCell align="center">
-                      <Button
-                        onClick={() => {
-                          navigate('/affilate/detail-offer');
-                        }}
-                        variant="contained"
-                        color="success"
-                        style={{ fontWeight: 700 }}
-                      >
-                        More Detail
-                      </Button>
-                    </TableCell>
                   </TableRow>
                 ))
               ) : null
@@ -353,6 +351,34 @@ const Offers = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </TableContainer>
+
+
+      <Modal onClose={() => setIsPayoutVal(false)} open={isPayoutVal}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: 24, p: 2, borderRadius: '8px', width: '90%' }}>
+          <Table >
+            <TableHead>
+              <TableRow>
+                <TableCell className='text-center'>Reg</TableCell>
+                <TableCell className='text-center'>Ftd</TableCell>
+                <TableCell className='text-center'>deposite</TableCell>
+                <TableCell className='text-center'>Deposite</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow style={{ backgroundColor: '#f2f2f2' }}>
+                <TableCell className='text-center' >{payoutVal?.reg ? payoutVal?.reg : "N/A"}</TableCell>
+                <TableCell className='text-center' >{payoutVal?.ftd ? payoutVal?.ftd : "N/A"}</TableCell>
+                <TableCell className='text-center' >{payoutVal?.deposit ? payoutVal?.deposit : "N/A"}</TableCell>
+                <TableCell className='text-center' >{payoutVal?.Deposit ? payoutVal?.Deposit : "N/A"}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Box>
+      </Modal>
+
+
+
+
 
     </>
   );

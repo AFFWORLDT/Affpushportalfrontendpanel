@@ -48,7 +48,7 @@ const Conversions = () => {
         },
       });
       
-      console.log('this is response this is laxmikant edit page  --->', response);
+      // console.log('this is response this is laxmikant edit page  --->', response);
       setData(response.data);
       setLoading(true);
     } catch (error) {
@@ -71,7 +71,7 @@ const Conversions = () => {
   const handlePostback = async (item) => {
     const accessToken = user.data.access_token;
     const campageinId = item.campaign_id;
-    console.log('id is -->', campageinId);
+    // console.log('id is -->', campageinId);
     const url = `${URL2}/api/analytics/postback?campaign_id=${campageinId}`;
 
     setIsOpen(true);
@@ -83,7 +83,7 @@ const Conversions = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log('data of post back data in clickcon------>', response.data);
+      // console.log('data of post back data in clickcon------>', response.data);
       setPostData(response.data);
       setLoading(true);
     } catch (error) {
