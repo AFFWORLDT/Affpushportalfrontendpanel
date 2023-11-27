@@ -163,6 +163,7 @@ const Offers = () => {
       }
 
       const jsonData = await response.json();
+      console.log("jsonData.approval_status____",jsonData.approval_status);
       if (jsonData.approval_status === 'approved') {
         setButtonStates((prevStates) => ({
           ...prevStates,
@@ -301,13 +302,13 @@ const Offers = () => {
           }));
           await sendRequest(row?._id);
         }
-
+        console.log('Button clicked and changed to pending for row:', row._id);
         
         // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
         
       }
       
-      console.log('Button clicked and changed to pending for row:', row._id);
+      
     } catch (error) {
       console.error('Error:', error);
     }
@@ -529,21 +530,7 @@ const Offers = () => {
 </TableCell>
 
 
-                    <TableCell align="center">
-                      <Button
-                        onClick={() => {
-                          if (row?.type === "Public" || row?.type === null) {
-                            handleCopyAff(row);
-                          } else if (row?.type === "Private") {
-                            navigate('/affilate/detail-offer');
-                          }
-                        }}
-                        variant="contained"
-                        style={{ fontWeight: 700 }}
-                      >
-                        {row?.type === "Private" ? 'Get Approval' : (copied ? 'Copied' : 'Copy Link')}
-                      </Button>
-                    </TableCell>
+                    
                   </TableRow>
                 ))
               ) : null
