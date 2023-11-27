@@ -47,7 +47,7 @@ const Offers = () => {
   const url = `${URL}/approve/`;
   //const url ="http://localhost:8000/approve/";
   const affiliateId = res?.data.affiliate_id;
-  const [buttonText, setButtonText] = useState('Get Approval');
+  const [approveData,setApproveData] = useState([]);
   
 
 
@@ -107,11 +107,22 @@ const Offers = () => {
   //   (data.map((each)=>{
   //     console.log("NAME__",each?.name);
   //     console.log("TYPE__",each?.type);
-
+  //   }))
   //   // console.log("DATA__", data);
   //   (data.map((each) => {
   //   }))
-  // }, [data]);
+
+    
+  // }, [data])
+
+
+  useEffect(()=>{
+    (data.map((row) => {
+      console.log("NAME__",row?.name);
+      console.log("buttonStates[row._id]____",buttonStates[row._id]);
+        }))
+    
+  },[data])
 
   const fetchData = async () => {
     try {
@@ -128,7 +139,9 @@ const Offers = () => {
       setLoading(true);
 
       for (const row of result.data) {
+        if (row?.type === 'Private') {
         await checkApprovalStatus(row);
+        }
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -140,7 +153,7 @@ const Offers = () => {
   const checkApprovalStatus = async (row) => {
     
     try {
-      const url_approve=`${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}&approval_status=pending`
+      const url_approve=`${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}`
       // Replace with your actual access token
       const headers = {
         'Content-Type': 'application/json',
@@ -163,22 +176,25 @@ const Offers = () => {
       }
 
       const jsonData = await response.json();
-      console.log("jsonData.approval_status____",jsonData.approval_status);
-      if (jsonData.approval_status === 'approved') {
+      console.log("jsonData",jsonData);
+      console.log("jsonData.approval_status____",jsonData[0]?.approval_status);
+      if (jsonData[0]?.approval_status === 'approved') {
         setButtonStates((prevStates) => ({
           ...prevStates,
           [row._id]: 'Approved',
         }));
-      } else if (jsonData.approval_status === 'disapproved') {
+      } else if (jsonData[0]?.approval_status === 'disapproved') {
         setButtonStates((prevStates) => ({
           ...prevStates,
           [row._id]: 'Disapproved',
         }));
-      } else if (jsonData.approval_status === 'pending') {
+      } else if (jsonData[0]?.approval_status === 'pending') {
         setButtonStates((prevStates) => ({
           ...prevStates,
           [row._id]: 'Pending',
         }));
+
+        
       }
       
     } catch (error) {
@@ -295,7 +311,7 @@ const Offers = () => {
           await handleCopyAff(row);
         }
         
-        if (buttonStates[row._id]==="Pending"){
+        else{
           setButtonStates((prevStates) => ({
             ...prevStates,
             [row._id]: 'Pending',
