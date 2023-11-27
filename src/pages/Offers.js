@@ -22,7 +22,7 @@ import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import PauseIcon from '@mui/icons-material/Pause';
 import { fontWeight } from '@mui/system';
 import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
-import { PrivateCheck } from 'src/utils/localStorage';
+
 
 
 
@@ -94,12 +94,7 @@ const Offers = () => {
   //     console.error('Error fetching data:', error);
   //   }
   // };
-  useEffect(() => {
-    // Call the 'fetchData' function when the 'status' state changes
-
-    PrivateCheck();
-    
-  }, []);
+  
 
 
   useEffect(() => {
