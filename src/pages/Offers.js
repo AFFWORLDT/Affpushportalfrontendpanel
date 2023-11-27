@@ -20,8 +20,10 @@ import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/loca
 import axios from 'axios';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import PauseIcon from '@mui/icons-material/Pause';
+import { fontWeight } from '@mui/system';
 import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
 import { PrivateCheck } from 'src/utils/localStorage';
+
 
 
 const Offers = () => {
@@ -37,15 +39,30 @@ const Offers = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageData, setPageData] = useState([]);
   const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
-  const [status, setStatus] = useState('');
-  const [payoutVal , setPayoutVal] = useState();
-  const [ isPayoutVal , setIsPayoutVal] = useState(false); 
-  const PrivateCheck = () => {
-    const auth = localStorage.getItem("user");
+
+  const [status, setStatus] = useState("");
+  const [buttonStates, setButtonStates] = useState({});
+  const user2 = getUserFromLocalStorage();
+  const accessToken = user2?.data.access_token;
+  const url = `${URL}/approve/`;
+  //const url ="http://localhost:8000/approve/";
+  const affiliateId = res?.data.affiliate_id;
+  const [buttonText, setButtonText] = useState('Get Approval');
+  
+
+
+  const privateCheck = () => {
+    const auth = localStorage.getItem('user');
     if (!auth) {
       navigate('/login');
     }
-  }
+  };
+
+  
+  const [payoutVal , setPayoutVal] = useState();
+  const [ isPayoutVal , setIsPayoutVal] = useState(false); 
+  
+
 
 
   const handleChangePage = (event, newPage) => {
@@ -57,35 +74,168 @@ const Offers = () => {
   };
 
   useEffect(() => {
-    PrivateCheck();
+
+    privateCheck();
     fetchData();
+  }, []); // Use an empty dependency array to run the effect only once
+
+  // const fetchData = async () => {
+  //   try {
+  //     const result = await getData();
+      
+
+
+
+
+  //     console.log("offers data -->", result);
+  //     setData(result);
+  //     setLoading(true);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
+  useEffect(() => {
+    // Call the 'fetchData' function when the 'status' state changes
+
+    PrivateCheck();
+    
   }, []);
 
 
   useEffect(() => {
+
     fetchData();
   }, [status]);
 
-  useEffect(() => {
-    // console.log("DATA__", data);
-    (data.map((each) => {
-    }))
-  }, [data]);
+  // useEffect(() => {
+  //   console.log("DATA__",data);
+  //   (data.map((each)=>{
+  //     console.log("NAME__",each?.name);
+  //     console.log("TYPE__",each?.type);
+
+  //   // console.log("DATA__", data);
+  //   (data.map((each) => {
+  //   }))
+  // }, [data]);
 
   const fetchData = async () => {
     try {
+      console.log("status-->", status);
       const result = await axios.get(`${URL}/campaign/?page=1&status=${status}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.data.access_token}`,
         }
-      });
+      } );
+      
+      console.log("offers data -->", result);
       setData(result.data);
       setLoading(true);
+
+      for (const row of result.data) {
+        await checkApprovalStatus(row);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+
+
   };
+
+  const checkApprovalStatus = async (row) => {
+    
+    try {
+      const url_approve=`${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}&approval_status=pending`
+      // Replace with your actual access token
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      };
+     
+      
+      const response = await fetch(url_approve, {
+        method: 'GET',
+        headers: headers,
+        
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
+        // Log additional response data if needed
+        const responseData = await response.json();
+        console.error('Response Data:', responseData);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const jsonData = await response.json();
+      if (jsonData.approval_status === 'approved') {
+        setButtonStates((prevStates) => ({
+          ...prevStates,
+          [row._id]: 'Approved',
+        }));
+      } else if (jsonData.approval_status === 'disapproved') {
+        setButtonStates((prevStates) => ({
+          ...prevStates,
+          [row._id]: 'Disapproved',
+        }));
+      } else if (jsonData.approval_status === 'pending') {
+        setButtonStates((prevStates) => ({
+          ...prevStates,
+          [row._id]: 'Pending',
+        }));
+      }
+      
+    } catch (error) {
+      console.error('Error fetching approval status:', error);
+    }
+     
+    
+  };
+
+  
+ 
+
+
+  const sendRequest = async (campaignId) => {
+    
+    try {
+      // Replace with your actual access token
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      };
+      const requestData = {
+        
+          "affiliate_id": `${affiliateId}`,
+          "campaign_id": `${campaignId}`,
+          "request_sent": true,
+          "approval_status": "pending"
+        
+      };
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const jsonData = await response.json();
+     
+     
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      
+    }
+  };
+
+
+
+
+
 
   const handleIframe = async (row) => {
     try {
@@ -97,20 +247,18 @@ const Offers = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-      })
+      });
       console.log(response);
       if (response.status === 200) {
         toast.success("Iframe set successfully!!");
       }
-
-
-
     } catch (error) {
       console.log("Error While setting iframe-->", error);
       toast.error("Error While setting iframe!!");
     }
-  }
+  };
 
+  
   const handleCopyAff = (item) => {
     const link = `${URL}/${item?.code}?affiliate_id=${res.data.affiliate_id}`;
     // console.log('Copy clicked');
@@ -137,6 +285,64 @@ const Offers = () => {
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
+
+
+  const handleClick = async (row) => {
+    try {
+      if (row?.type === 'Public' || row?.type === null) {
+        await handleCopyAff(row);
+      } else if (row?.type === 'Private') {
+        // Update the state for the specific button
+        await checkApprovalStatus(row);
+      console.log("buttonStates[row._id]____",buttonStates[row._id]);
+        if (buttonStates[row._id]==="Approved"){
+          await handleCopyAff(row);
+        }
+        
+        if (buttonStates[row._id]==="Pending"){
+          setButtonStates((prevStates) => ({
+            ...prevStates,
+            [row._id]: 'Pending',
+          }));
+          await sendRequest(row?._id);
+        }
+
+        
+        // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
+        
+      }
+      
+      console.log('Button clicked and changed to pending for row:', row._id);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  // const handleClick = async (row) => {
+  //   try {
+  //     if (row?.type === 'Public' || row?.type === null) {
+  //       await handleCopyAff(row);
+  //     } else if (row?.type === 'Private') {
+  //       setButtonText('Pending'); 
+  //       // Update the state for the specific button
+  //       setButtonStates((prevStates) => ({
+  //         ...prevStates,
+  //         [row._id]: true,
+  //       }));
+  //       await sendRequest(row?._id);
+  //       // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
+  //     }
+  //     console.log('Button clicked and changed to pending');
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   } finally {
+  //     // Update the state for the specific button
+  //     setButtonStates((prevStates) => ({
+  //       ...prevStates,
+  //       [row._id]: false,
+  //     }));
+  //   }
+  // };
+
 
   const exportData = () => {
 
@@ -220,7 +426,8 @@ const Offers = () => {
           id="demo-simple-select"
           value={status}
           onChange={handleStatusChange}
-        >
+        > 
+        
           <MenuItem value="">All</MenuItem>
           <MenuItem value="paused">Paused</MenuItem>
           <MenuItem value="expired">Expired</MenuItem>
@@ -313,6 +520,19 @@ const Offers = () => {
                         Link Iframe
                       </Button>
                     </TableCell>
+                    
+                    <TableCell align="center">
+                    <Button
+        key={row._id}
+        onClick={() => handleClick(row)}
+        disabled={buttonStates[row._id] === 'Pending'}
+        variant="contained"
+        style={{ fontWeight: 700, marginBottom: '10px' }}
+      >
+        {row?.type === 'Private' ? (buttonStates[row._id]==="Approved" ? (copied ? 'Copied' : 'Copy Link') : buttonStates[row._id]==="Disapproved" ? 'Rejected' :buttonStates[row._id]==="Pending"? 'Pending': 'Get Approval') : (copied ? 'Copied' : 'Copy Link')  }
+      </Button>
+</TableCell>
+
 
                     <TableCell align="center">
                       <Button
