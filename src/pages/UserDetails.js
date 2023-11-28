@@ -23,6 +23,7 @@ import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
 import { getUserFromLocalStorage, getResFromLocalStorage } from '../utils/localStorage';
 import ManagersTable from './ManagersTable';
+import Campaign from './Campaign';
 import account from 'src/_mock/account';
 import { Image } from 'react-bootstrap';
 
@@ -799,7 +800,7 @@ function UserDetails() {
                             onClick={() => handleTabClick('managers')}>
                             Managers
                         </Typography>
-                        <Typography className={classes.textinBox}>Campaigns </Typography>
+                        <Typography className={classes.textinBox} onClick={() => handleTabClick('campaign')}>Campaigns </Typography>
                         <Typography className={classes.textinBox}>PostBacks</Typography>
                         <Typography className={classes.textinBox}>Payouts</Typography>
                         <Typography className={classes.textinBox}>Comapany</Typography>
@@ -813,6 +814,9 @@ function UserDetails() {
 
             {activeTab === 'managers' &&
                 <ManagersTable />
+            }
+            {activeTab === 'campaign' &&
+                <Campaign />
             }
 
             <ToastContainer />
