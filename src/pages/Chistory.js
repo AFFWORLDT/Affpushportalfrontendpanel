@@ -128,7 +128,7 @@ const Chistory = () => {
 
     try {
       const res = await axios.post(`${URL}/api/check-order-status`, { order });
-      console.log("this is res for Order Status--->", res);
+      // console.log("this is res for Order Status--->", res);
       setOrderStatus(res.data);
       setIsDetailsStatus(true);
 

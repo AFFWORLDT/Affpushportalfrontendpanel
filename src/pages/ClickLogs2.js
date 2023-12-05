@@ -44,8 +44,6 @@ export default function ClickLogs2() {
 
     // Calculate the total milliseconds
     const totalMilliseconds = (days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60) * 1000;
-
-   
     setTiming(totalMilliseconds);
   }
 
@@ -62,9 +60,11 @@ export default function ClickLogs2() {
     let totalCharges = 0;
 
     totalQuantity = quantity * maxExecutions;
+
     totalCharges = (quantity * maxExecutions) / 100;
 
     setTotalQuantity(totalQuantity);
+    
     setTotalCharges(totalCharges);
 
   }
