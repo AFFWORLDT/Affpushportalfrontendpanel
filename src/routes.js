@@ -17,6 +17,7 @@ import DynamicAds from './pages/DynamicAds';
 import ClickLogs from './pages/ClickLogs';
 import ClickLogs2 from './pages/ClickLogs2';
 import Chistory from './pages/Chistory';
+import PlayerPage from './pages/PlayerPage';
 
 
 
