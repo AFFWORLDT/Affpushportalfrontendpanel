@@ -45,6 +45,11 @@ const navConfig = [
     path: '/dashboard/chistory',
     icon: <TaskIcon/>,
   },
+  {
+    title: 'ConversionReport',
+    path: '/affilate/conversionReport',
+    icon: <ChangeCircleIcon/>,
+  },
   // {
   //   title: 'user',
   //   path: '/dashboard/user',
