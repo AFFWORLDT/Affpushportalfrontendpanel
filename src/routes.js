@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import Offers from './pages/Offers';
+import ConversionReport from './pages/ConversionReport';
 import DetailOffer from './pages/DetailOffer';
 import Conversions from './pages/Conversions';
 import PrivateComponent from './components/PrivateRoute';
@@ -33,6 +34,9 @@ export default function Router() {
           path: 'offers', element: <Offers />,
         },
         {
+          path: 'conversionReport', element: <ConversionReport />,
+        },
+        {
           path: 'clicklogs', element: <ClickLogs />,
         },
         {
@@ -48,6 +52,7 @@ export default function Router() {
       children: [
         { path: 'detail-offer', element: <DetailOffer /> },
         { path: 'offers', element: <Offers /> },
+        { path: 'conversionReport', element: <ConversionReport /> },
         { path: 'conversions', element: <Conversions /> },
         { path: 'payment/details', element: <PaymentDetails /> },
         { path: 'user/details', element: <UserDetails /> },
