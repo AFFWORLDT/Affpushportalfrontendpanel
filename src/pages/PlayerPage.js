@@ -7,7 +7,7 @@ const PlayerPage = () => {
 
   const handleClick = async () => {
     try {
-      const response = await axios.get(`https://reports-qoud.onrender.com/players/?cid=${cid}`);
+      const response = await axios.get(`https://reports-api.affworld.in/players/?cid=${cid}`);
       setPlayerData(response.data);
     } catch (error) {
       console.error('Error fetching player data:', error);
