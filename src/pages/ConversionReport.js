@@ -56,6 +56,7 @@ const ConversionReport = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showApproved, setShowApproved] = useState(false);
+  const [campaigns, setCampaigns] = useState("");
 
   const rows = userData;
   const filteredRows = showApproved
@@ -87,7 +88,7 @@ const ConversionReport = () => {
   const TableStickyHeader = () => {
     return (
       <TableRow style={{ position: "sticky", top: 0, zIndex: 1000 }}>
-        <TableCell className="affilate-deatils-all">Campaign Id</TableCell>
+        
         <TableCell className="affilate-deatils-all">Campaign Name</TableCell>
         <TableCell className="affilate-deatils-all">Event</TableCell>
         <TableCell className="affilate-deatils-all">Amount</TableCell>
@@ -151,40 +152,53 @@ const ConversionReport = () => {
     }
   };
 
-  const fetchCampaignName = async (campaignId) => {
-    const campaignUrl = `${URL}/campaign/${campaignId}`;
+  // const fetchCampaignName = async (campaignId) => {
+  //   const campaignUrl = `${URL}/campaign/${campaignId}`;
     
-    try {
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      };
-      settableLoading(true);
-      const response = await fetch(campaignUrl, {
-        method: 'GET',
-        headers: headers,
-      });
+  //   try {
+  //     const headers = {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${accessToken}`,
+  //     };
+  //     settableLoading(true);
+  //     const response = await fetch(campaignUrl, {
+  //       method: 'GET',
+  //       headers: headers,
+  //     });
   
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
   
-      const jsonData = await response.json();
-      console.log("JSONDATA:".jsonData);
-      return jsonData?.name || "N/A"; 
+  //     const jsonData = await response.json();
+  //     console.log("JSONDATA:".jsonData);
+  //     return jsonData?.name || "N/A"; 
       
-    } catch (error) {
-      console.error('Error fetching campaign name:', error);
-      settableLoading(false);
-      return "N/A"; // Return "N/A" in case of an error
+  //   } catch (error) {
+  //     console.error('Error fetching campaign name:', error);
+  //     settableLoading(false);
+  //     return "N/A"; // Return "N/A" in case of an error
       
-    }
-  };
+  //   }
+  // };
+  
+
+  
   
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // const fetchCampaignNames = async () => {
+    
+  
+  // for (const row of updatedRows) {
+  //   const campaignName = campaigns[row]?.name;
+  //   row.campaignName = campaignName || "N/A"; // Update the row with the campaign name or set to "N/A" if not found
+  // }
+    
+  // };
   useEffect(() => {
     fetchData();
     fetchUserData();
@@ -195,21 +209,14 @@ const ConversionReport = () => {
   useEffect(() => {
     // Fetch campaign names for each row
     if (userData && !campaignNamesFetched) {
-      const fetchCampaignNames = async () => {
-        const updatedRows = [...userData]; // Create a copy to avoid modifying the original data
-      console.log("first userdata", userData);
-      updatedRows.sort((a, b) => new Date(b.initiated_at) - new Date(a.initiated_at)); // Sort the data
-      console.log("AFTER SORTING", updatedRows);
+      const updatedRows = [...userData]; // Create a copy to avoid modifying the original data
+  console.log("first userdata", userData);
+  updatedRows.sort((a, b) => new Date(b.initiated_at) - new Date(a.initiated_at)); // Sort the data
+  console.log("AFTER SORTING", updatedRows);
+  setUserData(updatedRows);
+    setCampaignNamesFetched(true);
+    settableLoading(false);
       
-      for (const row of updatedRows) {
-        const campaignName = await fetchCampaignName(row.campaign_id);
-        row.campaignName = campaignName; // Update the row with the campaign name
-      }
-        setUserData(updatedRows);
-        setCampaignNamesFetched(true);
-        settableLoading(false);
-      };
-      fetchCampaignNames();
     }
   }, [userData,campaignNamesFetched]);
   
@@ -251,10 +258,10 @@ const ConversionReport = () => {
                     <TableBody>
                       {filteredRows?.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((row, index) => (
                         <TableRow key={index}>
-                          <TableCell>{row.campaign_id}</TableCell>
-                          <TableCell>{row.campaignName}</TableCell>
-                          <TableCell>{row.event}</TableCell>
-                          <TableCell>{row.amount}</TableCell>
+                          
+                          <TableCell>{row?.campaignName}</TableCell>
+                          <TableCell>{row?.event}</TableCell>
+                          <TableCell>{row?.amount}</TableCell>
                           <TableCell>{row?.approved ? "Approved" : "Pending"}</TableCell>
                           <TableCell>
                             {new Date(row.initiated_at).toLocaleString(undefined, {
