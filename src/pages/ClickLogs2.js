@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Button, Input } from '@mui/material';
 import { toast } from 'react-toastify';
 import account from 'src/_mock/account';
+import { getUserFromLocalStorage } from 'src/service/localStorage';
 
 export default function ClickLogs2() {
   let [data, setData] = useState([]);
@@ -22,6 +23,10 @@ export default function ClickLogs2() {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalCharges, setTotalCharges] = useState(0);
   const URL = process.env.REACT_APP_PROD_FILINGSOLUTIONS_API;
+  const Affiliate_URL = process.env.REACT_APP_PROD_API;
+  const [remainBalance, setRemainBalance] = useState(0);
+  const user2 = getUserFromLocalStorage();
+  const accessToken = user2?.data.access_token;
 
   const getData = async () => {
     try {
@@ -29,11 +34,35 @@ export default function ClickLogs2() {
       if (response.status === 200) {
         // toast.success("Services fetched successfully!!");
         setData(response?.data);
+        // console.log("this is data--->", response?.data);
         setCategoryOption(data.category);
       }
     } catch (error) {
       console.error('Error fetching Data --->', error);
       toast.error("Error fetching filing hub soltion data!!");
+    }
+  }
+
+  const getRemainBalance = async () => {
+    try {
+      const url = `${Affiliate_URL}/api/wallet/remaining-balance`;
+      const data = await axios.get(url, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (data.status === 200) {
+        console.log("this is remaining balance--->", data?.data?.remainingBalance);
+        // toast.success("Remaining balance fetched successfully!!");
+        setRemainBalance(data?.data?.remainingBalance);
+      }
+
+
+
+    } catch (error) {
+      console.error('Error in  fetching remaining balance --->', error);
+      toast.error("Error fetching remaining balance!!");
     }
   }
 
@@ -52,6 +81,7 @@ export default function ClickLogs2() {
 
   useEffect(() => {
     getData();
+    getRemainBalance();
   }, []);
 
   const updateQunatityCharge = () => {
@@ -64,7 +94,7 @@ export default function ClickLogs2() {
     totalCharges = (quantity * maxExecutions) / 100;
 
     setTotalQuantity(totalQuantity);
-    
+
     setTotalCharges(totalCharges);
 
   }
@@ -114,7 +144,18 @@ export default function ClickLogs2() {
   };
   return (
     <>
-      <h1 className='text-center'>Add Campagin</h1>
+      <div className='text-center align-center justify-content-center d-block '>
+        <h1 className='text-center'>Add Campagin</h1>
+        <h2>Remaining Balance:
+          {
+            remainBalance < 0 ? (
+              <span style={{ color: 'red' }}> ₹{remainBalance}  </span>
+            ) : (
+              <span style={{ color: 'green' }}> ₹{remainBalance}</span>
+            )
+          }
+        </h2>
+      </div>
 
       <div>
         <form onSubmit={handleSubmit(onSubmit)} className="form">
@@ -216,7 +257,7 @@ export default function ClickLogs2() {
               name="totalCharges"
               value={totalCharges}
               placeholder='Total Charges'
-              
+
             />
           </div>
 

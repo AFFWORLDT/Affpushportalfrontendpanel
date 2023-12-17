@@ -25,6 +25,7 @@ import {
 import { afterLoginStorage   } from "../service/localStorage";
 import { getUserFromLocalStorage } from '../service/localStorage';
 import { removeUserFromLocalStorage } from '../service/localStorage';
+import { Box } from '@mui/system';
 
 
 // import PrivateComponent from "../components/PrivateRoute";
@@ -130,6 +131,8 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, {user?.data.name} Welcome back to Affworld
         </Typography>
+
+       
 
         <Grid container spacing={3}>
           <Grid style={{ cursor: 'pointer' }}

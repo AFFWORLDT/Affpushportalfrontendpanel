@@ -44,7 +44,7 @@ export default function Router() {
           path: 'clicklogs2', element: <ClickLogs2 />,
         },
         { path: 'chistory', element: <Chistory /> },
-        { path: 'PlayerPage', element: <PlayerPage /> },
+        { path: 'playerPage', element: <PlayerPage /> },
 
       ],
     },
