@@ -10,20 +10,27 @@ import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import PauseIcon from '@mui/icons-material/Pause';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { Helmet } from 'react-helmet-async';
+import { getUserFromLocalStorage } from 'src/service/localStorage';
+
 
 
 const Chistory = () => {
+  const user2 = getUserFromLocalStorage();
+  const accessToken = user2?.data.access_token;
   const affiliate_id = account.affiliate_id;
   const affiliate_name = account.displayName;
+  const [remainBalance, setRemainBalance] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [apires, setApires] = useState([]);
   const URL = process.env.REACT_APP_PROD_FILINGSOLUTIONS_API;
+  const Affiliate_URL = process.env.REACT_APP_PROD_API;
   const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [isDetailsStatus, setIsDetailsStatus] = useState(false);
   const [orderStatus, setOrderStatus] = useState();
-
+  const [totalBill , setTotalBill] = useState(0);
 
   const [serviceToDelete, setServiceToDelete] = useState(null);
 
@@ -63,6 +70,60 @@ const Chistory = () => {
     setApires(apires.apiResponse);
     setIsOpen(true);
   }
+
+  const getTotalBill = async()=>{
+
+    try {
+      const url = `${Affiliate_URL}/api/wallet/get-total-bill`;
+      const data = await axios.get(url , {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (data.status === 200) {
+        setTotalBill(data?.data)
+      }else if(data.status === 401){
+        toast.error("Unauthorized access", {
+          position: toast.POSITION.TOP_CENTER,
+        })
+      }
+
+
+      
+    } catch (error) {
+      console.log("Error in getting total bill--->", error);
+      toast.error("Error in getting total bill!!");
+      
+    }
+
+
+
+  }
+
+  const getRemainBalance = async () => {
+    try {
+      const url = `${Affiliate_URL}/api/wallet/remaining-balance`;
+      const data = await axios.get(url, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (data.status === 200) {
+        console.log("this is remaining balance--->", data?.data?.remainingBalance);
+        // toast.success("Remaining balance fetched successfully!!");
+        setRemainBalance(data?.data?.remainingBalance);
+      }
+
+
+
+    } catch (error) {
+      console.error('Error in  fetching remaining balance --->', error);
+      toast.error("Error fetching remaining balance!!");
+    }
+  }
+
 
   const handleChnageStatus = async (row) => {
     try {
@@ -146,6 +207,8 @@ const Chistory = () => {
 
   useEffect(() => {
     getJobData();
+    getTotalBill();
+    getRemainBalance();
   }, [affiliate_id])
 
 
@@ -157,7 +220,21 @@ const Chistory = () => {
       <div>
         <h1 className='text-center'> Campagin History </h1>
         <h2 className='text-center'> Welcome {affiliate_name} !! </h2>
-        <h3>Total Charges : ₹{totalCharges}</h3>
+        <div className='d-flex flex-row justify-content-between '>
+        <h3>Total Charges : ₹{totalBill}</h3>
+        <h3>Reamining Balance  : 
+        {
+            remainBalance < 0 ? (
+              <span style={{ color: 'red' }}> ₹{remainBalance}  </span>
+            ) : (
+              <span style={{ color: 'green' }}> ₹{remainBalance}</span>
+            )
+          }
+        </h3>
+
+        </div>
+
+
         {loading ? (
           <Box sx={{ width: '100%' }}>
             <LinearProgress />
