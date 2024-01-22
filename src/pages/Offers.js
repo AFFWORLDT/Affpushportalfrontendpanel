@@ -47,8 +47,8 @@ const Offers = () => {
   const url = `${URL}/approve/`;
   //const url ="http://localhost:8000/approve/";
   const affiliateId = res?.data.affiliate_id;
-  const [approveData,setApproveData] = useState([]);
-  
+  const [approveData, setApproveData] = useState([]);
+
 
 
   const privateCheck = () => {
@@ -58,10 +58,10 @@ const Offers = () => {
     }
   };
 
-  
-  const [payoutVal , setPayoutVal] = useState();
-  const [ isPayoutVal , setIsPayoutVal] = useState(false); 
-  
+
+  const [payoutVal, setPayoutVal] = useState();
+  const [isPayoutVal, setIsPayoutVal] = useState(false);
+
 
 
 
@@ -82,7 +82,7 @@ const Offers = () => {
   // const fetchData = async () => {
   //   try {
   //     const result = await getData();
-      
+
 
 
 
@@ -94,7 +94,7 @@ const Offers = () => {
   //     console.error('Error fetching data:', error);
   //   }
   // };
-  
+
 
 
   useEffect(() => {
@@ -112,17 +112,17 @@ const Offers = () => {
   //   (data.map((each) => {
   //   }))
 
-    
+
   // }, [data])
 
 
-  useEffect(()=>{
+  useEffect(() => {
     (data.map((row) => {
-      console.log("NAME__",row?.name);
-      console.log("buttonStates[row._id]____",buttonStates[row._id]);
-        }))
-    
-  },[data])
+      console.log("NAME__", row?.name);
+      console.log("buttonStates[row._id]____", buttonStates[row._id]);
+    }))
+
+  }, [data])
 
   const fetchData = async () => {
     try {
@@ -132,15 +132,15 @@ const Offers = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.data.access_token}`,
         }
-      } );
-      
+      });
+
       console.log("offers data -->", result);
       setData(result.data);
       setLoading(true);
 
       for (const row of result.data) {
         if (row?.type === 'Private') {
-        await checkApprovalStatus(row);
+          await checkApprovalStatus(row);
         }
       }
     } catch (error) {
@@ -151,20 +151,20 @@ const Offers = () => {
   };
 
   const checkApprovalStatus = async (row) => {
-    
+
     try {
-      const url_approve=`${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}`
+      const url_approve = `${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}`
       // Replace with your actual access token
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       };
-     
-      
+
+
       const response = await fetch(url_approve, {
         method: 'GET',
         headers: headers,
-        
+
       });
 
       if (!response.ok) {
@@ -176,8 +176,8 @@ const Offers = () => {
       }
 
       const jsonData = await response.json();
-      console.log("jsonData",jsonData);
-      console.log("jsonData.approval_status____",jsonData[0]?.approval_status);
+      console.log("jsonData", jsonData);
+      console.log("jsonData.approval_status____", jsonData[0]?.approval_status);
       if (jsonData[0]?.approval_status === 'approved') {
         setButtonStates((prevStates) => ({
           ...prevStates,
@@ -194,22 +194,22 @@ const Offers = () => {
           [row._id]: 'Pending',
         }));
 
-        
+
       }
-      
+
     } catch (error) {
       console.error('Error fetching approval status:', error);
     }
-     
-    
+
+
   };
 
-  
- 
+
+
 
 
   const sendRequest = async (campaignId) => {
-    
+
     try {
       // Replace with your actual access token
       const headers = {
@@ -217,14 +217,14 @@ const Offers = () => {
         'Authorization': `Bearer ${accessToken}`,
       };
       const requestData = {
-        
-          "affiliate_id": `${affiliateId}`,
-          "campaign_id": `${campaignId}`,
-          "request_sent": true,
-          "approval_status": "pending"
-        
+
+        "affiliate_id": `${affiliateId}`,
+        "campaign_id": `${campaignId}`,
+        "request_sent": true,
+        "approval_status": "pending"
+
       };
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers: headers,
@@ -236,11 +236,11 @@ const Offers = () => {
       }
 
       const jsonData = await response.json();
-     
-     
+
+
     } catch (error) {
       console.error('Error fetching data:', error);
-      
+
     }
   };
 
@@ -270,7 +270,7 @@ const Offers = () => {
     }
   };
 
-  
+
   const handleCopyAff = (item) => {
     const link = `${URL}/${item?.code}?affiliate_id=${res.data.affiliate_id}`;
     // console.log('Copy clicked');
@@ -306,12 +306,12 @@ const Offers = () => {
       } else if (row?.type === 'Private') {
         // Update the state for the specific button
         await checkApprovalStatus(row);
-      console.log("buttonStates[row._id]____",buttonStates[row._id]);
-        if (buttonStates[row._id]==="Approved"){
+        console.log("buttonStates[row._id]____", buttonStates[row._id]);
+        if (buttonStates[row._id] === "Approved") {
           await handleCopyAff(row);
         }
-        
-        else{
+
+        else {
           setButtonStates((prevStates) => ({
             ...prevStates,
             [row._id]: 'Pending',
@@ -319,12 +319,12 @@ const Offers = () => {
           await sendRequest(row?._id);
         }
         console.log('Button clicked and changed to pending for row:', row._id);
-        
+
         // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
-        
+
       }
-      
-      
+
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -401,7 +401,7 @@ const Offers = () => {
     XLSX.writeFile(wb, fileName);
   };
 
-  const handlePayout = (row)=>{
+  const handlePayout = (row) => {
     setPayoutVal(row?.payouts);
     setIsPayoutVal(true);
     // console.log("row this is payout row--->", row?.payouts);
@@ -438,8 +438,8 @@ const Offers = () => {
           id="demo-simple-select"
           value={status}
           onChange={handleStatusChange}
-        > 
-        
+        >
+
           <MenuItem value="">All</MenuItem>
           <MenuItem value="paused">Paused</MenuItem>
           <MenuItem value="expired">Expired</MenuItem>
@@ -532,21 +532,21 @@ const Offers = () => {
                         Link Iframe
                       </Button>
                     </TableCell>
-                    
+
                     <TableCell align="center">
-                    <Button
-        key={row._id}
-        onClick={() => handleClick(row)}
-        disabled={buttonStates[row._id] === 'Pending'}
-        variant="contained"
-        style={{ fontWeight: 700, marginBottom: '10px' }}
-      >
-        {row?.type === 'Private' ? (buttonStates[row._id]==="Approved" ? (copied ? 'Copied' : 'Copy Link') : buttonStates[row._id]==="Disapproved" ? 'Rejected' :buttonStates[row._id]==="Pending"? 'Pending': 'Get Approval') : (copied ? 'Copied' : 'Copy Link')  }
-      </Button>
-</TableCell>
+                      <Button
+                        key={row._id}
+                        onClick={() => handleClick(row)}
+                        disabled={buttonStates[row._id] === 'Pending'}
+                        variant="contained"
+                        style={{ fontWeight: 700, marginBottom: '10px' }}
+                      >
+                        {row?.type === 'Private' ? (buttonStates[row._id] === "Approved" ? (copied ? 'Copied' : 'Copy Link') : buttonStates[row._id] === "Disapproved" ? 'Rejected' : buttonStates[row._id] === "Pending" ? 'Pending' : 'Get Approval') : (copied ? 'Copied' : 'Copy Link')}
+                      </Button>
+                    </TableCell>
 
 
-                    
+
                   </TableRow>
                 ))
               ) : null
@@ -593,9 +593,6 @@ const Offers = () => {
           </Table>
         </Box>
       </Modal>
-
-
-
 
 
     </>

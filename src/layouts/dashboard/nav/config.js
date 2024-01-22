@@ -35,9 +35,10 @@ const navConfig = [
     path: '/affilate/clicklogs',
     icon: <QueryStatsIcon/>,
   },
+ 
   {
-    title: 'Campaign Management',
-    path: '/dashboard/clicklogs2',
+    title: 'Launch Camapgin ',
+    path: '/dashboard/single-Campagin',
     icon: <PostAddIcon/>,
   },
   {

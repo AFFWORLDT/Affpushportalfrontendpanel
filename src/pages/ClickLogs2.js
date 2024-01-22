@@ -145,7 +145,7 @@ export default function ClickLogs2() {
   return (
     <>
       <div className='text-center align-center justify-content-center d-block '>
-        <h1 className='text-center'>Add Campagin</h1>
+        <h1 className='text-center'>Add Advance Campagin</h1>
         <h2>Remaining Balance:
           {
             remainBalance < 0 ? (
