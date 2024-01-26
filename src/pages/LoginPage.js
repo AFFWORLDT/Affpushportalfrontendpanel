@@ -15,6 +15,7 @@ import Iconify from '../components/iconify';
 import { LoginForm } from '../sections/auth/login';
 import { Box } from '@mui/system';
 
+
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -75,11 +76,13 @@ export default function LoginPage() {
       </Helmet>
 
       <StyledRoot>
-
-            <Box sx={{ height: "18vh",  width: "18vh", display: "flex", justifyContent: "top", alignItems: "top", borderRadius: "10px", }}>
-
-              <Logo />
-            </Box>
+        <Logo
+          sx={{
+            position: 'fixed',
+            top: { xs: 16, sm: 24, md: 40 },
+            left: { xs: 80, sm: 80, md: 80 },
+          }}
+        />
 
         {mdUp && (
           <StyledSection >
@@ -98,7 +101,7 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account ? {''}
-              <Link to="/register" variant="subtitle2" underline="hover"><b>Get started</b></Link>
+              <Link to="/register" variant="subtitle2" style={{ textDecoration: 'none' }} underline="hover"><b>Get started</b></Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>

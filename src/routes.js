@@ -19,6 +19,7 @@ import ClickLogs2 from './pages/ClickLogs2';
 import Chistory from './pages/Chistory';
 import PlayerPage from './pages/PlayerPage';
 import LaunchCamapgin from './pages/LaunchCamapgin';
+import ForgotPass from './pages/ForgotPass';
 
 
 
@@ -79,6 +80,10 @@ export default function Router() {
     {
       path: 'register',
       element: <RegisterPage />,
+    },
+    {
+      path: 'forgotpass',
+      element: <ForgotPass />,
     },
 
     {
