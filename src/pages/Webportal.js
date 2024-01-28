@@ -137,8 +137,8 @@ export default function DashboardAppPage() {
             <AppWidgetSummary title="Add new Site" total={97} icon={'ant-design:gold-filled'} />
           </Grid>
           <Grid style={{ cursor: 'pointer' }}
-            onClick={() => navigate("/affilate/Updatesite")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Updatesite " total={92} icon={'ant-design:gold-filled'} />
+            onClick={() => navigate("/affilate/updatedsite")} item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Updatedsite " total={92} icon={'ant-design:gold-filled'} />
           </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/listedsites")}

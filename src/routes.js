@@ -23,6 +23,7 @@ import ForgotPass from './pages/ForgotPass';
 import Adspace    from './pages/Adspace'
 import Webportal  from './pages/Webportal'
 import Addnewsite from './pages/Addnewsite'
+import UpdatedSite from './pages/UpdatedSite';
 
 
 
@@ -75,6 +76,8 @@ export default function Router() {
         { path: 'Adspace', element: <Adspace /> },
         { path: 'Webportal', element: <Webportal /> },
         { path: 'Addnewsite', element: <Addnewsite /> },
+        { path: 'updatedsite', element: <UpdatedSite /> },
+
 
 
       ],

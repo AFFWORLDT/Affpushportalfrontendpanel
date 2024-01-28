@@ -109,7 +109,7 @@ export default function DashboardAppPage() {
         try {
             console.log("Sending URL", webURL);
             const url = `${URL}/api/affiliates/save_website_pns?website_url=${webURL}`;
-    
+
             const res = await axios.post(url, null, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,10 +118,10 @@ export default function DashboardAppPage() {
             });
 
 
-    
+
             console.log("Response from server", res?.data);
 
-            if(res?.status === 201){
+            if (res?.status === 201) {
                 toast.success(res?.data?.message);
                 setWebURl("");
             }
@@ -132,7 +132,7 @@ export default function DashboardAppPage() {
             toast.error(error?.response?.data?.detail);
         }
     }
-    
+
 
     useEffect(() => {
         // Check if user is authenticated
@@ -167,11 +167,14 @@ export default function DashboardAppPage() {
                 </Typography>
 
 
+                <Box sx={{ display: 'flex' , flexDirection: 'column' }} >
 
 
-                <TextField value={webURL} onChange={(e) => setWebURl(e.target.value)} id="standard-basic" label="Enter Website URl" variant="standard" />
-                <Button variant="contained" color='success' onClick={sendURL} >Send URL</Button>
 
+                    <TextField value={webURL} onChange={(e) => setWebURl(e.target.value)} id="standard-basic" label="Enter Website URl" variant="standard" />
+                    <Button sx={{ mt: 3 }} variant="contained" color='success' onClick={sendURL} >Send URL</Button>
+
+                </Box>
 
 
 
