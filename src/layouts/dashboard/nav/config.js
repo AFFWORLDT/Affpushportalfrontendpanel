@@ -51,6 +51,13 @@ const navConfig = [
     path: '/affilate/conversionReport',
     icon: <ChangeCircleIcon/>,
   },
+  {
+    title: 'AdSpace',
+    path: '/affilate/Adspace',
+    icon: <ChangeCircleIcon/>,
+  },
+
+
   // {
   //   title: 'user',
   //   path: '/dashboard/user',

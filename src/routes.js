@@ -20,6 +20,9 @@ import Chistory from './pages/Chistory';
 import PlayerPage from './pages/PlayerPage';
 import LaunchCamapgin from './pages/LaunchCamapgin';
 import ForgotPass from './pages/ForgotPass';
+import Adspace    from './pages/Adspace'
+import Webportal  from './pages/Webportal'
+import Addnewsite from './pages/Addnewsite'
 
 
 
@@ -69,6 +72,9 @@ export default function Router() {
         { path: 'dynamicAds', element: <DynamicAds /> },
         { path: 'clicklogs', element: <ClickLogs /> },
         { path: 'clicklogs2', element: <ClickLogs2 /> },
+        { path: 'Adspace', element: <Adspace /> },
+        { path: 'Webportal', element: <Webportal /> },
+        { path: 'Addnewsite', element: <Addnewsite /> },
 
 
       ],
