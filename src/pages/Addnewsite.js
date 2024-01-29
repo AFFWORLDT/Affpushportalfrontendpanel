@@ -108,7 +108,7 @@ export default function DashboardAppPage() {
     const sendURL = async () => {
         try {
             console.log("Sending URL", webURL);
-            const url = `${URL}/api/affiliates/save_website_pns?website_url=${webURL}`;
+            const url = `${URL}/api/affiliates/add_pns_site?website_url=${webURL}`;
 
             const res = await axios.post(url, null, {
                 headers: {
@@ -167,9 +167,7 @@ export default function DashboardAppPage() {
                 </Typography>
 
 
-                <Box sx={{ display: 'flex' , flexDirection: 'column' }} >
-
-
+                <Box sx={{ display: 'flex', flexDirection: 'column' }} >
 
                     <TextField value={webURL} onChange={(e) => setWebURl(e.target.value)} id="standard-basic" label="Enter Website URl" variant="standard" />
                     <Button sx={{ mt: 3 }} variant="contained" color='success' onClick={sendURL} >Send URL</Button>
