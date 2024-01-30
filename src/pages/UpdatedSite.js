@@ -79,7 +79,7 @@ const UpdatedSite = () => {
 
         try {
             setLoading(true);
-            const url = `${URL}/api/affiliates/get_pns_site`;
+            const url = `${URL}/api/pns/get_pns_site`;
             const res = await axios.get(url, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const UpdatedSite = () => {
                 website_brief: website_brief
             };
 
-            const res = await axios.put(`${URL}/api/affiliates/update_pns_site?website_url=${web_url}`, updatedData, {
+            const res = await axios.put(`${URL}/api/pns/update_pns_site?website_url=${web_url}`, updatedData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
