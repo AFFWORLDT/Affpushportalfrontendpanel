@@ -24,7 +24,7 @@ import Adspace    from './pages/Adspace'
 import Webportal  from './pages/Webportal'
 import Addnewsite from './pages/Addnewsite'
 import UpdatedSite from './pages/UpdatedSite';
-import PushPortal from './pages/PushPortal';
+import PushPortal from "./pages/PushPortal";
 
 
 
@@ -79,6 +79,7 @@ export default function Router() {
         { path: 'Addnewsite', element: <Addnewsite /> },
         { path: 'updatedsite', element: <UpdatedSite /> },
         { path: 'pushPortal', element: <PushPortal /> },
+
 
         
       
