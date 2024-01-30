@@ -145,7 +145,7 @@ export default function DashboardAppPage() {
             item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Listed sites" total={203} color="info" icon={'ant-design:interaction-filled'} />
           </Grid>
-          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/pushportal")}
+          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/pushPortal")}
             item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="PushPortal" total={1352831}  icon={'ant-design:thunderbolt-outlined'} />
           </Grid>
