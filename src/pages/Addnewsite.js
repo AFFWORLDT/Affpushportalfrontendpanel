@@ -108,7 +108,7 @@ export default function DashboardAppPage() {
     const sendURL = async () => {
         try {
             console.log("Sending URL", webURL);
-            const url = `${URL}/api/affiliates/add_pns_site?website_url=${webURL}`;
+            const url = `${URL}/api/pns/add_pns_site?website_url=${webURL}`;
 
             const res = await axios.post(url, null, {
                 headers: {
