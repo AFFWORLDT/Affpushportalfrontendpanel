@@ -1,7 +1,16 @@
-.modelpayment{
-    background-color: rgb(227, 240, 240);
-    border-radius: 2px solid red;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
+.modelpayment {
+  background-color: rgb(227, 240, 240);
+  border-radius: 9px solid red;
+  margin: 10px;
+  padding: 16px 20px ! important;
+  border-radius: 10px;
+}
+.model-container {
+  width: 120vw !important;
+  margin-top: 70px;
+}
+@media screen and (max-width: 778px) {
+  .model-container {
+    width: 100vw !important;
+  }
 }
