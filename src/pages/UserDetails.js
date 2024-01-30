@@ -584,7 +584,7 @@ function UserDetails() {
                 color="primary"
                 onClick={sendVerificationEmail}
                 className={classes.button + "  send-email-btn "}
-                sx={{ padding: "10px 0", width: "218px" }}
+                sx={{ padding: "10px 0", width: "218px", marginTop: "25px" }}
               >
                 Send Verification Email
               </Button>
@@ -621,7 +621,11 @@ function UserDetails() {
                     component="span"
                     color="primary"
                     onClick={fetchImage}
-                    sx={{ padding: "10px 0", width: "218px" }}
+                    sx={{
+                      padding: "10px 0",
+                      width: "218px",
+                      marginTop: "25px",
+                    }}
                     className="common-btn"
                   >
                     Upload Profile Image
@@ -649,7 +653,7 @@ function UserDetails() {
                 component="span"
                 color="primary"
                 onClick={handleSubmit}
-                sx={{ padding: "10px 0", width: "218px" }}
+                sx={{ padding: "10px 0", width: "218px", marginTop: "25px" }}
                 className="common-btn"
               >
                 Submit
@@ -907,6 +911,38 @@ function UserDetails() {
                 </Grid>
               </Grid>
             </Grid>
+            <Box
+              style={{
+                display: "flex",
+                marginTop: "15px",
+                justifyContent: "space-evenly",
+                flexWrap: "wrap",
+              }}
+            >
+              <Typography
+                className={classes.textinBox}
+                onClick={() => handleTabClick("overview")}
+              >
+                Overview
+              </Typography>
+
+              <Typography
+                className={classes.textinBox}
+                onClick={() => handleTabClick("managers")}
+              >
+                Managers
+              </Typography>
+              <Typography
+                className={classes.textinBox}
+                onClick={() => handleTabClick("campaign")}
+              >
+                Campaigns{" "}
+              </Typography>
+              <Typography className={classes.textinBox}>PostBacks</Typography>
+              <Typography className={classes.textinBox}>Payouts</Typography>
+              <Typography className={classes.textinBox}>Comapany</Typography>
+              <Typography className={classes.textinBox}>Billing</Typography>
+            </Box>
           </Grid>
         </Box>
       </Grid>
