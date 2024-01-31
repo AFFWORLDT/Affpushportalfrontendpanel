@@ -8,21 +8,27 @@ import ThemeProvider from './theme';
 import { StyledChart } from './components/chart';
 import ScrollToTop from './components/scroll-to-top';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+
+
 
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
- 
-      <HelmetProvider>
-        <BrowserRouter>
-          <ThemeProvider>
-            <ScrollToTop />
-            <StyledChart />
-            <Router />
-          </ThemeProvider>
-        </BrowserRouter>
-      </HelmetProvider>
-  
+
+    <HelmetProvider>
+      <BrowserRouter>
+        <ThemeProvider>
+          <ScrollToTop />
+          <StyledChart />
+          <Router />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
+      </BrowserRouter>
+    </HelmetProvider>
+
   );
 }
