@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
-
-
-
 import { Helmet } from 'react-helmet-async';
-import { Button, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { toast } from 'react-toastify';
 import { Modal } from 'react-bootstrap';
 import Table from '@mui/material/Table';
@@ -11,23 +8,17 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
+
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import LinearProgress from '@mui/material/LinearProgress';
-import useClipboard from "react-use-clipboard";
-import copy from 'clipboard-copy';
-import * as XLSX from 'xlsx';
-import { getData } from '../service/api';
-import { getResFromLocalStorage, getUserFromLocalStorage } from '../service/localStorage';
+
+import { getUserFromLocalStorage } from '../service/localStorage';
 import axios from 'axios';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
-import PauseIcon from '@mui/icons-material/Pause';
 import TextField from '@mui/material/TextField';
-
 import CloseIcon from '@mui/icons-material/Close';
-// import { fontWeight } from '@mui/system';
-import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the Expired icon
+
 
 
 
@@ -40,17 +31,10 @@ const UpdatedSite = () => {
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
-    // const [newData, setNewData] = useState({});
 
-    // const [name, setName] = useState('');
-    // const [desc, setDesc] = useState('');
-    // const [manager, setManager] = useState('');
     const [country, setCountry] = useState('');
     const [category, setCategory] = useState('');
-    // const [description, setDescription] = useState('');
-    // const [imageUrl, setImageUrl] = useState('');
-    // const [statusCampagin, setStatusCampagin] = useState('');
-    // const [advitisorData, setAdvitisorData] = useState([]);
+
     const [estivis, setEstivis] = useState('');
     const [audience_type, setAudience_type] = useState('');
     const [website_brief, setWebsite_brief] = useState('');
