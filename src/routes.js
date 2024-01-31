@@ -25,6 +25,8 @@ import Webportal  from './pages/Webportal'
 import Addnewsite from './pages/Addnewsite'
 import UpdatedSite from './pages/UpdatedSite';
 import PushPortal from "./pages/PushPortal";
+import PushPortalDashBoard from './pages/PushPortalDashBoard';
+import PushHistory from './pages/PushHistory';
 
 
 
@@ -79,6 +81,10 @@ export default function Router() {
         { path: 'Addnewsite', element: <Addnewsite /> },
         { path: 'updatedsite', element: <UpdatedSite /> },
         { path: 'pushPortal', element: <PushPortal /> },
+        { path: 'pushPortalDashboard', element: <PushPortalDashBoard /> },
+        { path: 'pushHistory', element: <PushHistory /> },
+
+
 
 
         

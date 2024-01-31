@@ -22,7 +22,7 @@ import {
   AppConversionRates,
   AppClicks,
 } from '../sections/@dashboard/app';
-import { afterLoginStorage } from "../service/localStorage";
+import { afterLoginStorage   } from "../service/localStorage";
 import { getUserFromLocalStorage } from '../service/localStorage';
 import { removeUserFromLocalStorage } from '../service/localStorage';
 import { Box } from '@mui/system';
@@ -32,11 +32,11 @@ import { Box } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
-export default function DashboardAppPage() {
+export default function PushPortalDashBoard() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [newsData, setNewsData] = useState([]);
+  const [newsData,setNewsData] = useState([]);
   const [user, setUser] = useState(null);
   const user1 = getUserFromLocalStorage();
   const [loading, setLoading] = useState(false);
@@ -49,8 +49,8 @@ export default function DashboardAppPage() {
       navigate('/login');
     }
   }
-
-
+ 
+  
   const fetchData = async () => {
     const url = `${URL2}/api/analytics/clicks`;
     const accessToken = user1.data.access_token;
@@ -72,7 +72,7 @@ export default function DashboardAppPage() {
   };
 
   const fetchNewsData = async () => {
-    const PAGENUMBER = 1;
+    const PAGENUMBER=1;
     const url_news = `${URL3}/news/?page=${PAGENUMBER}`;
     // console.log("THis is user data --->", url);
     const accessToken = user1.data.access_token;
@@ -99,7 +99,7 @@ export default function DashboardAppPage() {
       toast.error('Error in Fetching Data');
     }
   };
-
+  
   useEffect(() => {
     // Check if user is authenticated
     // privateCheck();
@@ -115,56 +115,56 @@ export default function DashboardAppPage() {
   }, []);
 
   const names = data.map(item => item.name);
-  const count = data.map(item => item.count);
-
-
+  const count = data.map(item=>item.count);
+  
+ 
 
 
   return (
     <>
-
+      
       <Helmet>
         <title> Dashboard | Affworld </title>
       </Helmet>
 
       <Container maxWidth="xl">
-
-
+       
+       
 
         <Grid container spacing={3}>
           <Grid style={{ cursor: 'pointer' }}
-            onClick={() => navigate("/affilate/Addnewsite")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Add new Site" total={97} icon={'ant-design:gold-filled'} />
+            onClick={() => navigate("/affilate/pushPortal")} item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="New Push" total={97} icon={'ant-design:gold-filled'} />
           </Grid>
           <Grid style={{ cursor: 'pointer' }}
-            onClick={() => navigate("/affilate/updatedsite")} item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Updatedsite " total={92} icon={'ant-design:gold-filled'} />
+            onClick={() => navigate("/affilate/pushHistory")} item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Push History " total={92} icon={'ant-design:gold-filled'} />
           </Grid>
 
           <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/listedsites")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Listed sites" total={203} color="info" icon={'ant-design:interaction-filled'} />
+            <AppWidgetSummary title="Automation" total={203} color="info" icon={'ant-design:interaction-filled'} />
           </Grid>
-          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/pushPortalDashboard")}
+          <Grid style={{ cursor: 'pointer' }} onClick={() => navigate("/affilate/pushPortal")}
             item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="PushPortal" total={1352831} icon={'ant-design:thunderbolt-outlined'} />
+            <AppWidgetSummary title="Outsource My Site" total={1352831}  icon={'ant-design:thunderbolt-outlined'} />
           </Grid>
+          
+
+         
+          
 
 
+          
 
+          
 
+          
 
+          
 
-
-
-
-
-
-
-
-
-
-
+          
+          
         </Grid>
       </Container>
     </>
