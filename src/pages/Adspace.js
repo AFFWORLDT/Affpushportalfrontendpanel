@@ -225,7 +225,14 @@ export default function DashboardAppPage() {
               }))}
             />
           </Grid>
-
+          
+<Box sx={{ width: '20%', height: '60vh', display: 'block' }}>
+            <iframe
+              src="https://affiliate-api.affworld.cloud/api/misc/iframe_code?affiliate_id=4b5562fb788d4cdf99b0dcd5d461a8b2&iframe_id=1&iframe_type=main"
+              scrolling="no"
+              style={{ border: 'none', width: '100%', height: '100%' }}
+            />
+          </Box>
           
           
         </Grid>
