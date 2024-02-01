@@ -55,8 +55,8 @@ function UserDetails() {
       border: "0.5px solid gray",
       borderRadius: "10px",
       padding: "10px",
-      width: "115px",
-      marginLeft: "10px",
+      width: "125px",
+      
     },
     dabox: {
       border: "0.5px solid gray",
@@ -271,7 +271,7 @@ function UserDetails() {
       if (!image) {
         toast.error("No image selected for upload.");
         return;
-      }
+      } //
 
       const formData = new FormData();
       formData.append("profile_image", image);
@@ -300,7 +300,7 @@ function UserDetails() {
       await fetchData();
       await fetchAffiliateData();
       await fetchWalletData();
-      await fetchImage();
+      // await fetchImage();
       await checkEmailVerified();
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -341,6 +341,7 @@ function UserDetails() {
   }, []);
 
   const handleSubmit = async (event) => {
+    await fetchImage();
     event.preventDefault();
 
     const data = {
@@ -554,11 +555,12 @@ function UserDetails() {
           <Grid container spacing={3} mt={1}>
             <Grid
               item
-              xs={6}
+              xs={12}
               md={3}
               display={"flex"}
               justifyContent={"center"}
               alignItems={"center"}
+              className="basic-info-age-input-container"
             >
               <FormControl>
                 <FormLabel htmlFor="age">Age (only 18+):</FormLabel>
@@ -568,6 +570,7 @@ function UserDetails() {
                   placeholder="Your Age"
                   value={age}
                   onChange={(event) => setAge(event.target.value)}
+                  className="basic-info-age-input"
                 />
               </FormControl>
             </Grid>
@@ -607,47 +610,6 @@ function UserDetails() {
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <FormControl>
-                <input
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="raised-button-file"
-                  type="file"
-                  onChange={handleImageChange}
-                />
-                <label htmlFor="raised-button-file">
-                  <Button
-                    variant="contained"
-                    component="span"
-                    color="primary"
-                    onClick={fetchImage}
-                    sx={{
-                      padding: "10px 0",
-                      width: "218px",
-                      marginTop: "25px",
-                    }}
-                    className="common-btn"
-                  >
-                    Upload Profile Image
-                  </Button>
-                </label>
-                {image && (
-                  <img
-                    src={image}
-                    alt="Preview"
-                    style={{ width: "150px", height: "150px" }}
-                  />
-                )}
-              </FormControl>
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              md={3}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
               <Button
                 variant="contained"
                 component="span"
@@ -658,6 +620,16 @@ function UserDetails() {
               >
                 Submit
               </Button>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              md={3}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+             
             </Grid>
           </Grid>
         </form>
@@ -687,131 +659,192 @@ function UserDetails() {
           }}
           className={classes.boxstyleForm1}
         >
-          <Grid container>
+          <Grid container >
+            <Grid item xs={6} md={4} sx={{ borderRight: "1px solid #ccc" }}>
+              <Box sx={{ padding: "10px" }}>
+                <Image
+                  src={account.photoURL}
+                  rounded
+                  style={{
+                    height: "100px",
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  className="profile-image"
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    flexDirection: "column",
+                    alignItems: "center ",
+                    gap: "10px",
+                  }}
+                  mt={"10px"}
+                >
+                  <Box sx={{ padding: "0 120px" }}>
+                    {" "}
+                    <Input
+                      type="file"
+                      onChange={handleImageChange}
+                      sx={{ width: "200px" }}
+                      className="choose-file"
+                    />
+                  </Box>
+                  <Button
+                    variant="contained"
+                    component="span"
+                    color="primary"
+                    onClick={fetchImage}
+                    sx={{ width: "200px" }}
+                    className="upload-profile-btn"
+                  >
+                    {" "}
+                    Upload
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              md={4}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRight: "1px solid #ccc",
+              }}
+              className="basic-info-main-container"
+            >
+              <Box sx={{ bgcolor: "" }} className="basic-info-container">
+                <Box>
+                  <Typography
+                    fontWeight={400}
+                    sx={{ display: "flex", justifyContent: "start" }}
+                  >
+                    <AccountCircleIcon className="info-icon" />{" "}
+                    <p> {user1.data.name} Active</p>
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography
+                    fontWeight={400}
+                    sx={{ display: "flex", justifyContent: "start" }}
+                  >
+                    {account.verified ? (
+                      <VerifiedUserIcon
+                        className="info-icon"
+                        style={{ color: "green" }}
+                      />
+                    ) : (
+                      <UnpublishedIcon
+                        className="info-icon"
+                        style={{ color: "red" }}
+                      />
+                    )}{" "}
+                    <p> {user1.data.email}</p>
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    fontWeight={400}
+                    sx={{ display: "flex", justifyContent: "start" }}
+                  >
+                    <AddLocationIcon /> <p> India</p>
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
             <Grid
               item
               xs={12}
-              md={2}
-              bgcolor={"lightgray"}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              borderRadius={5}
-              className="upload-image-container"
+              md={4}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <Box
-                style={{
-                  backgroundColor: blue[100],
-                  borderRadius: "10px",
-                  width: "135px", // display: "flex",
-                  flexWrap: "wrap",
-                  flexDirection: "column",
-                  height: "120px",
-                  padding: "10px 19px",
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  flexDirection: "column",
-                  margin: "0px auto",
-                  alignItems: "center",
-                }}
-              >
-                {account.photoURL === "" ? (
-                  <>
-                    <Input type="file" onChange={handleImageChange} />
-                    <Button
-                      variant="contained"
-                      component="span"
-                      color="primary"
-                      onClick={fetchImage}
-                    >
-                      {" "}
-                      Upload
-                    </Button>
-                  </>
-                ) : (
-                  <Image src={account.photoURL} rounded />
-                )}
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={10}>
-              <Grid container>
-                <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  display={"flex"}
-                  justifyContent={"center"}
-                >
-                  <Box
-                    display={"flex"}
-                    justifyContent={"space-evenly"}
-                    flexWrap={"wrap"}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gapY: 2,
-                      gapX: 4,
-                    }}
-                    className="basic-info-container"
-                  >
-                    <Box className="1">
-                      <Typography fontWeight={400}>
-                        {" "}
-                        <AccountCircleIcon /> {user1.data.name} Active
-                      </Typography>
-                    </Box>
-                    <Box className="2">
-                      <Typography fontWeight={400}>
-                        {" "}
-                        <AddLocationIcon /> India
-                      </Typography>
-                    </Box>
-                    <Box className="3">
-                      <Box display="flex" alignItems="center">
-                        <Typography fontWeight={400}>
-                          {account.verified ? (
-                            <VerifiedUserIcon style={{ color: "green" }} />
-                          ) : (
-                            <UnpublishedIcon style={{ color: "red" }} />
-                          )}{" "}
-                          <span style={{ whiteSpace: "nowrap" }}>
-                            {user1.data.email}
-                          </span>
-                        </Typography>
-                      </Box>
-                    </Box>
+              <Grid container spacing={2} px={"12px"}>
+                <Grid item md={12}>
+                  <Box className="btn-container" sx={{ padding: "10px" }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6} md={6}>
+                        <Button
+                          style={{
+                            backgroundColor: "blue",
+                            color: "white",
+                            width: "100%",
+                            padding: "8px 3px",
+                          }}
+                          className="member-join-btn"
+                        >{`MEMBER ${date}`}</Button>
+                      </Grid>
+                      <Grid item xs={6} md={6}>
+                        <Button
+                          style={{
+                            backgroundColor: "blue",
+                            color: "white",
+                            width: "100%",
+                            padding: "18px 3px",
+                          }}
+                          className="reset-pass-btn"
+                        >
+                          {" "}
+                          RESET PASSWORD{" "}
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={6} px={2} py={1}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      {" "}
-                      <Button
-                        style={{
-                          backgroundColor: "blue",
-                          color: "white",
-                          width: "100%",
-                          marginRight: "20px",
-                          padding: "8px 3px",
-                        }}
-                      >{`MEMBER ${date}`}</Button>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        style={{
-                          backgroundColor: "blue",
-                          color: "white",
-                          width: "100%",
-                          padding: "18px 3px",
-                        }}
-                      >
-                        {" "}
-                        RESET PASSWORD{" "}
-                      </Button>
-                    </Grid>
-                  </Grid>
+                <Grid item md={12}>
+                  <Box
+                    style={{
+                      display: "flex",
+
+                      justifyContent: "space-evenly",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <Typography
+                      className={classes.textinBox}
+                      onClick={() => handleTabClick("overview")}
+                    >
+                      Overview
+                    </Typography>
+
+                    <Typography
+                      className={classes.textinBox}
+                      onClick={() => handleTabClick("managers")}
+                    >
+                      Managers
+                    </Typography>
+                    <Typography
+                      className={classes.textinBox}
+                      onClick={() => handleTabClick("campaign")}
+                    >
+                      Campaigns{" "}
+                    </Typography>
+                    <Typography className={classes.textinBox}>
+                      PostBacks
+                    </Typography>
+                    <Typography className={classes.textinBox}>
+                      Payouts
+                    </Typography>
+                    <Typography className={classes.textinBox}>
+                      Comapany
+                    </Typography>
+                    <Typography className={classes.textinBox}>
+                      Billing
+                    </Typography>
+                  </Box>
                 </Grid>
-                <Grid container spacing={2} sx={{ mt: 2 }}>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} sx={{ mt: 2 , px:3 }}>
                   <Grid
                     item
                     xs={6}
@@ -909,41 +942,6 @@ function UserDetails() {
                     </Box>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-            <Box
-              style={{
-                display: "flex",
-                marginTop: "15px",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-              }}
-            >
-              <Typography
-                className={classes.textinBox}
-                onClick={() => handleTabClick("overview")}
-              >
-                Overview
-              </Typography>
-
-              <Typography
-                className={classes.textinBox}
-                onClick={() => handleTabClick("managers")}
-              >
-                Managers
-              </Typography>
-              <Typography
-                className={classes.textinBox}
-                onClick={() => handleTabClick("campaign")}
-              >
-                Campaigns{" "}
-              </Typography>
-              <Typography className={classes.textinBox}>PostBacks</Typography>
-              <Typography className={classes.textinBox}>Payouts</Typography>
-              <Typography className={classes.textinBox}>Comapany</Typography>
-              <Typography className={classes.textinBox}>Billing</Typography>
-            </Box>
-          </Grid>
         </Box>
       </Grid>
 
