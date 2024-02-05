@@ -5,6 +5,8 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import TaskIcon from '@mui/icons-material/Task';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 
 
 
@@ -23,74 +25,47 @@ const navConfig = [
   {
     title: 'Offers',
     path: '/affilate/offers',
-    icon: <LocalOfferIcon/>,
+    icon: <LocalOfferIcon />,
   },
   {
     title: 'Conversions',
     path: '/affilate/conversions',
-    icon: <ChangeCircleIcon/>,
+    icon: <ChangeCircleIcon />,
   },
   {
     title: 'ClickLogs',
     path: '/affilate/clicklogs',
-    icon: <QueryStatsIcon/>,
+    icon: <QueryStatsIcon />,
   },
- 
+
   {
     title: 'Launch Camapgin ',
     path: '/dashboard/single-Campagin',
-    icon: <PostAddIcon/>,
+    icon: <PostAddIcon />,
   },
   {
     title: 'C-Statistics',
     path: '/dashboard/chistory',
-    icon: <TaskIcon/>,
+    icon: <TaskIcon />,
   },
   {
     title: 'ConversionReport',
     path: '/affilate/conversionReport',
-    icon: <ChangeCircleIcon/>,
+    icon: <ChangeCircleIcon />,
   },
   {
     title: 'AdSpace',
     path: '/affilate/Adspace',
-    icon: <ChangeCircleIcon/>,
+    icon: <AddToQueueIcon />,
+  },
+  {
+    title: 'Wallet',
+    path: '/affilate/wallet',
+    icon: <AccountBalanceWalletIcon />,
   },
 
 
 
-  // {
-  //   title: 'user',
-  //   path: '/dashboard/user',
-  //   icon: icon('ic_user'),
-  // },
-  // {
-  //   title: 'product',
-  //   path: '/dashboard/products',
-  //   icon: icon('ic_cart'),
-  // },
-  // {
-  //   title: 'blog',
-  //   path: '/dashboard/blog',
-  //   icon: icon('ic_blog'),
-  // },
-
- 
-
-
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: icon('ic_lock'),
-  // },
-
-
-  // {
-  //   title: 'Not found',
-  //   path: '/404',
-  //   icon: icon('ic_disabled'),
-  // },
- 
 ];
 
 export default navConfig;

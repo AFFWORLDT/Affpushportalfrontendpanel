@@ -1,20 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
+// import { useNavigate } from 'react-router-dom';
+import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import { addUserToLocalStorage } from '../../service/localStorage';
-import Iconify from '../../components/iconify';
+// import { addUserToLocalStorage } from '../../service/localStorage';
+// import Iconify from '../../components/iconify';
 
 export default function RegisterForm() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const URL = process.env.REACT_APP_PROD_API;
   const [userMail, setUserMail] = useState('');
 
   const handleClick = async () => {
     try {
-      console.log("this is UserMail from env --->", userMail);
+      // console.log("this is UserMail from env --->", userMail);
 
       const formData = new URLSearchParams();
 
@@ -28,7 +28,7 @@ export default function RegisterForm() {
         setUserMail('');
       }
 
-      console.log("this is res from Mail API --->", res);
+      // console.log("this is res from Mail API --->", res);
     } catch (error) {
       console.log("Error While Sending Mail", error);
       toast.error("Something Went Wrong while sending Mail");
