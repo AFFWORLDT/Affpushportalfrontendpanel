@@ -56,7 +56,6 @@ function UserDetails() {
       borderRadius: "10px",
       padding: "10px",
       width: "125px",
-      
     },
     dabox: {
       border: "0.5px solid gray",
@@ -124,6 +123,11 @@ function UserDetails() {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
+  const getTabClass = (tab) => {
+    return tab === activeTab ? "active-tab" : "inactive-tab";
+  };
+
   const sendVerificationEmail = async () => {
     // Make an API request to send the verification email.
 
@@ -628,9 +632,7 @@ function UserDetails() {
               display={"flex"}
               justifyContent={"center"}
               alignItems={"center"}
-            >
-             
-            </Grid>
+            ></Grid>
           </Grid>
         </form>
       </Box>
@@ -659,7 +661,7 @@ function UserDetails() {
           }}
           className={classes.boxstyleForm1}
         >
-          <Grid container >
+          <Grid container>
             <Grid item xs={6} md={4} sx={{ borderRight: "1px solid #ccc" }}>
               <Box sx={{ padding: "10px" }}>
                 <Image
@@ -771,24 +773,26 @@ function UserDetails() {
                 <Grid item md={12}>
                   <Box className="btn-container" sx={{ padding: "10px" }}>
                     <Grid container spacing={2}>
-                      <Grid item xs={6} md={6}>
+                      <Grid item xs={6} md={12}>
                         <Button
                           style={{
                             backgroundColor: "blue",
                             color: "white",
                             width: "100%",
                             padding: "8px 3px",
+                            margin: "0 auto",
                           }}
                           className="member-join-btn"
                         >{`MEMBER ${date}`}</Button>
                       </Grid>
-                      <Grid item xs={6} md={6}>
+                      <Grid item xs={6} md={12}>
                         <Button
                           style={{
                             backgroundColor: "blue",
                             color: "white",
                             width: "100%",
-                            padding: "18px 3px",
+                            padding: "25px 3px",
+                            margin: "0 auto",
                           }}
                           className="reset-pass-btn"
                         >
@@ -799,149 +803,98 @@ function UserDetails() {
                     </Grid>
                   </Box>
                 </Grid>
-                <Grid item md={12}>
-                  <Box
-                    style={{
-                      display: "flex",
-
-                      justifyContent: "space-evenly",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Typography
-                      className={classes.textinBox}
-                      onClick={() => handleTabClick("overview")}
-                    >
-                      Overview
-                    </Typography>
-
-                    <Typography
-                      className={classes.textinBox}
-                      onClick={() => handleTabClick("managers")}
-                    >
-                      Managers
-                    </Typography>
-                    <Typography
-                      className={classes.textinBox}
-                      onClick={() => handleTabClick("campaign")}
-                    >
-                      Campaigns{" "}
-                    </Typography>
-                    <Typography className={classes.textinBox}>
-                      PostBacks
-                    </Typography>
-                    <Typography className={classes.textinBox}>
-                      Payouts
-                    </Typography>
-                    <Typography className={classes.textinBox}>
-                      Comapany
-                    </Typography>
-                    <Typography className={classes.textinBox}>
-                      Billing
-                    </Typography>
-                  </Box>
-                </Grid>
+                <Grid item md={12}></Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{ mt: 2 , px:3 }}>
-                  <Grid
-                    item
-                    xs={6}
-                    md={2}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box className={classes.innerbox}>
-                      <Box>
-                        {walletData?.total_earnings
-                          ? walletData?.total_earnings
-                          : 0}
-                      </Box>
-                      <Box>
-                        <Typography
-                          style={{ color: "#4CAF50", fontWeight: "bold" }}
-                        >
-                          Earnings(INR)
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={6}
-                    md={2}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box className={classes.innerbox}>
-                      <Box>1</Box>
-                      <Box>
-                        <Typography
-                          style={{ color: "#1976D2", fontWeight: "bold" }}
-                        >
-                          Offers
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={6}
-                    md={2}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box className={classes.innerbox}>
-                      <Box>{totalCount}</Box>
-                      <Box>
-                        <Typography
-                          style={{ color: "#FFA000", fontWeight: "bold" }}
-                        >
-                          Clicks
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={6}
-                    md={2}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box className={classes.innerbox}>
-                      <Box>{affiliateData.level}</Box>
-                      <Box>
-                        <Typography
-                          style={{ color: "#FFA000", fontWeight: "bold" }}
-                        >
-                          Level
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={4}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box className={classes.dabox}>
-                      <Box>
-                        {campaginName ? campaginName : "No Campaign Linked"}
-                      </Box>
-                      <Box>
-                        <Typography
-                          style={{ color: "#FFA000", fontWeight: "bold" }}
-                        >
-                          DA
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
+          <Grid container spacing={2} sx={{ mt: 2, px: 3 }}>
+            <Grid item xs={6} md={2} display="flex" justifyContent="center">
+              <Box className={classes.innerbox}>
+                <Box>
+                  {walletData?.total_earnings ? walletData?.total_earnings : 0}
+                </Box>
+                <Box>
+                  <Typography style={{ color: "#4CAF50", fontWeight: "bold" }}>
+                    Earnings(INR)
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={6} md={2} display="flex" justifyContent="center">
+              <Box className={classes.innerbox}>
+                <Box>1</Box>
+                <Box>
+                  <Typography style={{ color: "#1976D2", fontWeight: "bold" }}>
+                    Offers
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={6} md={2} display="flex" justifyContent="center">
+              <Box className={classes.innerbox}>
+                <Box>{totalCount}</Box>
+                <Box>
+                  <Typography style={{ color: "#FFA000", fontWeight: "bold" }}>
+                    Clicks
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={6} md={2} display="flex" justifyContent="center">
+              <Box className={classes.innerbox}>
+                <Box>{affiliateData.level}</Box>
+                <Box>
+                  <Typography style={{ color: "#FFA000", fontWeight: "bold" }}>
+                    Level
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4} display="flex" justifyContent="center">
+              <Box className={classes.dabox}>
+                <Box>{campaginName ? campaginName : "No Campaign Linked"}</Box>
+                <Box>
+                  <Typography style={{ color: "#FFA000", fontWeight: "bold" }}>
+                    DA
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+          <Box
+            style={{
+              display: "flex",
+
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              marginTop: "15px",
+            }}
+          >
+            <Typography
+              className={`${classes.textinBox} ${getTabClass("overview")}`}
+              onClick={() => handleTabClick("overview")}
+            >   
+              Overview
+            </Typography>
+
+            <Typography
+              className={`${classes.textinBox} ${getTabClass("managers")}`}
+              onClick={() => handleTabClick("managers")}
+            >
+              Managers
+            </Typography>
+
+            <Typography
+              className={`${classes.textinBox} ${getTabClass("campaign")}`}
+              onClick={() => handleTabClick("campaign")}
+            >
+              Campaigns
+            </Typography>
+            <Typography className={classes.textinBox}>PostBacks</Typography>
+            <Typography className={classes.textinBox}>Payouts</Typography>
+            <Typography className={classes.textinBox}>Comapany</Typography>
+            <Typography className={classes.textinBox}>Billing</Typography>
+          </Box>
         </Box>
       </Grid>
 
