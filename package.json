@@ -47,8 +47,10 @@
     "@mui/material": "^5.14.10",
     "@mui/styles": "^5.14.10",
     "@mui/system": "^5.14.10",
+    "@vercel/analytics": "^1.1.2",
+    "@vercel/speed-insights": "^1.0.9",
     "apexcharts": "^3.37.0",
-    "axios": "^1.4.0",
+    "axios": "^1.6.7",
     "bootstrap": "^5.3.1",
     "change-case": "^4.1.2",
     "clipboard-copy": "^4.0.1",
@@ -74,6 +76,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object":"7.21.11",
     "@babel/core": "^7.21.0",
     "@babel/eslint-parser": "^7.19.1",
     "eslint-config-airbnb": "^19.0.4",
