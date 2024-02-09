@@ -19,7 +19,15 @@ import ClickLogs2 from './pages/ClickLogs2';
 import Chistory from './pages/Chistory';
 import PlayerPage from './pages/PlayerPage';
 import LaunchCamapgin from './pages/LaunchCamapgin';
-import  Wallet  from './pages/Wallet';
+import ForgotPass from './pages/ForgotPass';
+import Adspace from './pages/Adspace'
+import Webportal from './pages/Webportal'
+import Addnewsite from './pages/Addnewsite'
+import UpdatedSite from './pages/UpdatedSite';
+import PushPortal from "./pages/PushPortal";
+import PushPortalDashBoard from './pages/PushPortalDashBoard';
+import PushHistory from './pages/PushHistory';
+import Wallet from './pages/Wallet';
 
 
 
@@ -69,7 +77,21 @@ export default function Router() {
         { path: 'dynamicAds', element: <DynamicAds /> },
         { path: 'clicklogs', element: <ClickLogs /> },
         { path: 'clicklogs2', element: <ClickLogs2 /> },
+        { path: 'Adspace', element: <Adspace /> },
+        { path: 'Webportal', element: <Webportal /> },
+        { path: 'Addnewsite', element: <Addnewsite /> },
+        { path: 'updatedsite', element: <UpdatedSite /> },
+        { path: 'pushPortal', element: <PushPortal /> },
+        { path: 'pushPortalDashboard', element: <PushPortalDashBoard /> },
+        { path: 'pushHistory', element: <PushHistory /> },
         { path: 'wallet', element: <Wallet /> },
+
+
+
+
+
+
+
 
 
 
@@ -82,6 +104,10 @@ export default function Router() {
     {
       path: 'register',
       element: <RegisterPage />,
+    },
+    {
+      path: 'forgotpass',
+      element: <ForgotPass />,
     },
 
     {
