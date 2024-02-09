@@ -229,10 +229,10 @@ const Wallet = () => {
             <Helmet>
                 <title>Wallet Details | Affworld</title>
             </Helmet>
-            <h1 className='text-center'>Your Wallet </h1>
+
             <div className='d-flex justify-content-between row  ' >
 
-                <div className='col-md-4 mt-4'>
+                <div className=' col-md-3 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -260,7 +260,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className='col-md-4 mt-4' >
+                <div className=' col-md-3 mt-4' >
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -288,7 +288,7 @@ const Wallet = () => {
 
                 </div>
 
-                <div className='col-md-4 mt-4'>
+                <div className='col-md-3 mt-4'>
 
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
@@ -300,7 +300,7 @@ const Wallet = () => {
                                     }
                                 </Typography>
                                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Remaining Balance
+                                    Remaining Bal.
                                 </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
@@ -316,7 +316,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className='col-md-4 mt-4'>
+                <div className='col-md-3 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -344,7 +344,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className='col-md-4 mt-4'>
+                <div className='col-md-3 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
