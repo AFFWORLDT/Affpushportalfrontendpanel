@@ -1,238 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
-import { Button } from '@mui/material';
-import totalbill from "../images/total-bill.avif";
-import totalAddedPhoto from "../images/totalAddedBalance.avif";
-import totalRemainingPhoto from "../images/remainingbalance.jpg";
-import addbalance from "../images/addbalance2.jpg";
-import balanceStatement from "../images/statements.avif";
-import { toast } from 'react-toastify';
-import { getUserFromLocalStorage } from 'src/service/localStorage';
-import { FormControl } from '@mui/material';
+import React, { useState } from "react";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import HomeIcon from "@mui/icons-material/Home";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box } from "@mui/system";
+import { Grid, Typography } from "@mui/material";
+import "./Wallet.css";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
-import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
-import { Helmet } from 'react-helmet-async';
-import { Select } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
-import LinearProgress from '@mui/material/LinearProgress';
-import CloudDoneIcon from '@mui/icons-material/CloudDone';
-import PauseIcon from '@mui/icons-material/Pause';
-import QrPayment from "../images/laxmikant_fedral.jpeg";
-import TextField from '@mui/material/TextField';
-import CircularProgress from '@mui/material/CircularProgress';
+const ResponsiveBottomNavigation = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.between("xs", "sm"));
 
-
-
-
-
-
-
-
-const Wallet = () => {
-    const theme = useTheme();
-    const URL = process.env.REACT_APP_PROD_API;
-    const user = getUserFromLocalStorage();
-    const accessToken = user?.data?.access_token;
-    const [totalBill, setTotalBill] = useState(0);
-    const [totalAddedBalance, setTotalAddedBalance] = useState(0);
-    const [totalRemainingBalance, setTotalRemainingBalance] = useState(0);
-    const [balanceStateMents, setBalanceStateMents] = useState([]);
-    const [show, setShow] = useState(false);
-    const [show1, setShow1] = useState(false);
-
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [loading, setLoading] = useState(false);
-    const [pageData, setPageData] = useState([]);
-    const [amount, setAmount] = useState(0);
-    const [orderId, setOrderId] = useState("");
-
-    const handleClose = () => setShow(false);
-    const handleClose1 = () => setShow1(false);
-
-    const handleShow = () => setShow(true);
-    const handleShow1 = () => setShow1(true);
-
-
-
-    const addbalanceToWallet = async () => {
-        try {
-            const url = `${URL}/api/wallet/add-balance`;
-            const data = {
-                amount: amount,
-                order_id: orderId
-            }
-
-            const res = await axios.post(url, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            console.log("Add Balance -->", res?.data);
-
-            if (res.status === 200) {
-                toast.success(res?.data?.message);
-                setAmount(0);
-                setOrderId("");
-                handleClose1();
-            }
-
-
-        } catch (error) {
-            console.log("Error While Adding Balance -->", error);
-            toast.error("Error While Adding Balance !!");
-
-        }
-    }
-
-
-
-    const getTotalBill = async () => {
-        try {
-            setLoading(true);
-            const url = `${URL}/api/wallet/get-total-bill`;
-            // console.log("Access token ", accessToken);
-
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            // console.log("Total Bill -->", res?.data);
-            setTotalBill(Number(res?.data.toFixed(2)));
-            setLoading(false);
-
-
-        } catch (error) {
-            console.log("Error While Getting Total Bill -->", error);
-            toast.error("Error While Getting Total Bill !!");
-
-        }
-    }
-
-    const getlBalanceStatements = async () => {
-        try {
-            setLoading(true);
-            const url = `${URL}/api/wallet/balance-statements`;
-            // console.log("Access token ", accessToken);
-
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            // console.log("Balance Statements -->", res?.data);
-            setBalanceStateMents(res?.data);
-            setLoading(false);
-
-        } catch (error) {
-            console.log("Error While Statements  -->", error);
-            toast.error("Error While Statements !!");
-
-        }
-    }
-
-    const getTotalAddedBalance = async () => {
-        try {
-            setLoading(true);
-            const url = `${URL}/api/wallet/total-added-balance`;
-            // console.log("Access token ", accessToken);
-
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            // console.log("Total Added Balance -->", res?.data);
-            setTotalAddedBalance(Number(res?.data?.total_added_balance?.toFixed(2)));
-            setLoading(false);
-
-        } catch (error) {
-            console.log("Error While Getting Total Added Balance -->", error);
-            toast.error("Error While Getting Total Added Balance !!");
-
-        }
-    }
-
-    const getTotalRemainingBalance = async () => {
-        try {
-            setLoading(true);
-            const url = `${URL}/api/wallet/total-remaining-balance`;
-            // console.log("Access token ", accessToken);
-
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            // console.log("Total Remaining Balance -->", res?.data);
-            setTotalRemainingBalance(Number(res?.data?.total_remaining_balance?.toFixed(2)));
-            setLoading(false);
-
-        } catch (error) {
-            console.log("Error While Getting Total Remaining Balance -->", error);
-            toast.error("Error While Getting Total Remaining Balance !!");
-
-        }
-    }
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-
-
-    useEffect(() => {
-        getTotalAddedBalance();
-        getTotalBill();
-        getTotalRemainingBalance();
-        getlBalanceStatements();
-    }, []);
-
-    useEffect(() => {
-        const startIndex = page * rowsPerPage;
-        const dataForPage = balanceStateMents?.slice(startIndex, startIndex + rowsPerPage);
-        setPageData(dataForPage);
-    }, [page, rowsPerPage, balanceStateMents]);
-
-
+  const [value, setValue] = useState(0);
 
     return (
         <>
             <Helmet>
                 <title>Wallet Details | Affworld</title>
             </Helmet>
-
+            <h1 className='text-center'>Your Wallet </h1>
             <div className='d-flex justify-content-between row  ' >
 
-                <div className=' col-md-3 mt-4'>
+                <div className='col-md-4 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -260,7 +51,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className=' col-md-3 mt-4' >
+                <div className='col-md-4 mt-4' >
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -288,7 +79,7 @@ const Wallet = () => {
 
                 </div>
 
-                <div className='col-md-3 mt-4'>
+                <div className='col-md-4 mt-4'>
 
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
@@ -300,7 +91,7 @@ const Wallet = () => {
                                     }
                                 </Typography>
                                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Remaining Bal.
+                                    Remaining Balance
                                 </Typography>
                             </CardContent>
                             <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
@@ -316,7 +107,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className='col-md-3 mt-4'>
+                <div className='col-md-4 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -344,7 +135,7 @@ const Wallet = () => {
                     </Card>
                 </div>
 
-                <div className='col-md-3 mt-4'>
+                <div className='col-md-4 mt-4'>
 
                     <Card sx={{ display: 'flex', width: "fit-content" }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
