@@ -9,6 +9,11 @@ import {
   FormControl,
   InputLabel,
   Modal,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+
 } from "@mui/material";
 import { toast } from "react-toastify";
 import Table from "@mui/material/Table";
@@ -23,48 +28,80 @@ import LinearProgress from "@mui/material/LinearProgress";
 import useClipboard from "react-use-clipboard";
 import copy from "clipboard-copy";
 import * as XLSX from "xlsx";
-import { getData } from "../service/api";
-import {
-  getResFromLocalStorage,
-  getUserFromLocalStorage,
-} from "../service/localStorage";
+import { getResFromLocalStorage, getUserFromLocalStorage } from "../service/localStorage";
 import axios from "axios";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import PauseIcon from "@mui/icons-material/Pause";
-import { fontWeight } from "@mui/system";
 import AccessTimeIcon from "@mui/icons-material/AccessTime"; // Import the Expired icon
+import { useTheme } from "@mui/material/styles";
+
 
 const Offers = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const URL2 = process.env.REACT_APP_PROD_API;
-
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [selectedOption, setSelectedOption] = useState("");
   const navigate = useNavigate();
   const res = getResFromLocalStorage();
   const user = getUserFromLocalStorage();
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [pageData, setPageData] = useState([]);
+  const [approveData, setApproveData] = useState([]);
+  const [categoryFilteredData, setCategoryFilteredData] = useState([]);
+  const [countryFilteredData, setCountryFilteredData] = useState([]);
+  const [buttonStates, setButtonStates] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [pageData, setPageData] = useState([]);
-  const { copied, copyToClipboard } = useClipboard(); // Initialize useClipboard
+  const { copied, copyToClipboard } = useClipboard();
 
   const [status, setStatus] = useState("");
-  const [buttonStates, setButtonStates] = useState({});
   const user2 = getUserFromLocalStorage();
   const accessToken = user2?.data.access_token;
   const url = `${URL}/approve/`;
-  //const url ="http://localhost:8000/approve/";
-  const affiliateId = res?.data.affiliate_id;
-  const [approveData, setApproveData] = useState([]);
 
-  //
+  const affiliateId = res?.data?.affiliate_id;
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [categoryFilteredData, setCategoryFilteredData] = useState([]);
-
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [countryFilteredData, setCountryFilteredData] = useState([]);
+  const [selectedIframCampaginId, setSelectedIframCampaginId] = useState("");
+  const theme = useTheme();
 
-  //
+
+
+  const handleIframeCode = (row) => {
+    handleOpen();
+    setSelectedIframCampaginId(row?._id);
+
+  }
+
+
+  const handleIframe = async () => {
+    try {
+      console.log("this is selectedOption", selectedOption);
+      const url = `${URL2}/api/affiliates/set_on_iframe?iframe_id=${selectedOption}&campaign_id=${selectedIframCampaginId}`;
+      const accessToken = user?.data?.access_token;
+      console.log(accessToken);
+      const response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("Iframe set successfully!!");
+        handleClose();
+        setSelectedIframCampaginId("");
+        setSelectedOption("");
+      }
+    } catch (error) {
+      console.log("Error While setting iframe-->", error);
+      toast.error("Error While setting iframe!!");
+    }
+  };
 
   const privateCheck = () => {
     const auth = localStorage.getItem("user");
@@ -87,42 +124,15 @@ const Offers = () => {
   useEffect(() => {
     privateCheck();
     fetchData();
-  }, []); // Use an empty dependency array to run the effect only once
+  }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const result = await getData();
 
-  //     console.log("offers data -->", result);
-  //     setData(result);
-  //     setLoading(true);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
 
   useEffect(() => {
     fetchData();
   }, [status]);
 
-  // useEffect(() => {
-  //   console.log("DATA__",data);
-  //   (data.map((each)=>{
-  //     console.log("NAME__",each?.name);
-  //     console.log("TYPE__",each?.type);
-  //   }))
-  //   // console.log("DATA__", data);
-  //   (data.map((each) => {
-  //   }))
 
-  // }, [data])
-
-  useEffect(() => {
-    data.map((row) => {
-      console.log("NAME__", row?.name);
-      console.log("buttonStates[row._id]____", buttonStates[row._id]);
-    });
-  }, [data]);
 
   const fetchData = async () => {
     try {
@@ -132,72 +142,19 @@ const Offers = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.data.access_token}`,
-          },
+            "Authorization": `Bearer ${accessToken}`
+          }
         }
       );
-
-      console.log("offers data -->", result);
       setData(result.data);
       setLoading(true);
 
-      // for (const row of result.data) {
-      //   if (row?.type === "Private") {
-      //     await checkApprovalStatus(row);
-      //   }
-      // }
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const checkApprovalStatus = async (row) => {
-    try {
-      const url_approve = `${URL}/approve/?page=1&affiliate_id=${affiliateId}&campaign_id=${row._id}`;
-      // Replace with your actual access token
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      };
-
-      const response = await fetch(url_approve, {
-        method: "GET",
-        headers: headers,
-      });
-
-      if (!response.ok) {
-        console.error(
-          `HTTP error! Status: ${response.status} - ${response.statusText}`
-        );
-        // Log additional response data if needed
-        const responseData = await response.json();
-        console.error("Response Data:", responseData);
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const jsonData = await response.json();
-      console.log("jsonData", jsonData);
-      console.log("jsonData.approval_status____", jsonData[0]?.approval_status);
-      if (jsonData[0]?.approval_status === "approved") {
-        setButtonStates((prevStates) => ({
-          ...prevStates,
-          [row._id]: "Approved",
-        }));
-      } else if (jsonData[0]?.approval_status === "disapproved") {
-        setButtonStates((prevStates) => ({
-          ...prevStates,
-          [row._id]: "Disapproved",
-        }));
-      } else if (jsonData[0]?.approval_status === "pending") {
-        setButtonStates((prevStates) => ({
-          ...prevStates,
-          [row._id]: "Pending",
-        }));
-      }
-    } catch (error) {
-      console.error("Error fetching approval status:", error);
-    }
-  };
 
   const sendRequest = async (campaignId) => {
     try {
@@ -229,27 +186,6 @@ const Offers = () => {
     }
   };
 
-  const handleIframe = async (row) => {
-    try {
-      const campageinId = row._id;
-      const url = `${URL2}/api/affiliates/set_on_iframe?campaign_id=${campageinId}`;
-      const accessToken = user.data.access_token;
-      const response = await axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log(response);
-      if (response.status === 200) {
-        toast.success("Iframe set successfully!!");
-      }
-    } catch (error) {
-      console.log("Error While setting iframe-->", error);
-      toast.error("Error While setting iframe!!");
-    }
-  };
-
   const handleCopyAff = (item) => {
     const link = `${URL}/${item?.code}?affiliate_id=${res?.data?.affiliate_id}`;
 
@@ -276,8 +212,7 @@ const Offers = () => {
       if (row?.type === "Public" || row?.type === null) {
         await handleCopyAff(row);
       } else if (row?.type === "Private") {
-        // Update the state for the specific button
-        // await checkApprovalStatus(row);
+
         console.log("buttonStates[row._id]____", buttonStates[row._id]);
         if (buttonStates[row._id] === "Approved") {
           await handleCopyAff(row);
@@ -290,37 +225,14 @@ const Offers = () => {
         }
         console.log("Button clicked and changed to pending for row:", row._id);
 
-        // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
+
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  // const handleClick = async (row) => {
-  //   try {
-  //     if (row?.type === 'Public' || row?.type === null) {
-  //       await handleCopyAff(row);
-  //     } else if (row?.type === 'Private') {
-  //       setButtonText('Pending');
-  //       // Update the state for the specific button
-  //       setButtonStates((prevStates) => ({
-  //         ...prevStates,
-  //         [row._id]: true,
-  //       }));
-  //       await sendRequest(row?._id);
-  //       // navigate('/affiliate/detail-offer'); // Commented out to isolate the issue
-  //     }
-  //     console.log('Button clicked and changed to pending');
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   } finally {
-  //     // Update the state for the specific button
-  //     setButtonStates((prevStates) => ({
-  //       ...prevStates,
-  //       [row._id]: false,
-  //     }));
-  //   }
-  // };
+
+
 
   const exportData = () => {
     const fileName = "Offers.xlsx";
@@ -366,7 +278,6 @@ const Offers = () => {
   const handlePayout = (row) => {
     setPayoutVal(row?.payouts);
     setIsPayoutVal(true);
-    // console.log("row this is payout row--->", row?.payouts);
   };
 
   useEffect(() => {
@@ -375,7 +286,7 @@ const Offers = () => {
     setPageData(dataForPage);
   }, [page, rowsPerPage, data]);
 
-  //
+
 
   const handleCategoryChange = (event) => {
     const newSelectedCategory = event.target.value;
@@ -413,6 +324,8 @@ const Offers = () => {
     setSelectedCountry(newSelectedCountry);
     setCountryFilteredData(newFilteredData);
   };
+
+
 
 
   const handleClearFilter = () => {
@@ -509,7 +422,7 @@ const Offers = () => {
 
 
       <div className="mt-3 mb-3" >
-        {categoryFilteredData?.length > 0 ? (
+        {categoryFilteredData?.length > 0 && countryFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
             <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -565,7 +478,10 @@ const Offers = () => {
                       <span style={{ fontWeight: 700 }}>{row?.status} </span>
                     </TableCell>
                     <TableCell align="center">
-                      <Button variant="contained" onClick={() => handleIframe(row)}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleIframeCode(row)}
+                      >
                         Link Iframe
                       </Button>
                     </TableCell>
@@ -602,8 +518,9 @@ const Offers = () => {
         )}
       </div>
 
+
       <div className="mt-3 mb-3 " >
-        {countryFilteredData?.length > 0 ? (
+        {countryFilteredData?.length > 0 && categoryFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
             <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -659,7 +576,10 @@ const Offers = () => {
                       <span style={{ fontWeight: 700 }}>{row?.status} </span>
                     </TableCell>
                     <TableCell align="center">
-                      <Button variant="contained" onClick={() => handleIframe(row)}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleIframeCode(row)}
+                      >
                         Link Iframe
                       </Button>
                     </TableCell>
@@ -714,9 +634,7 @@ const Offers = () => {
                       <TableCell>Offers</TableCell>
                       <TableCell align="center">Category</TableCell>
                       <TableCell align="center">Tags</TableCell>
-                      {/* <TableCell align="center">Description</TableCell> */}
                       <TableCell align="center">Payout</TableCell>
-                      {/* <TableCell align="center">Metrics</TableCell> */}
                       <TableCell align="center">Country</TableCell>
                       <TableCell align="center">Status</TableCell>
                       <TableCell align="center">Iframe</TableCell>
@@ -746,9 +664,6 @@ const Offers = () => {
                                 ))}
                               </Select>
                             </TableCell>
-                            {/* <TableCell align="center">
-                      {row?.description === null ? "N/A" : row?.description}
-                    </TableCell> */}
 
                             <TableCell align="center">
                               <Button
@@ -758,14 +673,7 @@ const Offers = () => {
                                 See Payouts
                               </Button>
                             </TableCell>
-                            {/* <TableCell align="center">
-                      <Box>
-                        <Box sx={{ display: "flex", justifyContent: "center" }}>
-                          <span style={{ color: "#6E7A83" }}>CR</span>
-                          &nbsp;&nbsp;&nbsp; <span>0%</span>
-                        </Box>
-                      </Box>
-                    </TableCell> */}
+
                             <TableCell align="center">
                               {row?.country === null ? "N/A" : row?.country}
                             </TableCell>
@@ -784,12 +692,11 @@ const Offers = () => {
                             <TableCell align="center">
                               <Button
                                 variant="contained"
-                                onClick={() => handleIframe(row)}
+                                onClick={() => handleIframeCode(row)}
                               >
                                 Link Iframe
                               </Button>
                             </TableCell>
-
                             <TableCell align="center">
                               <Button
                                 key={row._id}
@@ -891,6 +798,155 @@ const Offers = () => {
           </Table>
         </Box>
       </Modal>
+
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #4c545d',
+          borderRadius: "8px",
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Box
+
+          >
+            <RadioGroup
+
+            >
+              <Grid container>
+                <Grid
+                  item xs={12} md={6}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        value="1"
+                        onChange={(e) =>
+                          setSelectedOption(e.target.value)
+                        }
+                      />
+                    }
+                    label="Option 1"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        value="2"
+                        onChange={(e) =>
+                          setSelectedOption(e.target.value)
+                        }
+                      />
+                    }
+                    label="Option 2"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        value="3"
+                        onChange={(e) =>
+                          setSelectedOption(e.target.value)
+                        }
+                      />
+                    }
+                    label="Option 3"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Radio
+                        value="4"
+                        onChange={(e) =>
+                          setSelectedOption(e.target.value)
+                        }
+                      />
+                    }
+                    label="Option 4"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={12}
+                  mt={1}
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: "120px",
+                    }}
+                    onClick={handleIframe}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    sx={{ width: "120px", marginLeft: "10px" }}
+                    variant="contained"
+                    color="error"
+                    onClick={handleClose}
+                  >
+                    Close
+                  </Button>
+                </Grid>
+              </Grid>
+            </RadioGroup>
+          </Box>
+        </Box>
+      </Modal>
+
+
+
+
+
     </>
   );
 };

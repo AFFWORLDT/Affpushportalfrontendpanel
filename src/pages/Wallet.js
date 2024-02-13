@@ -33,6 +33,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import QrPayment from "../images/laxmikant_fedral.jpeg";
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import account from 'src/_mock/account';
 
 
 
@@ -231,6 +232,10 @@ const Wallet = () => {
             </Helmet>
             <h1 className='text-center'>Your Wallet </h1>
             <div className='d-flex justify-content-between row  ' >
+
+                {/* <div>
+                    <img src={account?.photoURL} alt="testing" />
+                </div> */}
 
                 <div className='col-md-4 mt-4'>
 
