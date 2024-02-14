@@ -13,9 +13,11 @@ import {
   Grid,
   Radio,
   RadioGroup,
+  Link,
 
 } from "@mui/material";
 import { toast } from "react-toastify";
+import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -56,6 +58,7 @@ const Offers = () => {
   const [buttonStates, setButtonStates] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [moreDetailsCamapgin, setMoreDetailsCamapgin] = useState({});
   const { copied, copyToClipboard } = useClipboard();
 
   const [status, setStatus] = useState("");
@@ -112,6 +115,8 @@ const Offers = () => {
 
   const [payoutVal, setPayoutVal] = useState();
   const [isPayoutVal, setIsPayoutVal] = useState(false);
+  const [moreDetailsModal, setMoreDetailsModal] = useState(false);
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -280,6 +285,28 @@ const Offers = () => {
     setIsPayoutVal(true);
   };
 
+  const handleMoreDetails = async (row) => {
+
+    setMoreDetailsModal(true);
+    const campaign_id = row?._id;
+    const url = `${URL}/campaign/${campaign_id}`;
+
+    const res = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    console.log("More Details -->", res?.data);
+    setMoreDetailsCamapgin(res?.data);
+
+
+
+
+
+
+  }
+
   useEffect(() => {
     const startIndex = page * rowsPerPage;
     const dataForPage = data.slice(startIndex, startIndex + rowsPerPage);
@@ -435,6 +462,8 @@ const Offers = () => {
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
+                  <TableCell align="center">Details</TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -533,6 +562,8 @@ const Offers = () => {
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
+                  <TableCell align="center">Deatils</TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -639,6 +670,7 @@ const Offers = () => {
                       <TableCell align="center">Status</TableCell>
                       <TableCell align="center">Iframe</TableCell>
                       <TableCell align="center">Action</TableCell>
+                      <TableCell align="center">Details</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -720,6 +752,9 @@ const Offers = () => {
                                     : "Copy Link"}
                               </Button>
                             </TableCell>
+                            <TableCell align="center">
+                              <Button variant="outlined" color="secondary" onClick={() => handleMoreDetails(row)}  >  Details <ReadMoreIcon sx={{ marginLeft: "5px" }} /> </Button>
+                            </TableCell>
                           </TableRow>
                         ))
                       ) : null
@@ -796,6 +831,68 @@ const Offers = () => {
               </TableRow>
             </TableBody>
           </Table>
+        </Box>
+      </Modal>
+
+
+      <Modal onClose={() => setMoreDetailsModal(false)} open={moreDetailsModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "white",
+            boxShadow: 24,
+            p: 2,
+            borderRadius: "8px",
+            width: "90%",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="text-center">CampaignPhoto</TableCell>
+                <TableCell className="text-center">Name</TableCell>
+                <TableCell className="text-center">Status</TableCell>
+                <TableCell className="text-center">Country</TableCell>
+                <TableCell className="text-center">Url</TableCell>
+                <TableCell className="text-center">horizontal_image_url</TableCell>
+                <TableCell className="text-center">vertical_image_url</TableCell>
+
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow style={{ backgroundColor: "#f2f2f2" }}>
+                <TableCell className="text-center">
+                  <img style={{ width: "100px" }} src={moreDetailsCamapgin?.CampaignPhoto} alt="campagin-photo" />
+
+                </TableCell>
+                <TableCell className="text-center">
+                  {moreDetailsCamapgin?.name ? moreDetailsCamapgin?.name : "N/A"}
+                </TableCell>
+                <TableCell className="text-center">
+                  {moreDetailsCamapgin?.status ? moreDetailsCamapgin?.status : "N/A"}
+                </TableCell>
+                <TableCell className="text-center">
+                  {moreDetailsCamapgin?.country ? moreDetailsCamapgin?.country : "N/A"}
+                </TableCell>
+                <TableCell className="text-center">
+                  <Link to={moreDetailsCamapgin?.url ? moreDetailsCamapgin?.url : "N/A"} >URL</Link>
+
+                </TableCell>
+                <TableCell className="text-center">
+                  <img src={moreDetailsCamapgin?.horizontal_image_url} alt="horizontal Image" />
+
+                </TableCell>
+                <TableCell className="text-center">
+                  <img src={moreDetailsCamapgin?.vertical_image_url} alt="horizontal Image" />
+
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+
         </Box>
       </Modal>
 

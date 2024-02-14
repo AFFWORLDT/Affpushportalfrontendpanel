@@ -14,6 +14,7 @@ import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import { Box } from '@mui/system';
+import { storeAnid } from 'src/utils/localStorage';
 
 
 // ----------------------------------------------------------------------
@@ -51,6 +52,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
   const navigate = useNavigate();
+
   const privateCheck = () => {
     const auth = localStorage.getItem("user");
     if (auth) {
@@ -58,8 +60,14 @@ export default function LoginPage() {
     }
   }
 
+
+
+
+
+
   useEffect(() => {
     privateCheck();
+    storeAnid();
   }, []);
   const boxstyle = {
     // background: "linear(to-l, #7928CA, #FF0080)",
