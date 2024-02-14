@@ -2,18 +2,19 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
 // import {  } from 'react-router-dom';
-import {  Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { Container, Typography, Divider, Stack, Button } from '@mui/material';
 // hooks
 
 
-import { useNavigate ,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import useResponsive from '../hooks/useResponsive';
 // components
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import  RegisterForm  from '../sections/auth/RegisterFrom'
+import RegisterForm from '../sections/auth/RegisterFrom'
+import { storeAnid } from 'src/utils/localStorage';
 
 // ----------------------------------------------------------------------
 
@@ -53,16 +54,19 @@ export default function RegisterPage() {
   const privateCheck = () => {
     const auth = localStorage.getItem("user");
     if (auth) {
-      navigate("/"); 
+      navigate("/");
     }
   }
-  
+
+
+
   useEffect(() => {
+    storeAnid();
     privateCheck();
   });
   const boxstyle = {
     // background: "linear(to-l, #7928CA, #FF0080)",
-    color:"green"
+    color: "green"
     // bgClip: "text",
     // fontSize: "4xl",
     // fontWeight: "extrabold"
@@ -79,7 +83,7 @@ export default function RegisterPage() {
           sx={{
             position: 'fixed',
             top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 },
+            left: { xs: 80, sm: 80, md: 80 },
           }}
         />
 

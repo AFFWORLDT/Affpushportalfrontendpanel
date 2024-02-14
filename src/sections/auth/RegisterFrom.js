@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
@@ -15,6 +15,10 @@ import Iconify from '../../components/iconify';
 export default function RegisterFrom() {
   const navigate = useNavigate();
   const URL = process.env.REACT_APP_PROD_API;
+  const [anid, setAnid] = useState(null);
+
+
+
 
   const [values, setValues] = useState({
     name: "",
@@ -24,6 +28,11 @@ export default function RegisterFrom() {
     bio: "",
   });
 
+  const setAnidLocalStorage = () => {
+    const anid = localStorage.getItem("anid");
+    setAnid(anid);
+  }
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = async () => {
@@ -31,13 +40,12 @@ export default function RegisterFrom() {
 
     if (!name || !email || !password) {
       toast.error("Please Provide All The Fields");
-
       return;
     }
 
-    console.log( "this is url from env --->",URL);
+    console.log("this is url from env --->", URL);
     try {
-      const url = `${URL}/api/affiliates`;
+      const url = `${URL}/api/affiliates/?anid=${anid}`;
       console.log(url);
       const data = { name, email, password, bio, };
       console.log(data);
@@ -56,7 +64,7 @@ export default function RegisterFrom() {
       setTimeout(() => {
         navigate("/");
         window.location.reload();
-            }, 5000);
+      }, 5000);
       console.log(response);
       // return response.data;
 
@@ -69,6 +77,11 @@ export default function RegisterFrom() {
 
     }
   };
+
+
+  useEffect(() => {
+    setAnidLocalStorage();
+  }, []);
 
   return (
     <>

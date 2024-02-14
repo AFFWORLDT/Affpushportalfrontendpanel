@@ -48,23 +48,41 @@ export const removeUserFromLocalStorage = () => {
 
 };
 
+
+export const storeAnid = () => {
+  try {
+
+    const anid = localStorage.getItem("anid");
+    if (!anid) {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const anid = urlSearchParams.get("anid");
+      localStorage.setItem("anid", anid);
+
+    }
+
+  } catch (error) {
+    console.log("Error While saving this anid", error);
+
+  }
+}
+
 export const getUserFromLocalStorage = () => {
   const userData = localStorage.getItem("user");
-  
+
   // const result = localStorage.getItem("user");
   const user = JSON.parse(userData); // Parse the JSON data
 
-  
+
   return user;
 };
 
 export const getResFromLocalStorage = () => {
   const resData = localStorage.getItem("res");
-  
+
   // const result = localStorage.getItem("user");
   const res = JSON.parse(resData); // Parse the JSON data
 
-  
+
   return res;
 };
 
