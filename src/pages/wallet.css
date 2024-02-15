@@ -21,8 +21,7 @@
   border-radius: 50%;
   margin: 0 auto;
 }
-.wallet-avatar,
-img {
+.wallet-avatar-img  {
   display: block;
   object-fit: cover;
   border-radius: 50%;
@@ -77,8 +76,7 @@ img {
     margin: 0 auto;
     overflow: hidden;
   }
-  .wallet-avatar,
-  img {
+  .wallet-avatar-img {
     display: block;
 
     object-fit: cover;

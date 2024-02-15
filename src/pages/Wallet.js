@@ -218,7 +218,7 @@ const Wallet = () => {
             <Box className="wallet-bg-container">
               <Box className="wallet-info-container">
                 <Box className="wallet-avatar">
-                  <img src={account.photoURL} alt="" />
+                  <img  className="wallet-avatar-img" src={account.photoURL} alt="" />
                 </Box>
                 <Box className="wallet-name">{account.displayName}</Box>
                 <Box className="wallet-email">{account.email}</Box>
