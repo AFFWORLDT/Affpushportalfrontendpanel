@@ -1,0 +1,11 @@
+.offer-CampaignPhoto {
+  width: 150px !important;
+  height: auto !important; /* Add this line to maintain aspect ratio */
+}
+
+@media screen and (min-width: 360px) and (max-width: 740px) {
+  .offer-CampaignPhoto {
+    width: 80px !important;
+    height: auto !important; /* Add this line to maintain aspect ratio */
+  }
+}
