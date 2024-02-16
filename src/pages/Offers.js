@@ -14,10 +14,9 @@ import {
   Radio,
   RadioGroup,
   Link,
-
 } from "@mui/material";
 import { toast } from "react-toastify";
-import ReadMoreIcon from '@mui/icons-material/ReadMore';
+import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -30,13 +29,15 @@ import LinearProgress from "@mui/material/LinearProgress";
 import useClipboard from "react-use-clipboard";
 import copy from "clipboard-copy";
 import * as XLSX from "xlsx";
-import { getResFromLocalStorage, getUserFromLocalStorage } from "../service/localStorage";
+import {
+  getResFromLocalStorage,
+  getUserFromLocalStorage,
+} from "../service/localStorage";
 import axios from "axios";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import PauseIcon from "@mui/icons-material/Pause";
 import AccessTimeIcon from "@mui/icons-material/AccessTime"; // Import the Expired icon
 import { useTheme } from "@mui/material/styles";
-
 
 const Offers = () => {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -72,14 +73,10 @@ const Offers = () => {
   const [selectedIframCampaginId, setSelectedIframCampaginId] = useState("");
   const theme = useTheme();
 
-
-
   const handleIframeCode = (row) => {
     handleOpen();
     setSelectedIframCampaginId(row?._id);
-
-  }
-
+  };
 
   const handleIframe = async () => {
     try {
@@ -117,7 +114,6 @@ const Offers = () => {
   const [isPayoutVal, setIsPayoutVal] = useState(false);
   const [moreDetailsModal, setMoreDetailsModal] = useState(false);
 
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -131,13 +127,9 @@ const Offers = () => {
     fetchData();
   }, []);
 
-
-
   useEffect(() => {
     fetchData();
   }, [status]);
-
-
 
   const fetchData = async () => {
     try {
@@ -147,19 +139,16 @@ const Offers = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       setData(result.data);
       setLoading(true);
-
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
 
   const sendRequest = async (campaignId) => {
     try {
@@ -217,7 +206,6 @@ const Offers = () => {
       if (row?.type === "Public" || row?.type === null) {
         await handleCopyAff(row);
       } else if (row?.type === "Private") {
-
         console.log("buttonStates[row._id]____", buttonStates[row._id]);
         if (buttonStates[row._id] === "Approved") {
           await handleCopyAff(row);
@@ -229,15 +217,11 @@ const Offers = () => {
           await sendRequest(row?._id);
         }
         console.log("Button clicked and changed to pending for row:", row._id);
-
-
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-
 
   const exportData = () => {
     const fileName = "Offers.xlsx";
@@ -262,8 +246,9 @@ const Offers = () => {
       cells.forEach((cell, cellIndex) => {
         // If this is the action column, add a link
         if (cellIndex === 6) {
-          const actionLink = `${URL}/${data[index - 1]?.code}?affiliate_id=${res.data.affiliate_id
-            }`;
+          const actionLink = `${URL}/${data[index - 1]?.code}?affiliate_id=${
+            res.data.affiliate_id
+          }`;
 
           rowData.push(actionLink);
         } else {
@@ -286,34 +271,25 @@ const Offers = () => {
   };
 
   const handleMoreDetails = async (row) => {
-
     setMoreDetailsModal(true);
     const campaign_id = row?._id;
     const url = `${URL}/campaign/${campaign_id}`;
 
     const res = await axios.get(url, {
       headers: {
-        "Content-Type": "application/json"
-      }
-    })
+        "Content-Type": "application/json",
+      },
+    });
 
     console.log("More Details -->", res?.data);
     setMoreDetailsCamapgin(res?.data);
-
-
-
-
-
-
-  }
+  };
 
   useEffect(() => {
     const startIndex = page * rowsPerPage;
     const dataForPage = data.slice(startIndex, startIndex + rowsPerPage);
     setPageData(dataForPage);
   }, [page, rowsPerPage, data]);
-
-
 
   const handleCategoryChange = (event) => {
     const newSelectedCategory = event.target.value;
@@ -352,21 +328,15 @@ const Offers = () => {
     setCountryFilteredData(newFilteredData);
   };
 
-
-
-
   const handleClearFilter = () => {
     try {
-
       setCountryFilteredData([]);
       setSelectedCountry([]);
       fetchData();
-
-
     } catch (error) {
       console.log("Error while clear", error);
     }
-  }
+  };
 
   const countries = [
     "India",
@@ -381,77 +351,184 @@ const Offers = () => {
       <Helmet>
         <title>Best Offers | Affworld</title>
       </Helmet>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={exportData}
-        style={{ margin: "8px" }}
-      >
-        Export to Excel
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleClearFilter}
-        style={{ margin: "8px" }}
-      >
-        Clear Filter
-      </Button>
-      <FormControl sx={{ width: 200, margin: "8px" }}>
-        <InputLabel id="demo-simple-select-label">All Offers</InputLabel>
-        <Select
-          defaultValue=""
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={status}
-          onChange={handleStatusChange}
+
+      <Grid container rowSpacing={2}>
+        <Grid
+          item
+          md={3}
+          xs={6}
+          className="d-flex justify-content-center align-items-center"
         >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="paused">Paused</MenuItem>
-          <MenuItem value="expired">Expired</MenuItem>
-          <MenuItem value="active">Active</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl sx={{ width: 200, margin: "8px" }}>
-        <InputLabel id="demo-category-select-label">All Categories</InputLabel>
-        <Select
-          labelId="demo-category-select-label"
-          id="demo-category-select"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
+          <FormControl
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                width: "130px",
+                margin: "0 auto",
+              },
+              [theme.breakpoints.up("md")]: {
+                width: "200px",
+                backgroundColor: "white  ",
+              },
+            }}
+          >
+            <InputLabel id="demo-simple-select-label">All Offers</InputLabel>
+            <Select
+              defaultValue=""
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={status}
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="paused">Paused</MenuItem>
+              <MenuItem value="expired">Expired</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid
+          item
+          md={3}
+          xs={6}
+          className="d-flex justify-content-center align-items-center"
         >
-          <MenuItem value="">All</MenuItem>
-          {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <FormControl sx={{ width: 200, margin: "8px" }}>
-        <InputLabel id="demo-category-select-label">Countries</InputLabel>
-        <Select
-          labelId="demo-category-select-label"
-          id="demo-category-select"
-          value={selectedCountry}
-          onChange={handleCountryChange}
+          <FormControl
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                width: "130px",
+                margin: "0 auto",
+              },
+              [theme.breakpoints.up("md")]: {
+                width: "200px",
+                backgroundColor: "white  ",
+              },
+            }}
+          >
+            <InputLabel id="demo-category-select-label">
+              All Categories
+            </InputLabel>
+            <Select
+              labelId="demo-category-select-label"
+              id="demo-category-select"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+            >
+              <MenuItem value="">All</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid
+          item
+          md={3}
+          xs={6}
+          className="d-flex justify-content-center align-items-center"
         >
-          <MenuItem value="">All</MenuItem>
-          {countries.map((country) => (
-            <MenuItem key={country} value={country}>
-              {country}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          <FormControl
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                width: "130px",
+                margin: "0 auto",
+              },
+              [theme.breakpoints.up("md")]: {
+                width: "200px",
+                backgroundColor: "white  ",
+              },
+            }}
+          >
+            <InputLabel id="demo-category-select-label">Countries</InputLabel>
+            <Select
+              labelId="demo-category-select-label"
+              id="demo-category-select"
+              value={selectedCountry}
+              onChange={handleCountryChange}
+            >
+              <MenuItem value="">All</MenuItem>
+              {countries.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
+        <Grid
+          item
+          md={3}
+          xs={6}
+          className="d-flex justify-content-center align-items-center "
+        >
+          <Grid
+            container
+            rowSpacing={1}
+            colSpacing={4}
+            className="d-flex justify-content-center align-items-center "
+          >
+            <Grid
+              item
+              md={6}
+              className="d-flex justify-content-center align-items-center"
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={exportData}
+                sx={{
+                  [theme.breakpoints.up("xs")]: {
+                    width: "130px",
+                    fontSize: "12px",
+                  },
+                  [theme.breakpoints.up("md")]: {
+                    width: "140px",
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                Export to Excel
+              </Button>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              className="d-flex justify-content-center align-items-center"
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleClearFilter}
+                className=" mx-auto d-block"
+                sx={{
+                  [theme.breakpoints.up("xs")]: {
+                    width: "130px",
+                    fontSize: "12px",
+                  },
+                  [theme.breakpoints.up("md")]: {
+                    width: "130px",
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                Clear Filter
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
 
-      <div className="mt-3 mb-3" >
-        {categoryFilteredData?.length > 0 && countryFilteredData?.length == 0 ? (
+      <div className="mt-3 mb-3">
+        {categoryFilteredData?.length > 0 &&
+        countryFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
-            <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              id="offers-table"
+              sx={{ minWidth: 650 }}
+              aria-label="simple table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Offers</TableCell>
@@ -463,7 +540,6 @@ const Offers = () => {
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
                   <TableCell align="center">Details</TableCell>
-
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -488,7 +564,10 @@ const Offers = () => {
                       </Select>
                     </TableCell>
                     <TableCell align="center">
-                      <Button variant="contained" onClick={() => handlePayout(row)}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handlePayout(row)}
+                      >
                         See Payouts
                       </Button>
                     </TableCell>
@@ -528,13 +607,13 @@ const Offers = () => {
                               ? "Copied"
                               : "Copy Link"
                             : buttonStates[row._id] === "Disapproved"
-                              ? "Rejected"
-                              : buttonStates[row._id] === "Pending"
-                                ? "Pending"
-                                : "Get Approval"
+                            ? "Rejected"
+                            : buttonStates[row._id] === "Pending"
+                            ? "Pending"
+                            : "Get Approval"
                           : copied
-                            ? "Copied"
-                            : "Copy Link"}
+                          ? "Copied"
+                          : "Copy Link"}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -542,16 +621,18 @@ const Offers = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        ) : (
-          null
-        )}
+        ) : null}
       </div>
 
-
-      <div className="mt-3 mb-3 " >
-        {countryFilteredData?.length > 0 && categoryFilteredData?.length == 0 ? (
+      <div className="mt-3 mb-3 ">
+        {countryFilteredData?.length > 0 &&
+        categoryFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
-            <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              id="offers-table"
+              sx={{ minWidth: 650 }}
+              aria-label="simple table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Offers</TableCell>
@@ -563,7 +644,6 @@ const Offers = () => {
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
                   <TableCell align="center">Deatils</TableCell>
-
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -588,7 +668,10 @@ const Offers = () => {
                       </Select>
                     </TableCell>
                     <TableCell align="center">
-                      <Button variant="contained" onClick={() => handlePayout(row)}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handlePayout(row)}
+                      >
                         See Payouts
                       </Button>
                     </TableCell>
@@ -628,13 +711,13 @@ const Offers = () => {
                               ? "Copied"
                               : "Copy Link"
                             : buttonStates[row._id] === "Disapproved"
-                              ? "Rejected"
-                              : buttonStates[row._id] === "Pending"
-                                ? "Pending"
-                                : "Get Approval"
+                            ? "Rejected"
+                            : buttonStates[row._id] === "Pending"
+                            ? "Pending"
+                            : "Get Approval"
                           : copied
-                            ? "Copied"
-                            : "Copy Link"}
+                          ? "Copied"
+                          : "Copy Link"}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -642,154 +725,151 @@ const Offers = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        ) : (
-          null
-        )}
+        ) : null}
       </div>
-
-
 
       <div className="mt-3 mb-3 ">
+        {categoryFilteredData?.length === 0 &&
+        countryFilteredData?.length === 0 ? (
+          <>
+            <TableContainer component={Paper}>
+              <Table
+                id="offers-table"
+                sx={{ minWidth: 650 }}
+                aria-label="simple table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Offers</TableCell>
+                    <TableCell align="center">Category</TableCell>
+                    <TableCell align="center">Tags</TableCell>
+                    <TableCell align="center">Payout</TableCell>
+                    <TableCell align="center">Country</TableCell>
+                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Iframe</TableCell>
+                    <TableCell align="center">Action</TableCell>
+                    <TableCell align="center">Details</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {loading ? (
+                    pageData?.length > 0 ? (
+                      pageData.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="td" scope="row">
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row?.category === null ? "N/A" : row?.category}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Select defaultValue="">
+                              {row?.tags?.map((tag, index) => (
+                                <option key={index} value={tag}>
+                                  {tag}
+                                </option>
+                              ))}
+                            </Select>
+                          </TableCell>
 
-        {
-          categoryFilteredData?.length === 0 && countryFilteredData?.length === 0 ? (
-            <>
-              <TableContainer component={Paper}>
-                <Table
-                  id="offers-table"
-                  sx={{ minWidth: 650 }}
-                  aria-label="simple table"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Offers</TableCell>
-                      <TableCell align="center">Category</TableCell>
-                      <TableCell align="center">Tags</TableCell>
-                      <TableCell align="center">Payout</TableCell>
-                      <TableCell align="center">Country</TableCell>
-                      <TableCell align="center">Status</TableCell>
-                      <TableCell align="center">Iframe</TableCell>
-                      <TableCell align="center">Action</TableCell>
-                      <TableCell align="center">Details</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {loading ? (
-                      pageData?.length > 0 ? (
-                        pageData.map((row) => (
-                          <TableRow
-                            key={row.name}
-                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                          >
-                            <TableCell component="td" scope="row">
-                              {row.name}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row?.category === null ? "N/A" : row?.category}
-                            </TableCell>
-                            <TableCell align="center">
-                              <Select defaultValue="">
-                                {row?.tags?.map((tag, index) => (
-                                  <option key={index} value={tag}>
-                                    {tag}
-                                  </option>
-                                ))}
-                              </Select>
-                            </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              onClick={() => handlePayout(row)}
+                            >
+                              See Payouts
+                            </Button>
+                          </TableCell>
 
-                            <TableCell align="center">
-                              <Button
-                                variant="contained"
-                                onClick={() => handlePayout(row)}
-                              >
-                                See Payouts
-                              </Button>
-                            </TableCell>
+                          <TableCell align="center">
+                            {row?.country === null ? "N/A" : row?.country}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row?.status === "active" ? (
+                              <CloudDoneIcon style={{ color: "#32e620" }} />
+                            ) : row?.status === "paused" ? (
+                              <PauseIcon style={{ color: "#FF0000" }} />
+                            ) : row?.status === "expired" ? (
+                              <AccessTimeIcon style={{ color: "#FFA500" }} />
+                            ) : null}
+                            {"   "}
+                            <span style={{ fontWeight: 700 }}>
+                              {row?.status}{" "}
+                            </span>
+                          </TableCell>
 
-                            <TableCell align="center">
-                              {row?.country === null ? "N/A" : row?.country}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row?.status === "active" ? (
-                                <CloudDoneIcon style={{ color: "#32e620" }} />
-                              ) : row?.status === "paused" ? (
-                                <PauseIcon style={{ color: "#FF0000" }} />
-                              ) : row?.status === "expired" ? (
-                                <AccessTimeIcon style={{ color: "#FFA500" }} />
-                              ) : null}
-                              {"   "}
-                              <span style={{ fontWeight: 700 }}>{row?.status} </span>
-                            </TableCell>
-
-                            <TableCell align="center">
-                              <Button
-                                variant="contained"
-                                onClick={() => handleIframeCode(row)}
-                              >
-                                Link Iframe
-                              </Button>
-                            </TableCell>
-                            <TableCell align="center">
-                              <Button
-                                key={row._id}
-                                onClick={() => handleClick(row)}
-                                disabled={buttonStates[row._id] === "Pending"}
-                                variant="contained"
-                                style={{ fontWeight: 700, marginBottom: "10px" }}
-                              >
-                                {row?.type === "Private"
-                                  ? buttonStates[row._id] === "Approved"
-                                    ? copied
-                                      ? "Copied"
-                                      : "Copy Link"
-                                    : buttonStates[row._id] === "Disapproved"
-                                      ? "Rejected"
-                                      : buttonStates[row._id] === "Pending"
-                                        ? "Pending"
-                                        : "Get Approval"
-                                  : copied
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              onClick={() => handleIframeCode(row)}
+                            >
+                              Link Iframe
+                            </Button>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              key={row._id}
+                              onClick={() => handleClick(row)}
+                              disabled={buttonStates[row._id] === "Pending"}
+                              variant="contained"
+                              style={{ fontWeight: 700, marginBottom: "10px" }}
+                            >
+                              {row?.type === "Private"
+                                ? buttonStates[row._id] === "Approved"
+                                  ? copied
                                     ? "Copied"
-                                    : "Copy Link"}
-                              </Button>
-                            </TableCell>
-                            <TableCell align="center">
-                              <Button variant="outlined" color="secondary" onClick={() => handleMoreDetails(row)}  >  Details <ReadMoreIcon sx={{ marginLeft: "5px" }} /> </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : null
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={7} align="center">
-                          <LinearProgress />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25, 50, 100]}
-                  component="div"
-                  count={data.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableContainer>
-            </>
-          ) : (
-            null
-          )
-
-        }
-
-
-
+                                    : "Copy Link"
+                                  : buttonStates[row._id] === "Disapproved"
+                                  ? "Rejected"
+                                  : buttonStates[row._id] === "Pending"
+                                  ? "Pending"
+                                  : "Get Approval"
+                                : copied
+                                ? "Copied"
+                                : "Copy Link"}
+                            </Button>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={() => handleMoreDetails(row)}
+                            >
+                              {" "}
+                              Details{" "}
+                              <ReadMoreIcon sx={{ marginLeft: "5px" }} />{" "}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : null
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center">
+                        <LinearProgress />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50, 100]}
+                component="div"
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
+          </>
+        ) : null}
       </div>
-
-
-
 
       <Modal onClose={() => setIsPayoutVal(false)} open={isPayoutVal}>
         <Box
@@ -834,7 +914,6 @@ const Offers = () => {
         </Box>
       </Modal>
 
-
       <Modal onClose={() => setMoreDetailsModal(false)} open={moreDetailsModal}>
         <Box
           sx={{
@@ -857,45 +936,66 @@ const Offers = () => {
                 <TableCell className="text-center">Status</TableCell>
                 <TableCell className="text-center">Country</TableCell>
                 <TableCell className="text-center">Url</TableCell>
-                <TableCell className="text-center">horizontal_image_url</TableCell>
-                <TableCell className="text-center">vertical_image_url</TableCell>
-
+                <TableCell className="text-center">
+                  horizontal_image_url
+                </TableCell>
+                <TableCell className="text-center">
+                  vertical_image_url
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow style={{ backgroundColor: "#f2f2f2" }}>
                 <TableCell className="text-center">
-                  <img style={{ width: "100px" }} src={moreDetailsCamapgin?.CampaignPhoto} alt="campagin-photo" />
-
+                  <img
+                    style={{ width: "100px" }}
+                    src={moreDetailsCamapgin?.CampaignPhoto}
+                    alt="campagin-photo"
+                  />
                 </TableCell>
                 <TableCell className="text-center">
-                  {moreDetailsCamapgin?.name ? moreDetailsCamapgin?.name : "N/A"}
+                  {moreDetailsCamapgin?.name
+                    ? moreDetailsCamapgin?.name
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {moreDetailsCamapgin?.status ? moreDetailsCamapgin?.status : "N/A"}
+                  {moreDetailsCamapgin?.status
+                    ? moreDetailsCamapgin?.status
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {moreDetailsCamapgin?.country ? moreDetailsCamapgin?.country : "N/A"}
+                  {moreDetailsCamapgin?.country
+                    ? moreDetailsCamapgin?.country
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="text-center">
-                  <Link to={moreDetailsCamapgin?.url ? moreDetailsCamapgin?.url : "N/A"} >URL</Link>
-
+                  <Link
+                    to={
+                      moreDetailsCamapgin?.url
+                        ? moreDetailsCamapgin?.url
+                        : "N/A"
+                    }
+                  >
+                    URL
+                  </Link>
                 </TableCell>
                 <TableCell className="text-center">
-                  <img src={moreDetailsCamapgin?.horizontal_image_url} alt="horizontal Image" />
-
+                  <img
+                    src={moreDetailsCamapgin?.horizontal_image_url}
+                    alt="horizontal Image"
+                  />
                 </TableCell>
                 <TableCell className="text-center">
-                  <img src={moreDetailsCamapgin?.vertical_image_url} alt="horizontal Image" />
-
+                  <img
+                    src={moreDetailsCamapgin?.vertical_image_url}
+                    alt="horizontal Image"
+                  />
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
-
         </Box>
       </Modal>
-
 
       <Modal
         open={open}
@@ -903,27 +1003,27 @@ const Offers = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #4c545d',
-          borderRadius: "8px",
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <Box
-
-          >
-            <RadioGroup
-
-            >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #4c545d",
+            borderRadius: "8px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Box>
+            <RadioGroup>
               <Grid container>
                 <Grid
-                  item xs={12} md={6}
+                  item
+                  xs={12}
+                  md={6}
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -933,9 +1033,7 @@ const Offers = () => {
                     control={
                       <Radio
                         value="1"
-                        onChange={(e) =>
-                          setSelectedOption(e.target.value)
-                        }
+                        onChange={(e) => setSelectedOption(e.target.value)}
                       />
                     }
                     label="Option 1"
@@ -954,9 +1052,7 @@ const Offers = () => {
                     control={
                       <Radio
                         value="2"
-                        onChange={(e) =>
-                          setSelectedOption(e.target.value)
-                        }
+                        onChange={(e) => setSelectedOption(e.target.value)}
                       />
                     }
                     label="Option 2"
@@ -975,9 +1071,7 @@ const Offers = () => {
                     control={
                       <Radio
                         value="3"
-                        onChange={(e) =>
-                          setSelectedOption(e.target.value)
-                        }
+                        onChange={(e) => setSelectedOption(e.target.value)}
                       />
                     }
                     label="Option 3"
@@ -996,9 +1090,7 @@ const Offers = () => {
                     control={
                       <Radio
                         value="4"
-                        onChange={(e) =>
-                          setSelectedOption(e.target.value)
-                        }
+                        onChange={(e) => setSelectedOption(e.target.value)}
                       />
                     }
                     label="Option 4"
@@ -1039,11 +1131,6 @@ const Offers = () => {
           </Box>
         </Box>
       </Modal>
-
-
-
-
-
     </>
   );
 };
