@@ -210,184 +210,292 @@ const Wallet = () => {
     setPageData(dataForPage);
   }, [page, rowsPerPage, balanceStateMents]);
 
-    return (
-        <>
-            <Helmet>
-                <title>Wallet Details | Affworld</title>
-            </Helmet>
-            <h1 className='text-center'>Your Wallet </h1>
-            <div className='d-flex justify-content-between row  ' >
+  return (
+    <>
+      <Box>
+        <Grid container rowSpacing={{ xs: 2, sm: 2, md: 6 }}>
+          <Grid item xs={12}>
+            <Box className="wallet-bg-container ">
+              <Box className="wallet-info-container">
+                <Box >
+                  <img style={{height:"100px", width:"100px" , borderRadius:"50%"}} src={account?.photoURL} alt="userImg" />
+                </Box>
+                <Box className="wallet-name">{account?.displayName}</Box>
+                <Box className="wallet-email">{account?.email}</Box>
+              </Box>
+              <Box className="walet-id text-light">wall.et/saurabh</Box>
+            </Box>
 
-                <div className='col-md-4 mt-4'>
+            
 
-                    <Card sx={{ display: 'flex', width: "fit-content" }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    {
-                                        loading ? <CircularProgress /> : (<>₹{totalBill}</>)
-                                    }
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container rowSpacing={{ xs: 1, sm: 2, md: 6 }}>
+              <Grid item xs={6} md={4}>
+                <Box
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      marginX: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px",
+                      margin: "13px 8px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      width: "240px",
+                      margin: "0 auto",
+                      borderRadius: "8px",
+                      gap: "10px",
+                    },
+                  }}
+                >
+                  <ReceiptOutlinedIcon />
+                  <Typography variant="subtitle1" color="">
+                    {loading ? <CircularProgress /> : <>₹{totalBill}</>}
+                  </Typography>
+                  <Typography variant="" color="text.secondary">
+                    Total Bill
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  ></Box>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      marginX: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px",
+                      margin: "13px 8px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      width: "240px",
+                      margin: "0 auto",
+                      borderRadius: "8px",
+                      gap: "10px",
+                    },
+                  }}
+                >
+                  <MoneyOutlinedIcon />
+                  <Typography variant="subtitle1" color="">
+                    {loading ? <CircularProgress /> : <>₹{totalAddedBalance}</>}
+                  </Typography>
+                  <Typography variant="" color="text.secondary">
+                    Added Balance
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  ></Box>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      marginX: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px",
+                      margin: "13px 8px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      width: "240px",
+                      margin: "0 auto",
+                      borderRadius: "8px",
+                      gap: "10px",
+                    },
+                  }}
+                >
+                  <MonetizationOnOutlinedIcon />
+                  <Typography variant="subtitle1" color="">
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <>₹{totalRemainingBalance}</>
+                    )}
+                  </Typography>
+                  <Typography
+                    variant=""
+                    color="text.secondary"
+                    className="text-center"
+                  >
+                    Balance
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  ></Box>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      marginX: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px",
+                      margin: "13px 8px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      width: "240px",
+                      margin: "0 auto",
+                      borderRadius: "8px",
+                      gap: "10px",
+                    },
+                  }}
+                >
+                  <AccountBalanceOutlinedIcon />
+                  <Typography variant="subtitle1" color="">
+                    {loading ? <CircularProgress /> : <>₹{totalBill}</>}
+                  </Typography>
+                  <Typography
+                    variant=""
+                    color="text.secondary"
+                    className="text-center"
+                  >
+                    Statements
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button variant="outlined" onClick={handleShow}>
+                      Get Statement
+                    </Button>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      marginX: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px",
+                      margin: "13px 8px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      width: "240px",
+                      margin: "0 auto",
+                      borderRadius: "8px",
+                      gap: "10px",
+                    },
+                  }}
+                >
+                  <AccountBalanceWalletOutlinedIcon />
+                  <Typography component="div" variant="subtitle1">
+                    Min ₹50
+                  </Typography>
+                  <Typography
+                    variant=""
+                    color="text.secondary"
+                    className=" text-center"
+                  >
+                    Add Balance
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      onClick={handleShow1}
+                    >
+                      Add Balance
+                    </Button>
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Box>
 
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Your Total Bill
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
-                                <Button variant="contained" onClick={getTotalBill}  >Refresh</Button>
-                            </Box>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 151 }}
-                            image={totalbill}
-                            alt="Your Total Bill"
-                        />
-                    </Card>
-                </div>
-
-                <div className='col-md-4 mt-4' >
-
-                    <Card sx={{ display: 'flex', width: "fit-content" }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    {
-                                        loading ? <CircularProgress /> : (<>₹{totalAddedBalance}</>)
-                                    }
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Added Balance
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
-                                <Button variant="contained" onClick={getTotalAddedBalance} >Refresh</Button>
-                            </Box>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 151 }}
-                            image={totalAddedPhoto}
-                            alt="Your total Balance"
-                        />
-                    </Card>
-
-                </div>
-
-                <div className='col-md-4 mt-4'>
-
-
-                    <Card sx={{ display: 'flex', width: "fit-content" }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    {
-                                        loading ? <CircularProgress /> : (<>₹{totalRemainingBalance}</>)
-                                    }
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Remaining Balance
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
-                                <Button variant="contained" onClick={getTotalRemainingBalance}  >Refresh</Button>
-                            </Box>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 151 }}
-                            image={totalRemainingPhoto}
-                            alt="Remaining Balance"
-                        />
-                    </Card>
-                </div>
-
-                <div className='col-md-4 mt-4'>
-
-                    <Card sx={{ display: 'flex', width: "fit-content" }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    {
-                                        loading ? <CircularProgress /> : (<>₹{totalBill}</>)
-                                    }
-
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Bank Statements
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
-                                <Button variant="contained" onClick={handleShow}  >Get Statement</Button>
-                            </Box>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 151 }}
-                            image={balanceStatement}
-                            alt="Your Statements"
-                        />
-                    </Card>
-                </div>
-
-                <div className='col-md-4 mt-4'>
-
-                    <Card sx={{ display: 'flex', width: "fit-content" }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    Min ₹50
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                    Add More Balance
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", pl: 1, pb: 1 }}>
-                                <Button variant="contained" color="success" onClick={handleShow1} >Add Balance</Button>
-                            </Box>
-                        </Box>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 151 }}
-                            image={addbalance}
-                            alt="Add Baalnce "
-                        />
-                    </Card>
-                </div>
-
-            </div>
-
-            <Modal show={show} onHide={handleClose}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered >
-                <Modal.Header closeButton>
-                    <Modal.Title>Bank Statements</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-
-                    <TableContainer component={Paper}>
-                        <Table id="offers-table" sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center" >Affiliate Name</TableCell>
-                                    <TableCell align="center">Amount</TableCell>
-                                    <TableCell align="center">Order Id</TableCell>
-                                    <TableCell align="center">Verified</TableCell>
-                                    <TableCell align="center">Time</TableCell>
-
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {
-                                    pageData?.length > 0 ? (
-                                        pageData.map((row) => (
-                                            <TableRow
-                                                key={row.affiliate_id}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell align="center" component="td" scope="row">{row.affiliate_name}</TableCell>
-                                                <TableCell align="center">{row?.amount}</TableCell>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Bank Statements</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <TableContainer component={Paper}>
+            <Table
+              id="offers-table"
+              sx={{ minWidth: 650 }}
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Affiliate Name</TableCell>
+                  <TableCell align="center">Amount</TableCell>
+                  <TableCell align="center">Order Id</TableCell>
+                  <TableCell align="center">Verified</TableCell>
+                  <TableCell align="center">Time</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pageData?.length > 0 ? (
+                  pageData.map((row) => (
+                    <TableRow
+                      key={row.affiliate_id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell align="center" component="td" scope="row">
+                        {row.affiliate_name}
+                      </TableCell>
+                      <TableCell align="center">{row?.amount}</TableCell>
 
                       <TableCell align="center">{row?.order_id}</TableCell>
 

@@ -214,23 +214,12 @@ const Offers = () => {
 
   const handleClick = async (row) => {
     try {
-      if (row?.type === "Public" || row?.type === null) {
+      if (row?.type === "Public" || row?.type === null || buttonStates[row._id] === "Approved") {
         await handleCopyAff(row);
       } else if (row?.type === "Private") {
-
-        console.log("buttonStates[row._id]____", buttonStates[row._id]);
-        if (buttonStates[row._id] === "Approved") {
-          await handleCopyAff(row);
-        } else {
-          setButtonStates((prevStates) => ({
-            ...prevStates,
-            [row._id]: "Pending",
-          }));
-          await sendRequest(row?._id);
-        }
+        setButtonStates((prevStates) => ({ ...prevStates, [row._id]: "Pending" }));
+        await sendRequest(row?._id);
         console.log("Button clicked and changed to pending for row:", row._id);
-
-
       }
     } catch (error) {
       console.error("Error:", error);
@@ -315,18 +304,15 @@ const Offers = () => {
 
 
 
-  const handleCategoryChange = (event) => {
-    const newSelectedCategory = event.target.value;
-
-    const newFilteredData = data.filter(
-      (row) =>
-        row?.category === newSelectedCategory || newSelectedCategory === ""
-    );
-    console.log("selected category", newSelectedCategory);
-    console.log("data", newFilteredData);
-    setCategoryFilteredData(newFilteredData);
-    setSelectedCategory(newSelectedCategory);
-  };
+const handleCategoryChange = (event) => {
+  const newSelectedCategory = event.target.value;
+  setSelectedCategory(newSelectedCategory);
+  setCategoryFilteredData(
+    newSelectedCategory
+      ? data.filter((row) => row?.category === newSelectedCategory)
+      : data
+  );
+};
 
   const categories = [
     "Ecommerce",
@@ -343,11 +329,11 @@ const Offers = () => {
   ];
   const handleCountryChange = (event) => {
     const newSelectedCountry = event.target.value;
-    const newFilteredData = data.filter(
-      (row) => row?.country === newSelectedCountry || newSelectedCountry === ""
-    );
-    console.log("selected category", newSelectedCountry);
-    console.log("data", newFilteredData);
+    const newFilteredData = newSelectedCountry
+      ? data.filter((row) => row.country === newSelectedCountry)
+      : data;
+    // console.log("selected category", newSelectedCountry);
+    // console.log("data", newFilteredData);
     setSelectedCountry(newSelectedCountry);
     setCountryFilteredData(newFilteredData);
   };
@@ -422,7 +408,7 @@ const Offers = () => {
           onChange={handleCategoryChange}
         >
           <MenuItem value="">All</MenuItem>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
@@ -537,6 +523,9 @@ const Offers = () => {
                             : "Copy Link"}
                       </Button>
                     </TableCell>
+                    <TableCell align="center">
+                      <Button variant="outlined" color="secondary" onClick={() => handleMoreDetails(row)}  >  Details <ReadMoreIcon sx={{ marginLeft: "5px" }} /> </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -636,6 +625,9 @@ const Offers = () => {
                             ? "Copied"
                             : "Copy Link"}
                       </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button variant="outlined" color="secondary" onClick={() => handleMoreDetails(row)}  >  Details <ReadMoreIcon sx={{ marginLeft: "5px" }} /> </Button>
                     </TableCell>
                   </TableRow>
                 ))}
