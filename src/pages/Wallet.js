@@ -210,6 +210,15 @@ const Wallet = () => {
     setPageData(dataForPage);
   }, [page, rowsPerPage, balanceStateMents]);
 
+  const formatLocalDate = (timestamp) => {
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+    };
+
+    return new Date(timestamp).toLocaleDateString("en-IN", options);
+  };
+
   return (
     <>
       <Box>
@@ -472,23 +481,23 @@ const Wallet = () => {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        className="mt-5"
       >
         <Modal.Header closeButton>
           <Modal.Title>Bank Statements</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <TableContainer component={Paper}>
-            <Table
-              id="offers-table"
-              sx={{ minWidth: 650 }}
-              aria-label="simple table"
-            >
+          <TableContainer
+            component={Paper}
+            style={{ maxHeight: "300px", overflowY: "auto" }}
+          >
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Affiliate Name</TableCell>
                   <TableCell align="center">Amount</TableCell>
-                  <TableCell align="center">Order Id</TableCell>
-                  <TableCell align="center">Verified</TableCell>
+                  <TableCell align="center">Order ID</TableCell>
+                  <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Time</TableCell>
                 </TableRow>
               </TableHead>
@@ -503,9 +512,7 @@ const Wallet = () => {
                         {row.affiliate_name}
                       </TableCell>
                       <TableCell align="center">{row?.amount}</TableCell>
-
                       <TableCell align="center">{row?.order_id}</TableCell>
-
                       <TableCell align="center">
                         {row?.verified === true ? (
                           <CloudDoneIcon sx={{ color: "green" }} />
@@ -513,24 +520,32 @@ const Wallet = () => {
                           <PauseIcon sx={{ color: "red" }} />
                         )}
                       </TableCell>
-                      <TableCell align="center">{row?.timestamp}</TableCell>
+                      <TableCell align="center">
+                        {formatLocalDate(row?.timestamp)}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
-                  <h3>No Statements Available!!</h3>
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      <h6>No Statements Available!!</h6>
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
+          </TableContainer>
+          <Box className="mt-2">
             <TablePagination
               rowsPerPageOptions={[10, 25, 50, 100]}
-              component="div"
-              count={balanceStateMents?.length}
+              count={balanceStateMents?.length + 1}
               rowsPerPage={rowsPerPage}
+              component={"center"}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-          </TableContainer>
+          </Box>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="contained" color="error" onClick={handleClose}>
