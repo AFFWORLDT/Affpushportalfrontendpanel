@@ -217,17 +217,24 @@ const Wallet = () => {
           <Grid item xs={12}>
             <Box className="wallet-bg-container ">
               <Box className="wallet-info-container">
-                <Box >
-                  <img style={{height:"100px", width:"100px" , borderRadius:"50%"}} src={account?.photoURL} alt="userImg" />
+                <Box>
+                  <img
+                    style={{
+                      height: "100px",
+                      width: "100px",
+                      borderRadius: "50%",
+                    }}
+                    src={account?.photoURL}
+                    alt="userImg"
+                  />
                 </Box>
                 <Box className="wallet-name">{account?.displayName}</Box>
                 <Box className="wallet-email">{account?.email}</Box>
               </Box>
-              <Box className="walet-id text-light">wall.et/saurabh</Box>
+              <Box className="walet-id text-light">
+                Wallet/@{account?.displayName.split(" ")[0]}
+              </Box>
             </Box>
-
-            
-
           </Grid>
           <Grid item xs={12}>
             <Grid container rowSpacing={{ xs: 1, sm: 2, md: 6 }}>

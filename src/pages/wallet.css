@@ -1,5 +1,5 @@
 .wallet-bg-container {
-  width: 250px;
+  width: 290px;
   background-color: #0a82ff3d !important;
   height: 230px;
   margin: 0 auto;
@@ -21,7 +21,7 @@
   /* border-radius: 50%; */
   /* margin: 0 auto; */
 }
-.wallet-avatar-img  {
+.wallet-avatar-img {
   display: block;
   object-fit: cover;
   border-radius: 50%;
@@ -29,10 +29,11 @@
 
 .wallet-name {
   font-size: 18px;
-  font-weight : bold;
+  font-weight: bold;
 }
 .wallet-email {
   font-size: 16px;
+  margin-top :-7px;
 }
 .walet-id {
   position: absolute;
@@ -40,7 +41,7 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: 160px;
+  width: 220px;
   height: 40px;
   background-color: #0049ff;
   padding: 0;
@@ -49,17 +50,14 @@
   border-radius: 20px;
 }
 
-
-
-
 @media screen and (min-width: 360px) and (max-width: 740px) {
   .wallet-bg-container {
-    width: 250px;
+    width: 290px;
     background-color: #0a82ff3d !important;
     height: 230px;
     margin: 0 auto;
     border-radius: 10px;
-    padding: 10px;
+    padding: 15px 10px;
     position: relative;
   }
   .wallet-info-container {
@@ -97,7 +95,7 @@
     left: 50%;
     transform: translateX(-50%);
 
-    width: 160px;
+    width: 210px;
     height: 40px;
     background-color: #0049ff;
     padding: 0;
