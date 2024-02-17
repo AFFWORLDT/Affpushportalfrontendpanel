@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import { ToastContainer, toast } from 'react-toastify';
@@ -102,7 +102,10 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me"/>
+        <FormControlLabel
+          control={<Checkbox name="remember" />}
+          label="Remember Me"
+        />
         <Link href="/forgotpass" variant="subtitle2" style={{ textDecoration: 'none' }} underline="hover">
           Forgot password?
         </Link>
