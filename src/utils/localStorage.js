@@ -53,7 +53,7 @@ export const storeAnid = () => {
   try {
 
     const anid = localStorage.getItem("anid");
-    if (!anid) {
+    if (!anid || anid === null) {
       const urlSearchParams = new URLSearchParams(window.location.search);
       const anid = urlSearchParams.get("anid");
       localStorage.setItem("anid", anid);
