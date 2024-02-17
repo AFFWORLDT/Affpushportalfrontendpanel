@@ -449,7 +449,6 @@ const Offers = () => {
                 <TableRow>
                   <TableCell>Offers</TableCell>
                   <TableCell align="center">Tags</TableCell>
-                  <TableCell align="center">Payout</TableCell>
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
@@ -465,7 +464,7 @@ const Offers = () => {
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
-                 
+
                     <TableCell align="center">
                       <Select defaultValue="">
                         {row?.tags?.map((tag, index) => (
@@ -475,15 +474,7 @@ const Offers = () => {
                         ))}
                       </Select>
                     </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        onClick={() => handlePayout(row)}
-                      >
-                        See Payouts
-                      </Button>
-                    </TableCell>
-                    
+
                     <TableCell align="center">
                       {row?.status === "active" ? (
                         <CloudDoneIcon style={{ color: "#32e620" }} />
@@ -547,7 +538,6 @@ const Offers = () => {
                 <TableRow>
                   <TableCell>Offers</TableCell>
                   <TableCell align="center">Tags</TableCell>
-                  <TableCell align="center">Payout</TableCell>
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
@@ -563,7 +553,7 @@ const Offers = () => {
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
-                  
+
                     <TableCell align="center">
                       <Select defaultValue="">
                         {row?.tags?.map((tag, index) => (
@@ -573,14 +563,7 @@ const Offers = () => {
                         ))}
                       </Select>
                     </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        onClick={() => handlePayout(row)}
-                      >
-                        See Payouts
-                      </Button>
-                    </TableCell>
+
                     <TableCell align="center">
                       {row?.status === "active" ? (
                         <CloudDoneIcon style={{ color: "#32e620" }} />
@@ -645,7 +628,6 @@ const Offers = () => {
                   <TableRow>
                     <TableCell>Offers</TableCell>
                     <TableCell align="center">Tags</TableCell>
-                    <TableCell align="center">Payout</TableCell>
                     <TableCell align="center">Status</TableCell>
                     <TableCell align="center">Iframe</TableCell>
                     <TableCell align="center">Action</TableCell>
@@ -665,7 +647,7 @@ const Offers = () => {
                           <TableCell component="td" scope="row">
                             {row.name}
                           </TableCell>
-                       
+
                           <TableCell align="center">
                             <Select defaultValue="">
                               {row?.tags?.map((tag, index) => (
@@ -676,16 +658,6 @@ const Offers = () => {
                             </Select>
                           </TableCell>
 
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              onClick={() => handlePayout(row)}
-                            >
-                              See Payouts
-                            </Button>
-                          </TableCell>
-
-                         
                           <TableCell align="center">
                             {row?.status === "active" ? (
                               <CloudDoneIcon style={{ color: "#32e620" }} />
