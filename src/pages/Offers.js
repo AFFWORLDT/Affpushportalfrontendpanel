@@ -448,10 +448,8 @@ const Offers = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Offers</TableCell>
-                  <TableCell align="center">Category</TableCell>
                   <TableCell align="center">Tags</TableCell>
                   <TableCell align="center">Payout</TableCell>
-                  <TableCell align="center">Country</TableCell>
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
@@ -467,9 +465,7 @@ const Offers = () => {
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="center">
-                      {row?.category === null ? "N/A" : row?.category}
-                    </TableCell>
+                 
                     <TableCell align="center">
                       <Select defaultValue="">
                         {row?.tags?.map((tag, index) => (
@@ -487,9 +483,7 @@ const Offers = () => {
                         See Payouts
                       </Button>
                     </TableCell>
-                    <TableCell align="center">
-                      {row?.country === null ? "N/A" : row?.country}
-                    </TableCell>
+                    
                     <TableCell align="center">
                       {row?.status === "active" ? (
                         <CloudDoneIcon style={{ color: "#32e620" }} />
@@ -552,10 +546,8 @@ const Offers = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Offers</TableCell>
-                  <TableCell align="center">Category</TableCell>
                   <TableCell align="center">Tags</TableCell>
                   <TableCell align="center">Payout</TableCell>
-                  <TableCell align="center">Country</TableCell>
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Iframe</TableCell>
                   <TableCell align="center">Action</TableCell>
@@ -571,9 +563,7 @@ const Offers = () => {
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="center">
-                      {row?.category === null ? "N/A" : row?.category}
-                    </TableCell>
+                  
                     <TableCell align="center">
                       <Select defaultValue="">
                         {row?.tags?.map((tag, index) => (
@@ -590,9 +580,6 @@ const Offers = () => {
                       >
                         See Payouts
                       </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      {row?.country === null ? "N/A" : row?.country}
                     </TableCell>
                     <TableCell align="center">
                       {row?.status === "active" ? (
@@ -657,10 +644,8 @@ const Offers = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Offers</TableCell>
-                    <TableCell align="center">Category</TableCell>
                     <TableCell align="center">Tags</TableCell>
                     <TableCell align="center">Payout</TableCell>
-                    <TableCell align="center">Country</TableCell>
                     <TableCell align="center">Status</TableCell>
                     <TableCell align="center">Iframe</TableCell>
                     <TableCell align="center">Action</TableCell>
@@ -680,9 +665,7 @@ const Offers = () => {
                           <TableCell component="td" scope="row">
                             {row.name}
                           </TableCell>
-                          <TableCell align="center">
-                            {row?.category === null ? "N/A" : row?.category}
-                          </TableCell>
+                       
                           <TableCell align="center">
                             <Select defaultValue="">
                               {row?.tags?.map((tag, index) => (
@@ -702,9 +685,7 @@ const Offers = () => {
                             </Button>
                           </TableCell>
 
-                          <TableCell align="center">
-                            {row?.country === null ? "N/A" : row?.country}
-                          </TableCell>
+                         
                           <TableCell align="center">
                             {row?.status === "active" ? (
                               <CloudDoneIcon style={{ color: "#32e620" }} />
@@ -919,9 +900,9 @@ const Offers = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell className="text-center">Image 1</TableCell>
-                <TableCell className="text-center">Image 2</TableCell>
-                <TableCell className="text-center">Image 3</TableCell>
+                <TableCell className="text-center">Campaign</TableCell>
+                <TableCell className="text-center">horizontal</TableCell>
+                <TableCell className="text-center">vertical</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ backgroundColor: "#f2f2f2" }}>
