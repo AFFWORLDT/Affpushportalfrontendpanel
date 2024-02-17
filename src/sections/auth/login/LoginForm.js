@@ -102,8 +102,7 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
-              <Typography variant="body2">Remember me</Typography>
+        <Checkbox name="remember" label="Remember me" <b>Remember Me</b>/>
         <Link href="/forgotpass" variant="subtitle2" style={{ textDecoration: 'none' }} underline="hover">
           Forgot password?
         </Link>
