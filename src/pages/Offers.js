@@ -58,6 +58,8 @@ const Offers = () => {
   const [approveData, setApproveData] = useState([]);
   const [categoryFilteredData, setCategoryFilteredData] = useState([]);
   const [countryFilteredData, setCountryFilteredData] = useState([]);
+  const [bothFilteredData, setBothFilteredData] = useState([]);
+
   const [buttonStates, setButtonStates] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -292,9 +294,21 @@ const Offers = () => {
     const dataForPage = data.slice(startIndex, startIndex + rowsPerPage);
     setPageData(dataForPage);
   }, [page, rowsPerPage, data]);
+  const handleCategoryCountryChange = (selectedCategory, selectedCountry) => {
+    const newFilteredData = data.filter(
+      (row) =>
+        row?.category === selectedCategory && row?.country === selectedCountry
+    );
+    console.log("selected category---->", selectedCategory);
+    console.log("selected country---->", selectedCountry);
+    console.log("data BOTH-->", newFilteredData);
+    setBothFilteredData(newFilteredData);
+  
+  };
 
   const handleCategoryChange = (event) => {
     const newSelectedCategory = event.target.value;
+    handleCategoryCountryChange(newSelectedCategory, selectedCountry);
 
     const newFilteredData = data.filter(
       (row) =>
@@ -321,10 +335,12 @@ const Offers = () => {
   ];
   const handleCountryChange = (event) => {
     const newSelectedCountry = event.target.value;
+    handleCategoryCountryChange(selectedCategory, newSelectedCountry);
+
     const newFilteredData = data.filter(
       (row) => row?.country === newSelectedCountry || newSelectedCountry === ""
     );
-    console.log("selected category", newSelectedCountry);
+    console.log("selected country", newSelectedCountry);
     console.log("data", newFilteredData);
     setSelectedCountry(newSelectedCountry);
     setCountryFilteredData(newFilteredData);
@@ -333,7 +349,10 @@ const Offers = () => {
   const handleClearFilter = () => {
     try {
       setCountryFilteredData([]);
-      setSelectedCountry([]);
+      setCategoryFilteredData([]);
+      setSelectedCountry("");
+      setSelectedCategory("");
+      
       fetchData();
     } catch (error) {
       console.log("Error while clear", error);
@@ -438,7 +457,8 @@ const Offers = () => {
 
       <div className="mt-3 mb-3">
         {categoryFilteredData?.length > 0 &&
-        countryFilteredData?.length == 0 ? (
+        countryFilteredData?.length == 0 &&
+        bothFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
             <Table
               id="offers-table"
@@ -447,6 +467,7 @@ const Offers = () => {
             >
               <TableHead>
                 <TableRow>
+                <TableCell>No</TableCell>
                   <TableCell>Offers</TableCell>
                   <TableCell align="center">Tags</TableCell>
                   <TableCell align="center">Status</TableCell>
@@ -456,11 +477,15 @@ const Offers = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {categoryFilteredData.map((row) => (
+                {categoryFilteredData?.map((row , index) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
+                      <TableCell component="td" scope="row">
+                      {index + 1}
+                    </TableCell>
+
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
@@ -515,6 +540,16 @@ const Offers = () => {
                           : copied
                           ? "Copied"
                           : "Copy Link"}
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleMoreDetails(row)}
+                      >
+                        {" "}
+                        Details <ReadMoreIcon sx={{ marginLeft: "5px" }} />{" "}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -527,7 +562,8 @@ const Offers = () => {
 
       <div className="mt-3 mb-3 ">
         {countryFilteredData?.length > 0 &&
-        categoryFilteredData?.length == 0 ? (
+        categoryFilteredData?.length == 0 &&
+        bothFilteredData?.length == 0 ? (
           <TableContainer component={Paper}>
             <Table
               id="offers-table"
@@ -536,6 +572,7 @@ const Offers = () => {
             >
               <TableHead>
                 <TableRow>
+                  <TableCell>No</TableCell>
                   <TableCell>Offers</TableCell>
                   <TableCell align="center">Tags</TableCell>
                   <TableCell align="center">Status</TableCell>
@@ -545,11 +582,15 @@ const Offers = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {countryFilteredData?.map((row) => (
+                {countryFilteredData?.map((row , index) => (
                   <TableRow
-                    key={row.name}
+                    key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
+                    <TableCell component="td" scope="row">
+                      {index + 1}
+                    </TableCell>
+
                     <TableCell component="td" scope="row">
                       {row.name}
                     </TableCell>
@@ -606,6 +647,120 @@ const Offers = () => {
                           : "Copy Link"}
                       </Button>
                     </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleMoreDetails(row)}
+                      >
+                        {" "}
+                        Details <ReadMoreIcon sx={{ marginLeft: "5px" }} />{" "}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : null}
+      </div>
+
+      <div className="mt-3 mb-3 ">
+        {bothFilteredData?.length > 0 ? (
+          <TableContainer component={Paper}>
+            <Table
+              id="offers-table"
+              sx={{ minWidth: 650 }}
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>No</TableCell>
+
+                  <TableCell>Offers</TableCell>
+                  <TableCell align="center">Tags</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Iframe</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                  <TableCell align="center">Deatils</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bothFilteredData?.map((row, index) => (
+                  <TableRow
+                    key={row._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="td" scope="row">
+                      {index + 1}
+                    </TableCell>
+
+                    <TableCell component="td" scope="row">
+                      {row.name}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Select defaultValue="">
+                        {row?.tags?.map((tag, index) => (
+                          <option key={index} value={tag}>
+                            {tag}
+                          </option>
+                        ))}
+                      </Select>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {row?.status === "active" ? (
+                        <CloudDoneIcon style={{ color: "#32e620" }} />
+                      ) : row?.status === "paused" ? (
+                        <PauseIcon style={{ color: "#FF0000" }} />
+                      ) : row?.status === "expired" ? (
+                        <AccessTimeIcon style={{ color: "#FFA500" }} />
+                      ) : null}
+                      {"   "}
+                      <span style={{ fontWeight: 700 }}>{row?.status} </span>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        onClick={() => handleIframeCode(row)}
+                      >
+                        Link Iframe
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        key={row._id}
+                        onClick={() => handleClick(row)}
+                        disabled={buttonStates[row._id] === "Pending"}
+                        variant="contained"
+                        style={{ fontWeight: 700, marginBottom: "10px" }}
+                      >
+                        {row?.type === "Private"
+                          ? buttonStates[row._id] === "Approved"
+                            ? copied
+                              ? "Copied"
+                              : "Copy Link"
+                            : buttonStates[row._id] === "Disapproved"
+                            ? "Rejected"
+                            : buttonStates[row._id] === "Pending"
+                            ? "Pending"
+                            : "Get Approval"
+                          : copied
+                          ? "Copied"
+                          : "Copy Link"}
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleMoreDetails(row)}
+                      >
+                        {" "}
+                        Details <ReadMoreIcon sx={{ marginLeft: "5px" }} />{" "}
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -616,7 +771,8 @@ const Offers = () => {
 
       <div className="mt-3 mb-3 ">
         {categoryFilteredData?.length === 0 &&
-        countryFilteredData?.length === 0 ? (
+        countryFilteredData?.length === 0 &&
+        bothFilteredData?.length === 0 ? (
           <>
             <TableContainer component={Paper}>
               <Table
@@ -626,6 +782,7 @@ const Offers = () => {
               >
                 <TableHead>
                   <TableRow>
+                    <TableCell>No</TableCell>
                     <TableCell>Offers</TableCell>
                     <TableCell align="center">Tags</TableCell>
                     <TableCell align="center">Status</TableCell>
@@ -637,13 +794,17 @@ const Offers = () => {
                 <TableBody>
                   {loading ? (
                     pageData?.length > 0 ? (
-                      pageData.map((row) => (
+                      pageData.map((row, index) => (
                         <TableRow
                           key={row.name}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
+                          <TableCell component="td" scope="row">
+                            {index + 1}
+                          </TableCell>
+
                           <TableCell component="td" scope="row">
                             {row.name}
                           </TableCell>
