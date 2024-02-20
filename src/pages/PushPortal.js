@@ -3,17 +3,42 @@ import axios from "axios";
 import { Button, Input } from "@mui/material";
 import { toast } from "react-toastify";
 import { getUserFromLocalStorage } from "src/service/localStorage";
+import moment from "moment-timezone";
 
 const PushPortal = () => {
-  const [webUrl, setWebUrl] = useState();
-  const [title, setTitle] = useState();
-  const [body, setBody] = useState();
-  const [iconUrl, setIconUrl] = useState();
-  const [action, setAction] = useState();
+  const [webUrl, setWebUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [iconUrl, setIconUrl] = useState("");
+  const [action, setAction] = useState("");
   const [verifiedWeb, setVerifiedWeb] = useState();
   const URL = process.env.REACT_APP_PROD_API;
   const user2 = getUserFromLocalStorage();
   const accessToken = user2?.data.access_token;
+  const [localDateTime, setLocalDateTime] = useState("");
+  const [convertedDateTime, setConvertedDateTime] = useState("");
+  const [selectedTimeZone, setSelectedTimeZone] = useState("");
+
+  useEffect(() => {
+    //checking if localDateTime is  not empty before converting
+    if (localDateTime) {
+      convertToLocalTime();
+    }
+  }, [localDateTime]); // Run the effect when localDateTime changes
+
+  const convertToLocalTime = () => {
+    const localMoment = moment(localDateTime);
+
+    // You can fetch user's country code dynamically and get the corresponding time zone
+
+    const userTimeZone = moment.tz.guess(true) || "UTC"; // Fallback to UTC if unable to determine
+    console.log(userTimeZone);
+
+    const utcMoment = localMoment.clone().tz(userTimeZone).utc();
+    const convertedTimeString = utcMoment.format("YYYY-MM-DD HH:mm:ss");
+    setConvertedDateTime(convertedTimeString);
+    setSelectedTimeZone(userTimeZone);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +50,9 @@ const PushPortal = () => {
       icon: iconUrl,
       clickAction: action,
     };
-
+    if (convertedDateTime) {
+      payload.scheduleTime = convertedDateTime;
+    }
     console.log("payload", payload);
 
     // Convert payload object to JSON string
@@ -87,15 +114,10 @@ const PushPortal = () => {
     <div>
       <div>
         <form className="form">
-    
           <div className="form-group">
             <label htmlFor="url">Website URL</label>
-            <select
-              id="urlDropdown"
-            >
-                <option value={verifiedWeb}>
-                  {verifiedWeb}
-                </option>
+            <select id="urlDropdown" className="">
+              <option value={verifiedWeb}>{verifiedWeb}</option>
             </select>
           </div>
 
@@ -143,12 +165,50 @@ const PushPortal = () => {
             />
           </div>
 
+          <div className="accordion form-group" id="accordionExample">
+            <div className="accordion-item">
+              <h2 className="accordion-header" id="headingOne">
+                <button
+                  className="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  <label htmlFor="localDateTime">
+                    You can schedual your time
+                  </label>
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                className="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div className="accordion-body">
+                  <div className="form-group">
+                    <input
+                      type="datetime-local"
+                      id="localDateTime"
+                      className="form-control"
+                      value={localDateTime}
+                      onChange={(e) => setLocalDateTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="form-group submit d-flex justify-content-center  align-items-center">
             <Button
               type="submit"
               variant="contained"
               color="success"
               onClick={handleSubmit}
+              className="px-5"
             >
               Submit
             </Button>
