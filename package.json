@@ -58,6 +58,7 @@
     "dotenv": "^16.3.1",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.45",
     "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -76,9 +77,9 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object":"7.21.11",
     "@babel/core": "^7.21.0",
     "@babel/eslint-parser": "^7.19.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-flowtype": "^8.0.3",
