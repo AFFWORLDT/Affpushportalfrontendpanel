@@ -44,12 +44,23 @@ const PushHistory = () => {
   useEffect(() => {
     historyDetails();
   }, []);
-  const formatLocalDate = (timestamp) => {
-    const options = {
+  const formatLocalDate = (utcTimestamp) => {
+    const utcDate = new Date(utcTimestamp);
+    // Add 5 hours and 30 minutes to convert to IST
+    utcDate.setHours(utcDate.getHours() + 5);
+    utcDate.setMinutes(utcDate.getMinutes() + 30);
+
+    // Format the date to a string in a way that suits your needs
+    const istTimeString = utcDate.toLocaleString("en-In", {
+      timeZone: "Asia/Kolkata", // Set the timezone to IST
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
       hour: "numeric",
       minute: "numeric",
-    };
-    return new Date(timestamp).toLocaleDateString("en-IN", options);
+    });
+
+    return istTimeString;
   };
   return (
     <>
@@ -138,6 +149,7 @@ const PushHistory = () => {
                         <TableCell align="center">
                           {formatLocalDate(rowData?.timestamp)}
                         </TableCell>
+                        {console.log(rowData?.timestamp)}
                       </TableRow>
                     ))}
                   </>
