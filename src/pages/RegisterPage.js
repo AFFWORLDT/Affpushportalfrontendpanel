@@ -102,12 +102,12 @@ export default function RegisterPage() {
               Register to Affworld
             </Typography>
 
-            <Typography variant="body2" sx={{ mb: 5 }}>
+            <Typography variant="body2" sx={{ mb: 3 }}>
               Already have an account? {''}
               <Link to="/login" variant="subtitle2">Login</Link>
             </Typography>
 
-            <Stack direction="row" spacing={2}>
+            {/* <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
               </Button>
@@ -125,7 +125,7 @@ export default function RegisterPage() {
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 OR
               </Typography>
-            </Divider>
+            </Divider> */}
 
             <RegisterForm />
           </StyledContent>
